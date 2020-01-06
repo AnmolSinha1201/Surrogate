@@ -40,9 +40,11 @@ namespace Surrogate
 			il.Emit(OpCodes.Call, Method.Of(() => Attribute.GetCustomAttribute(default(MemberInfo), default(Type))));
 			
 
-			il.Emit(OpCodes.Ldtoken, typeof(MethodSurrogateInfo));
-			il.Emit(OpCodes.Call, Method.Of(() => Type.GetTypeFromHandle(default(RuntimeTypeHandle))));
-			il.Emit(OpCodes.Call, Method.Of(() => Activator.CreateInstance(default(Type))));
+			// il.Emit(OpCodes.Ldtoken, typeof(MethodSurrogateInfo));
+			// il.Emit(OpCodes.Call, Method.Of(() => Type.GetTypeFromHandle(default(RuntimeTypeHandle))));
+			// il.Emit(OpCodes.Call, Method.Of(() => Activator.CreateInstance(default(Type))));
+			il.Emit(OpCodes.Ldstr, "foobar is real");
+			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object) }));
 
 
 			il.Emit(OpCodes.Callvirt, Method.Of((MethodSurrogate a) => a.Process(default(MethodSurrogateInfo))));
