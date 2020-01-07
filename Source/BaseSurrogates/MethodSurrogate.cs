@@ -18,13 +18,13 @@ namespace Surrogate.Base
 	{
 		public object Item;
 		public MethodInfo Member;
-		// public object[] Arguments;
+		public object[] Arguments;
 
-		public MethodSurrogateInfo(object Item, MethodInfo Member)
+		public MethodSurrogateInfo(object Item, MethodInfo Member, object[] Arguments)
 		{
 			this.Item = Item;
 			this.Member = Member;
-			// this.Arguments = Arguments;
+			this.Arguments = Arguments;
 		}
 
 		public object Execute()

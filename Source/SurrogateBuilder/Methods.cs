@@ -59,7 +59,20 @@ namespace Surrogate
 			il.Emit(OpCodes.Ldarg_0);
 			il.Emit(OpCodes.Ldtoken, methodBuilder2);
 			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
-			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object), typeof(MethodInfo) }));
+
+			var args = il.DeclareLocal(typeof(object[]));
+			il.Emit(OpCodes.Ldc_I4_1);
+			il.Emit(OpCodes.Newarr, typeof(object));
+			il.Emit(OpCodes.Stloc, args);
+			il.Emit(OpCodes.Ldloc, args);
+			il.Emit(OpCodes.Ldc_I4_0);
+			// il.Emit(OpCodes.Ldc_I4, 456456);
+			il.Emit(OpCodes.Ldarg_1);
+			il.Emit(OpCodes.Box, typeof(int));
+			il.Emit(OpCodes.Stelem_Ref);
+			il.Emit(OpCodes.Ldloc, args);
+
+			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object), typeof(MethodInfo), typeof(object[]) }));
 			il.Emit(OpCodes.Call, Method.Of((MethodSurrogate a) => a.Process(default(MethodSurrogateInfo))));
 			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
 
