@@ -16,7 +16,8 @@ namespace Surrogate
             var retType = SurrogateBuilder.Build(typeof(Foo));
             var instance = (Foo)Activator.CreateInstance(retType);
             // retType.GetMethod("NewM").Invoke(instance, null);
-            instance.ActualMethod();
+            var retVal = instance.ActualMethod();
+            // instance.foo();
         }
 
         void foobar()
@@ -28,24 +29,10 @@ namespace Surrogate
     public class Foo
     {
         [MethodSurrogate]
-        public virtual void ActualMethod()
+        public virtual int ActualMethod()
         {
             Console.WriteLine("Actual Method");
-        }
-
-        public void CallMethod1(string Name, object[] Items)
-        {
-            
-        }
-
-        public void CallMethod2(string Name)
-        {
-
-        }
-
-        public void CallMethod3(object[] Items)
-        {
-
+            return 12345;
         }
     }
 }

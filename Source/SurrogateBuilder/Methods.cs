@@ -28,10 +28,23 @@ namespace Surrogate
 
 			ILGenerator il = methodBuilder.GetILGenerator();
 
+			MethodBuilder methodBuilder2 = Builder.DefineMethod(
+				"Hidden",
+				MethodAttributes.Public
+				| MethodAttributes.HideBySig
+				| MethodAttributes.NewSlot
+				| MethodAttributes.Virtual
+				| MethodAttributes.Final,
+				CallingConventions.HasThis,
+				OriginalMethod.ReturnType,
+				Type.EmptyTypes
+			);
 
-			// this.OriginalMethod()
-			// il.LoadThis();
-			// il.Call(OriginalMethod);
+			ILGenerator il2 = methodBuilder2.GetILGenerator();
+			il2.Emit(OpCodes.Ldarg_0);
+			il2.Emit(OpCodes.Call, OriginalMethod);
+			il2.Emit(OpCodes.Ret);
+
 
 			il.Emit(OpCodes.Ldtoken, OriginalMethod);
 			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
@@ -40,18 +53,16 @@ namespace Surrogate
 			il.Emit(OpCodes.Call, Method.Of(() => Attribute.GetCustomAttribute(default(MemberInfo), default(Type))));
 			
 
-			// il.Emit(OpCodes.Ldtoken, typeof(MethodSurrogateInfo));
-			// il.Emit(OpCodes.Call, Method.Of(() => Type.GetTypeFromHandle(default(RuntimeTypeHandle))));
-			// il.Emit(OpCodes.Call, Method.Of(() => Activator.CreateInstance(default(Type))));
-			il.Emit(OpCodes.Ldstr, "foobar is real");
-			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object) }));
-
-
-			il.Emit(OpCodes.Callvirt, Method.Of((MethodSurrogate a) => a.Process(default(MethodSurrogateInfo))));
+			il.Emit(OpCodes.Ldarg_0);
+			il.Emit(OpCodes.Ldtoken, methodBuilder2);
+			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
+			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object), typeof(MethodInfo) }));
+			il.Emit(OpCodes.Call, Method.Of((MethodSurrogate a) => a.Process(default(MethodSurrogateInfo))));
+			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
 
 			
-			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Call, OriginalMethod);
+			// il.Emit(OpCodes.Ldarg_0);
+			// il.Emit(OpCodes.Call, OriginalMethod);
 
 
 			// return to terminate
