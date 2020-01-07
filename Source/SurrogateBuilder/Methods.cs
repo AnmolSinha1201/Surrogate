@@ -62,7 +62,6 @@ namespace Surrogate
 			il.Emit(OpCodes.Stloc, args);
 			il.Emit(OpCodes.Ldloc, args);
 			il.Emit(OpCodes.Ldc_I4_0);
-			// il.Emit(OpCodes.Ldc_I4, 456456);
 			il.Emit(OpCodes.Ldarg_1);
 			il.Emit(OpCodes.Box, typeof(int));
 			il.Emit(OpCodes.Stelem_Ref);
