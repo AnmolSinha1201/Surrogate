@@ -80,12 +80,6 @@ namespace Surrogate
 			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
 
 
-			
-			// il.Emit(OpCodes.Ldarg_0);
-			// il.Emit(OpCodes.Call, OriginalMethod);
-
-
-			// return to terminate
 			il.Emit(OpCodes.Ret);
 
 			Builder.DefineMethodOverride(methodBuilder, OriginalMethod);
