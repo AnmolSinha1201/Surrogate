@@ -40,7 +40,8 @@ namespace Surrogate
 
 			ILGenerator il2 = methodBuilder2.GetILGenerator();
 			il2.Emit(OpCodes.Ldarg_0);
-			il2.Emit(OpCodes.Ldarg_1);
+			for (int i = 0; i < parameterTypes.Count(); i++)
+				il2.Emit(OpCodes.Ldarg, i + 1);
 			il2.Emit(OpCodes.Call, OriginalMethod);
 			il2.Emit(OpCodes.Ret);
 
@@ -57,14 +58,17 @@ namespace Surrogate
 			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
 
 			var args = il.DeclareLocal(typeof(object[]));
-			il.Emit(OpCodes.Ldc_I4_1);
+			il.Emit(OpCodes.Ldc_I4, parameterTypes.Count());
 			il.Emit(OpCodes.Newarr, typeof(object));
 			il.Emit(OpCodes.Stloc, args);
-			il.Emit(OpCodes.Ldloc, args);
-			il.Emit(OpCodes.Ldc_I4_0);
-			il.Emit(OpCodes.Ldarg_1);
-			il.Emit(OpCodes.Box, typeof(int));
-			il.Emit(OpCodes.Stelem_Ref);
+			for (int i = 0; i < parameterTypes.Count(); i++)
+			{
+				il.Emit(OpCodes.Ldloc, args);
+				il.Emit(OpCodes.Ldc_I4, i);
+				il.Emit(OpCodes.Ldarg, i + 1);
+				il.Emit(OpCodes.Box, parameterTypes[i]);
+				il.Emit(OpCodes.Stelem_Ref);
+			}
 			il.Emit(OpCodes.Ldloc, args);
 
 			var info = il.DeclareLocal(typeof(MethodSurrogateInfo));
