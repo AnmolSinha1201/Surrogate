@@ -11,10 +11,6 @@ namespace Surrogate
 	{
 		private static void CreateMethodProxy(this TypeBuilder Builder, MethodInfo OriginalMethod)
 		{
-			var itemAttribute = (MethodSurrogate)OriginalMethod.GetCustomAttribute(typeof(MethodSurrogate));
-			if (itemAttribute == null)
-				return;
-
 			var parameterTypes = OriginalMethod.GetParameters().Select(i => i.ParameterType).ToArray();
 			MethodBuilder methodBuilder = Builder.DefineMethod(
 				OriginalMethod.Name,
