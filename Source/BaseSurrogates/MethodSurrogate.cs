@@ -6,11 +6,12 @@ namespace Surrogate.Base
 	[AttributeUsage(AttributeTargets.Method)]
 	public class MethodSurrogate : Attribute
 	{
-		public virtual object Process(MethodSurrogateInfo Info)
+		public virtual void Process(MethodSurrogateInfo Info)
 		{
 			Console.WriteLine("Inside Surrogate");
 			var retVal = Info.Execute();
-			return retVal;
+			Info.ReturnValue = retVal;
+			// return retVal;
 		}
 	}
 
@@ -19,6 +20,7 @@ namespace Surrogate.Base
 		public object Item;
 		public MethodInfo Member;
 		public object[] Arguments;
+		public object ReturnValue;
 
 		public MethodSurrogateInfo(object Item, MethodInfo Member, object[] Arguments)
 		{

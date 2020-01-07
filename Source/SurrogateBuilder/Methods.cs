@@ -72,9 +72,17 @@ namespace Surrogate
 			il.Emit(OpCodes.Stelem_Ref);
 			il.Emit(OpCodes.Ldloc, args);
 
+			var info = il.DeclareLocal(typeof(MethodSurrogateInfo));
 			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object), typeof(MethodInfo), typeof(object[]) }));
+			il.Emit(OpCodes.Stloc, info);
+			il.Emit(OpCodes.Ldloc, info);
 			il.Emit(OpCodes.Call, Method.Of((MethodSurrogate a) => a.Process(default(MethodSurrogateInfo))));
+			// il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
+			il.Emit(OpCodes.Ldloc, info);
+			var retValInfo = typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue));
+			il.Emit(OpCodes.Ldfld, retValInfo);
 			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
+
 
 			
 			// il.Emit(OpCodes.Ldarg_0);
