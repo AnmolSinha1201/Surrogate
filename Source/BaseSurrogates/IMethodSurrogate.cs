@@ -3,16 +3,9 @@ using System.Reflection;
 
 namespace Surrogate.Base
 {
-	[AttributeUsage(AttributeTargets.Method)]
-	public class MethodSurrogate : Attribute
+	public interface IMethodSurrogate
 	{
-		public virtual void Process(MethodSurrogateInfo Info)
-		{
-			Console.WriteLine("Inside Surrogate");
-			var retVal = Info.Execute();
-			Info.ReturnValue = retVal;
-			// return retVal;
-		}
+		void InterceptMethod(MethodSurrogateInfo Info);
 	}
 
 	public class MethodSurrogateInfo
@@ -31,7 +24,7 @@ namespace Surrogate.Base
 
 		public object Execute()
 		{
-			return Member.Invoke(Item, new object[] { 67890 });
+			return Member.Invoke(Item, Arguments);
 		}
 	}
 }
