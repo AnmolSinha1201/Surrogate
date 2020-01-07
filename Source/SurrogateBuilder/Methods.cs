@@ -47,7 +47,7 @@ namespace Surrogate
 
 			il.Emit(OpCodes.Ldtoken, OriginalMethod);
 			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
-			il.Emit(OpCodes.Ldtoken, typeof(MethodSurrogate));
+			il.Emit(OpCodes.Ldtoken, AttributeInfo.GetType());
 			il.Emit(OpCodes.Call, Method.Of(() => Type.GetTypeFromHandle(default(RuntimeTypeHandle))));
 			il.Emit(OpCodes.Call, Method.Of(() => Attribute.GetCustomAttribute(default(MemberInfo), default(Type))));
 			
@@ -71,8 +71,9 @@ namespace Surrogate
 			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object), typeof(MethodInfo), typeof(object[]) }));
 			il.Emit(OpCodes.Stloc, info);
 			il.Emit(OpCodes.Ldloc, info);
-			il.Emit(OpCodes.Call, Method.Of((MethodSurrogate a) => a.Process(default(MethodSurrogateInfo))));
-			// il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
+			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new Type[] { typeof(MethodSurrogateInfo) });
+			il.Emit(OpCodes.Call, interceptMethodInfo);
+
 			il.Emit(OpCodes.Ldloc, info);
 			var retValInfo = typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue));
 			il.Emit(OpCodes.Ldfld, retValInfo);
