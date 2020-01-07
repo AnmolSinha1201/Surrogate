@@ -9,7 +9,7 @@ namespace Surrogate
 {
 	public static partial class SurrogateBuilder
 	{
-		private static void CreateMethodProxy(this TypeBuilder Builder, MethodInfo OriginalMethod)
+		private static void CreateMethodProxy(this TypeBuilder Builder, MethodInfo OriginalMethod, Attribute AttributeInfo)
 		{
 			var parameterTypes = OriginalMethod.GetParameters().Select(i => i.ParameterType).ToArray();
 			MethodBuilder methodBuilder = Builder.DefineMethod(
