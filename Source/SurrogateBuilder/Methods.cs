@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -14,6 +15,7 @@ namespace Surrogate
 			if (itemAttribute == null)
 				return;
 
+			var parameterTypes = OriginalMethod.GetParameters().Select(i => i.ParameterType).ToArray();
 			MethodBuilder methodBuilder = Builder.DefineMethod(
 				OriginalMethod.Name,
 				MethodAttributes.Public
@@ -23,7 +25,7 @@ namespace Surrogate
 				| MethodAttributes.Final,
 				CallingConventions.HasThis,
 				OriginalMethod.ReturnType,
-				Type.EmptyTypes
+				parameterTypes
 			);
 
 			ILGenerator il = methodBuilder.GetILGenerator();
@@ -37,11 +39,12 @@ namespace Surrogate
 				| MethodAttributes.Final,
 				CallingConventions.HasThis,
 				OriginalMethod.ReturnType,
-				Type.EmptyTypes
+				parameterTypes
 			);
 
 			ILGenerator il2 = methodBuilder2.GetILGenerator();
 			il2.Emit(OpCodes.Ldarg_0);
+			il2.Emit(OpCodes.Ldarg_1);
 			il2.Emit(OpCodes.Call, OriginalMethod);
 			il2.Emit(OpCodes.Ret);
 
