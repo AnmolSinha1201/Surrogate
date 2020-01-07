@@ -1,4 +1,5 @@
 using System;
+using Surrogate.Base;
 
 namespace Surrogate
 {
@@ -8,7 +9,10 @@ namespace Surrogate
 		{
 			var builder = ItemType.CreateTypeBuilder();
 			var method = ItemType.GetMethod(nameof(Foo.ActualMethod));
-			builder.CreateMethodProxy(method);
+			
+			foreach (var attribute in Attribute.GetCustomAttributes(method))
+				if (typeof(IMethodSurrogate).IsAssignableFrom(attribute.GetType()))
+					builder.CreateMethodProxy(method, (Attribute)attribute);
 
 			return builder.CreateType();
 		}
