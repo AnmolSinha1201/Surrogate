@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
 using Surrogate.Interfaces;
+using Surrogate.Helpers;
 
 namespace Surrogate
 {
@@ -26,24 +27,7 @@ namespace Surrogate
 
 			ILGenerator il = methodBuilder.GetILGenerator();
 
-			MethodBuilder methodBuilder2 = Builder.DefineMethod(
-				"Hidden",
-				MethodAttributes.Public
-				| MethodAttributes.HideBySig
-				| MethodAttributes.NewSlot
-				| MethodAttributes.Virtual
-				| MethodAttributes.Final,
-				CallingConventions.HasThis,
-				OriginalMethod.ReturnType,
-				parameterTypes
-			);
-
-			ILGenerator il2 = methodBuilder2.GetILGenerator();
-			il2.Emit(OpCodes.Ldarg_0);
-			for (int i = 0; i < parameterTypes.Count(); i++)
-				il2.Emit(OpCodes.Ldarg, i + 1);
-			il2.Emit(OpCodes.Call, OriginalMethod);
-			il2.Emit(OpCodes.Ret);
+			var backingMethod = Builder.CreateBackingMethod(OriginalMethod);
 
 			// il.Emit(OpCodes.Ldarg_2);
 			// il.Emit(OpCodes.Ldind_I4);
@@ -58,7 +42,7 @@ namespace Surrogate
 			
 
 			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldtoken, methodBuilder2);
+			il.Emit(OpCodes.Ldtoken, backingMethod);
 			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
 
 			var args = il.DeclareLocal(typeof(object[]));
@@ -127,6 +111,32 @@ namespace Surrogate
 			Builder.DefineMethodOverride(methodBuilder, OriginalMethod);
 			
 		}
+
+		private static MethodBuilder CreateBackingMethod(this TypeBuilder Builder, MethodInfo OriginalMethod)
+		{
+			var parameters = OriginalMethod.GetParameters();
+
+			MethodBuilder methodBuilder = Builder.DefineMethod(
+				OriginalMethod.Name.ToBackingMethodName(),
+				OriginalMethod.Attributes,
+				CallingConventions.HasThis,
+				OriginalMethod.ReturnType,
+				parameters.Select(i => i.ParameterType).ToArray()
+			);
+			
+			// base.OriginalMethod(args);
+			ILGenerator il = methodBuilder.GetILGenerator();
+			il.Emit(OpCodes.Ldarg_0);
+			for (int i = 0; i < parameters.Count(); i++)
+				il.LoadArgument(i);
+			il.Emit(OpCodes.Call, OriginalMethod);
+			il.Emit(OpCodes.Ret);
+
+			return methodBuilder;
+		}
+
+		private static string ToBackingMethodName(this string OriginalMethodName)
+		=> $"<{OriginalMethodName}>k__BackingMethod";
 	}
 
 	static class Method {
