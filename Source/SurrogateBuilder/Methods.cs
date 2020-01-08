@@ -117,7 +117,7 @@ namespace Surrogate
 			var parameters = OriginalMethod.GetParameters();
 
 			MethodBuilder methodBuilder = Builder.DefineMethod(
-				$"<{OriginalMethodName}>k__BackingMethod",
+				$"<{OriginalMethod.Name}>k__BackingMethod",
 				OriginalMethod.Attributes,
 				CallingConventions.HasThis,
 				OriginalMethod.ReturnType,
