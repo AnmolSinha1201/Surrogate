@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using Surrogate.Base;
+using Surrogate.Interfaces;
 
 namespace Surrogate
 {

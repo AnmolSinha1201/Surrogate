@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq.Expressions;
-using Surrogate.Base;
 using Surrogate.Samples;
 
 namespace Surrogate
@@ -16,9 +15,10 @@ namespace Surrogate
 
             var retType = SurrogateBuilder.Build(typeof(Foo));
             var instance = (Foo)Activator.CreateInstance(retType);
+            // var instance = new Foo();
             // retType.GetMethod("NewM").Invoke(instance, null);
             var num = 456;
-            var retVal = instance.ActualMethod("foobar is real", out num);
+            var retVal = instance.ActualMethod("foobar is real", ref num);
             // instance.foo();
         }
 
@@ -31,7 +31,7 @@ namespace Surrogate
     public class Foo
     {
         [MethodSurrogate]
-        public virtual int ActualMethod(string InputText, out int InputNum)
+        public virtual int ActualMethod(string InputText, ref int InputNum)
         {
             Console.WriteLine("Actual Method");
             Console.WriteLine($"Received : {InputText}");

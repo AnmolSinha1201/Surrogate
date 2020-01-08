@@ -1,5 +1,5 @@
 using System;
-using Surrogate.Base;
+using Surrogate.Interfaces;
 
 namespace Surrogate
 {

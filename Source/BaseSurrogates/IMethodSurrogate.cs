@@ -1,7 +1,7 @@
 using System;
 using System.Reflection;
 
-namespace Surrogate.Base
+namespace Surrogate.Interfaces
 {
 	public interface IMethodSurrogate
 	{
