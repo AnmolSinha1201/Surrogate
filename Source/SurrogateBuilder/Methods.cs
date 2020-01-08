@@ -45,6 +45,10 @@ namespace Surrogate
 			il2.Emit(OpCodes.Call, OriginalMethod);
 			il2.Emit(OpCodes.Ret);
 
+			// il.Emit(OpCodes.Ldarg_2);
+			// il.Emit(OpCodes.Ldind_I4);
+			// var writeLine = typeof(System.Console).GetMethod(nameof(Console.WriteLine), new Type[] { typeof(int) });
+			// il.Emit(OpCodes.Call, writeLine);
 
 			il.Emit(OpCodes.Ldtoken, OriginalMethod);
 			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
@@ -65,11 +69,29 @@ namespace Surrogate
 			{
 				il.Emit(OpCodes.Ldloc, args);
 				il.Emit(OpCodes.Ldc_I4, i);
-				il.Emit(OpCodes.Ldarg, i + 1);
-				il.Emit(OpCodes.Box, parameterTypes[i]);
+				
+				if (parameterTypes[i].IsByRef || OriginalMethod.GetParameters()[i].IsOut)
+				{
+					il.Emit(OpCodes.Ldarg, i + 1);
+					il.Emit(OpCodes.Ldind_I4);
+				}
+				else
+					il.Emit(OpCodes.Ldarg, i + 1);
+				if (parameterTypes[i].IsByRef || OriginalMethod.GetParameters()[i].IsOut)
+				{
+					il.Emit(OpCodes.Box, parameterTypes[i].GetElementType());
+				}
+				else
+					il.Emit(OpCodes.Box, parameterTypes[i]);
 				il.Emit(OpCodes.Stelem_Ref);
 			}
 			il.Emit(OpCodes.Ldloc, args);
+
+			// il.Emit(OpCodes.Ldloc, args);
+			// il.Emit(OpCodes.Ldc_I4_1);
+			// il.Emit(OpCodes.Ldelem_Ref);
+			// il.Emit(OpCodes.Unbox_Any, typeof(int));
+			// il.Emit(OpCodes.Call, writeLine);
 
 			var info = il.DeclareLocal(typeof(MethodSurrogateInfo));
 			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object), typeof(MethodInfo), typeof(object[]) }));
@@ -77,6 +99,22 @@ namespace Surrogate
 			il.Emit(OpCodes.Ldloc, info);
 			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new Type[] { typeof(MethodSurrogateInfo) });
 			il.Emit(OpCodes.Call, interceptMethodInfo);
+
+
+			for (int i = 0; i < parameterTypes.Count(); i++)
+			{
+				if (parameterTypes[i].IsByRef || OriginalMethod.GetParameters()[i].IsOut)
+				{
+					
+					il.Emit(OpCodes.Ldarg, i + 1);
+					il.Emit(OpCodes.Ldloc, args);
+					il.Emit(OpCodes.Ldc_I4, i);
+					il.Emit(OpCodes.Ldelem_Ref);
+					il.Emit(OpCodes.Unbox_Any, parameterTypes[i].GetElementType());
+					il.Emit(OpCodes.Stind_I4);
+				}
+
+			}
 
 			il.Emit(OpCodes.Ldloc, info);
 			var retValInfo = typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue));
