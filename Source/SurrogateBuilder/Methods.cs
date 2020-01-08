@@ -117,7 +117,7 @@ namespace Surrogate
 			var parameters = OriginalMethod.GetParameters();
 
 			MethodBuilder methodBuilder = Builder.DefineMethod(
-				OriginalMethod.Name.ToBackingMethodName(),
+				$"<{OriginalMethodName}>k__BackingMethod",
 				OriginalMethod.Attributes,
 				CallingConventions.HasThis,
 				OriginalMethod.ReturnType,
@@ -135,8 +135,6 @@ namespace Surrogate
 			return methodBuilder;
 		}
 
-		private static string ToBackingMethodName(this string OriginalMethodName)
-		=> $"<{OriginalMethodName}>k__BackingMethod";
 	}
 
 	static class Method {
