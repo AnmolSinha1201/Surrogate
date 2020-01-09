@@ -15,57 +15,33 @@ namespace Surrogate
 			var parameterTypes = OriginalMethod.GetParameters().Select(i => i.ParameterType).ToArray();
 			MethodBuilder methodBuilder = Builder.DefineMethod(
 				OriginalMethod.Name,
-				MethodAttributes.Public
-				| MethodAttributes.HideBySig
-				| MethodAttributes.NewSlot
-				| MethodAttributes.Virtual
-				| MethodAttributes.Final,
+				OriginalMethod.Attributes,
 				CallingConventions.HasThis,
 				OriginalMethod.ReturnType,
 				parameterTypes
 			);
-
+			var backingMethod = Builder.CreateBackingMethod(OriginalMethod);
 			ILGenerator il = methodBuilder.GetILGenerator();
 
-			var backingMethod = Builder.CreateBackingMethod(OriginalMethod);
-
-			// il.Emit(OpCodes.Ldarg_2);
-			// il.Emit(OpCodes.Ldind_I4);
-			// var writeLine = typeof(System.Console).GetMethod(nameof(Console.WriteLine), new Type[] { typeof(int) });
-			// il.Emit(OpCodes.Call, writeLine);
 
 			il.LoadExternalAttribute(OriginalMethod, AttributeInfo.GetType());
-			
-
 			il.Emit(OpCodes.Ldarg_0);
 			il.LoadExternalMethodInfo(backingMethod);
-
 			var args = il.CreateArrayFromArgs(OriginalMethod);
 			il.Emit(OpCodes.Ldloc, args);
-
-			// il.Emit(OpCodes.Ldloc, args);
-			// il.Emit(OpCodes.Ldc_I4_1);
-			// il.Emit(OpCodes.Ldelem_Ref);
-			// il.Emit(OpCodes.Unbox_Any, typeof(int));
-			// il.Emit(OpCodes.Call, writeLine);
-
 			var info = il.CreateExternalType(typeof(MethodSurrogateInfo), new [] { typeof(object), typeof(MethodInfo), typeof(object[]) });
+			
 			il.Emit(OpCodes.Ldloc, info);
-			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) });
-			il.Emit(OpCodes.Call, interceptMethodInfo);
+			il.Emit(OpCodes.Call, AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
 
 			il.CopyArrayToArgs(OriginalMethod, args);
 
 			il.Emit(OpCodes.Ldloc, info);
-			var retValInfo = typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue));
-			il.Emit(OpCodes.Ldfld, retValInfo);
-			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
-
-
+			il.Emit(OpCodes.Ldfld, typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue)));
+			il.Unbox(OriginalMethod.ReturnType);
 			il.Emit(OpCodes.Ret);
 
 			Builder.DefineMethodOverride(methodBuilder, OriginalMethod);
-			
 		}
 
 		private static MethodBuilder CreateBackingMethod(this TypeBuilder Builder, MethodInfo OriginalMethod)
