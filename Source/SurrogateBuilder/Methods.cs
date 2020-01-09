@@ -34,7 +34,7 @@ namespace Surrogate
 			// var writeLine = typeof(System.Console).GetMethod(nameof(Console.WriteLine), new Type[] { typeof(int) });
 			// il.Emit(OpCodes.Call, writeLine);
 
-			il.LoadAttribute(OriginalMethod, AttributeInfo);
+			il.LoadAttribute(OriginalMethod, AttributeInfo.GetType());
 			
 
 			il.Emit(OpCodes.Ldarg_0);
@@ -131,11 +131,12 @@ namespace Surrogate
 			return methodBuilder;
 		}
 
-		private static void LoadAttribute(this ILGenerator IL, MethodInfo OriginalMethod, Attribute AttributeInfo)
+		private static void LoadAttribute(this ILGenerator IL, MethodInfo OriginalMethod, Type AttributeType)
 		{
+			// Attribute.GetCustomAttribute(OriginalMethod, AttributeInfo.GetType())
 			IL.Emit(OpCodes.Ldtoken, OriginalMethod);
 			IL.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
-			IL.Emit(OpCodes.Ldtoken, AttributeInfo.GetType());
+			IL.Emit(OpCodes.Ldtoken, AttributeType);
 			IL.Emit(OpCodes.Call, Method.Of(() => Type.GetTypeFromHandle(default(RuntimeTypeHandle))));
 			IL.Emit(OpCodes.Call, Method.Of(() => Attribute.GetCustomAttribute(default(MemberInfo), default(Type))));
 		}
