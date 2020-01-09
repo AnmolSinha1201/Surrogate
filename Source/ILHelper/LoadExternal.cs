@@ -25,5 +25,14 @@ namespace Surrogate.Helpers
 			IL.LoadExternalType(AttributeType);
 			IL.Emit(OpCodes.Call, typeof(Attribute).GetMethod(nameof(Attribute.GetCustomAttribute), new[] { typeof(MemberInfo), typeof(Type) }));
 		}
+
+		public static LocalBuilder CreateExternalType(this ILGenerator IL, Type ItemType, Type[] ConstructorTypeArray)
+		{
+			var local = IL.DeclareLocal(ItemType);
+			IL.Emit(OpCodes.Newobj, ItemType.GetConstructor(ConstructorTypeArray));
+			IL.Emit(OpCodes.Stloc, local);
+
+			return local;
+		}
 	}
 }

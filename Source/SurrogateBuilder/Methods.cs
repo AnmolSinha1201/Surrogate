@@ -49,9 +49,7 @@ namespace Surrogate
 			// il.Emit(OpCodes.Unbox_Any, typeof(int));
 			// il.Emit(OpCodes.Call, writeLine);
 
-			var info = il.DeclareLocal(typeof(MethodSurrogateInfo));
-			il.Emit(OpCodes.Newobj, typeof(MethodSurrogateInfo).GetConstructor(new Type[] { typeof(object), typeof(MethodInfo), typeof(object[]) }));
-			il.Emit(OpCodes.Stloc, info);
+			var info = il.CreateExternalType(typeof(MethodSurrogateInfo), new [] { typeof(object), typeof(MethodInfo), typeof(object[]) });
 			il.Emit(OpCodes.Ldloc, info);
 			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new Type[] { typeof(MethodSurrogateInfo) });
 			il.Emit(OpCodes.Call, interceptMethodInfo);
