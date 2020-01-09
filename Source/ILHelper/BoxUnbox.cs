@@ -8,7 +8,7 @@ namespace Surrogate.Helpers
 	{
         public static void Box(this ILGenerator IL, ParameterInfo Info)
         {
-			if (Info.ParameterType.IsByRef || Info.IsOut)
+			if (Info.IsByRefOrOut())
 				IL.Emit(OpCodes.Box, Info.ParameterType.GetElementType());
 			else
 				IL.Emit(OpCodes.Box, Info.ParameterType);
@@ -16,7 +16,7 @@ namespace Surrogate.Helpers
 
 		public static void Unbox(this ILGenerator IL, ParameterInfo Info)
         {
-			if (Info.ParameterType.IsByRef || Info.IsOut)
+			if (Info.IsByRefOrOut())
 				IL.Emit(OpCodes.Unbox_Any, Info.ParameterType.GetElementType());
 			else
 				IL.Emit(OpCodes.Box, Info.ParameterType);
