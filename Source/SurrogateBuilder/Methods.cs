@@ -51,7 +51,7 @@ namespace Surrogate
 
 			var info = il.CreateExternalType(typeof(MethodSurrogateInfo), new [] { typeof(object), typeof(MethodInfo), typeof(object[]) });
 			il.Emit(OpCodes.Ldloc, info);
-			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new Type[] { typeof(MethodSurrogateInfo) });
+			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) });
 			il.Emit(OpCodes.Call, interceptMethodInfo);
 
 
@@ -133,9 +133,4 @@ namespace Surrogate
 		}
 	}
 
-	static class Method {
-    public static MethodInfo Of<TResult>(Expression<Func<TResult>> f) => ((MethodCallExpression) f.Body).Method;
-    public static MethodInfo Of<T>(Expression<Action<T>> f) => ((MethodCallExpression) f.Body).Method;
-    public static MethodInfo Of(Expression<Action> f) => ((MethodCallExpression) f.Body).Method;
-}
 }
