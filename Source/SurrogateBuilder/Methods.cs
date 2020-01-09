@@ -38,7 +38,7 @@ namespace Surrogate
 
 			il.Emit(OpCodes.Ldloc, info);
 			il.Emit(OpCodes.Ldfld, typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue)));
-			il.Unbox(OriginalMethod.ReturnType);
+			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
 			il.Emit(OpCodes.Ret);
 
 			Builder.DefineMethodOverride(methodBuilder, OriginalMethod);
@@ -87,7 +87,7 @@ namespace Surrogate
 				if (parameters[i].IsByRefOrOut())
 					IL.LoadFromAddress(parameters[i].ParameterType);
 				
-				IL.Box(parameters[i].ActualParameterType());
+				IL.Emit(OpCodes.Box, parameters[i].ActualParameterType());
 				IL.Emit(OpCodes.Stelem_Ref);
 			}
 
@@ -109,7 +109,7 @@ namespace Surrogate
 				IL.Emit(OpCodes.Ldloc, LocalArray);
 				IL.LoadConstantInt32(i);
 				IL.Emit(OpCodes.Ldelem_Ref);
-				IL.Unbox(parameters[i].ActualParameterType());
+				IL.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
 				IL.StoreIntoAddress(parameters[i].ParameterType);
 				// IL.Emit(OpCodes.Stind_I4);
 			}
