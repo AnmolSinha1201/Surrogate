@@ -38,8 +38,7 @@ namespace Surrogate
 			
 
 			il.Emit(OpCodes.Ldarg_0);
-			il.Emit(OpCodes.Ldtoken, backingMethod);
-			il.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
+			il.LoadExternalMethodInfo(backingMethod);
 
 			var args = il.DeclareLocal(typeof(object[]));
 			il.Emit(OpCodes.Ldc_I4, parameterTypes.Count());
