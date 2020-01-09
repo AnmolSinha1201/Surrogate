@@ -18,7 +18,7 @@ namespace Surrogate.Helpers
 			IL.Emit(OpCodes.Call, typeof(MethodBase).GetMethod(nameof(MethodBase.GetMethodFromHandle), new[] { typeof(RuntimeMethodHandle) }));
 		}
 
-		private static void LoadExternalAttribute(this ILGenerator IL, MethodInfo OriginalMethod, Type AttributeType)
+		public static void LoadExternalAttribute(this ILGenerator IL, MethodInfo OriginalMethod, Type AttributeType)
 		{
 			// Attribute.GetCustomAttribute(OriginalMethod, AttributeInfo.GetType())
 			IL.LoadExternalMethodInfo(OriginalMethod);
