@@ -54,8 +54,6 @@ namespace Surrogate
 			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) });
 			il.Emit(OpCodes.Call, interceptMethodInfo);
 
-
-			for (int i = 0; i < parameterTypes.Count(); i++)
 			{
 				if (parameterTypes[i].IsByRef || OriginalMethod.GetParameters()[i].IsOut)
 				{
@@ -133,4 +131,9 @@ namespace Surrogate
 		}
 	}
 
+
+			// Args[i] = Value returned from Surrogate
+			for (int i = 0; i < parameters.Count(); i++)
+			{
+				if (!parameters[i].IsByRefOrOut())
 }
