@@ -134,11 +134,9 @@ namespace Surrogate
 		private static void LoadAttribute(this ILGenerator IL, MethodInfo OriginalMethod, Type AttributeType)
 		{
 			// Attribute.GetCustomAttribute(OriginalMethod, AttributeInfo.GetType())
-			IL.Emit(OpCodes.Ldtoken, OriginalMethod);
-			IL.Emit(OpCodes.Call, Method.Of(() => MethodBase.GetMethodFromHandle(default(RuntimeMethodHandle))));
-			IL.Emit(OpCodes.Ldtoken, AttributeType);
-			IL.Emit(OpCodes.Call, Method.Of(() => Type.GetTypeFromHandle(default(RuntimeTypeHandle))));
-			IL.Emit(OpCodes.Call, Method.Of(() => Attribute.GetCustomAttribute(default(MemberInfo), default(Type))));
+			IL.LoadExternalMethodInfo(OriginalMethod);
+			IL.LoadExternalType(AttributeType);
+			IL.Emit(OpCodes.Call, typeof(Attribute).GetMethod(nameof(Attribute.GetCustomAttribute), new[] { typeof(MemberInfo), typeof(Type) }));
 		}
 	}
 
