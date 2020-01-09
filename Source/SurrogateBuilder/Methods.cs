@@ -54,19 +54,7 @@ namespace Surrogate
 			var interceptMethodInfo = AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) });
 			il.Emit(OpCodes.Call, interceptMethodInfo);
 
-			{
-				if (parameterTypes[i].IsByRef || OriginalMethod.GetParameters()[i].IsOut)
-				{
-					
-					il.Emit(OpCodes.Ldarg, i + 1);
-					il.Emit(OpCodes.Ldloc, args);
-					il.Emit(OpCodes.Ldc_I4, i);
-					il.Emit(OpCodes.Ldelem_Ref);
-					il.Emit(OpCodes.Unbox_Any, parameterTypes[i].GetElementType());
-					il.Emit(OpCodes.Stind_I4);
-				}
-
-			}
+			il.CopyArrayToArgs(OriginalMethod, args);
 
 			il.Emit(OpCodes.Ldloc, info);
 			var retValInfo = typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue));
@@ -129,11 +117,26 @@ namespace Surrogate
 
 			return argsArray;
 		}
-	}
 
+		// Array is object[]
+		private static void CopyArrayToArgs(this ILGenerator IL, MethodInfo Method, LocalBuilder LocalArray)
+		{
+			var parameters = Method.GetParameters();
 
 			// Args[i] = Value returned from Surrogate
 			for (int i = 0; i < parameters.Count(); i++)
 			{
 				if (!parameters[i].IsByRefOrOut())
+					continue;
+			
+				IL.LoadArgument(i);
+				IL.Emit(OpCodes.Ldloc, LocalArray);
+				IL.LoadConstantInt32(i);
+				IL.Emit(OpCodes.Ldelem_Ref);
+				IL.Unbox(parameters[i]);
+				IL.StoreIntoAddress(parameters[i].ParameterType);
+				// IL.Emit(OpCodes.Stind_I4);
+			}
+		}
+	}
 }
