@@ -87,7 +87,7 @@ namespace Surrogate
 				if (parameters[i].IsByRefOrOut())
 					IL.LoadFromAddress(parameters[i].ParameterType);
 				
-				IL.Box(parameters[i]);
+				IL.Box(parameters[i].ActualParameterType());
 				IL.Emit(OpCodes.Stelem_Ref);
 			}
 
@@ -109,7 +109,7 @@ namespace Surrogate
 				IL.Emit(OpCodes.Ldloc, LocalArray);
 				IL.LoadConstantInt32(i);
 				IL.Emit(OpCodes.Ldelem_Ref);
-				IL.Unbox(parameters[i]);
+				IL.Unbox(parameters[i].ActualParameterType());
 				IL.StoreIntoAddress(parameters[i].ParameterType);
 				// IL.Emit(OpCodes.Stind_I4);
 			}
