@@ -40,30 +40,7 @@ namespace Surrogate
 			il.Emit(OpCodes.Ldarg_0);
 			il.LoadExternalMethodInfo(backingMethod);
 
-			var args = il.DeclareLocal(typeof(object[]));
-			il.Emit(OpCodes.Ldc_I4, parameterTypes.Count());
-			il.Emit(OpCodes.Newarr, typeof(object));
-			il.Emit(OpCodes.Stloc, args);
-			for (int i = 0; i < parameterTypes.Count(); i++)
-			{
-				il.Emit(OpCodes.Ldloc, args);
-				il.Emit(OpCodes.Ldc_I4, i);
-				
-				if (parameterTypes[i].IsByRef || OriginalMethod.GetParameters()[i].IsOut)
-				{
-					il.Emit(OpCodes.Ldarg, i + 1);
-					il.Emit(OpCodes.Ldind_I4);
-				}
-				else
-					il.Emit(OpCodes.Ldarg, i + 1);
-				if (parameterTypes[i].IsByRef || OriginalMethod.GetParameters()[i].IsOut)
-				{
-					il.Emit(OpCodes.Box, parameterTypes[i].GetElementType());
-				}
-				else
-					il.Emit(OpCodes.Box, parameterTypes[i]);
-				il.Emit(OpCodes.Stelem_Ref);
-			}
+			var args = il.CreateArrayFromArgs(OriginalMethod);
 			il.Emit(OpCodes.Ldloc, args);
 
 			// il.Emit(OpCodes.Ldloc, args);
@@ -128,6 +105,33 @@ namespace Surrogate
 			il.Emit(OpCodes.Ret);
 
 			return methodBuilder;
+		}
+
+		private static LocalBuilder CreateArrayFromArgs(this ILGenerator IL, MethodInfo Method)
+		{
+			var parameters = Method.GetParameters();
+
+			// var argsArray = new object[Size]
+			var argsArray = IL.DeclareLocal(typeof(object[]));
+			IL.LoadConstantInt32(parameters.Count());
+			IL.Emit(OpCodes.Newarr, typeof(object));
+			IL.Emit(OpCodes.Stloc, argsArray);
+
+			// argsArray[i] = Args[i]
+			for (int i = 0; i < parameters.Count(); i++)
+			{
+				IL.Emit(OpCodes.Ldloc, argsArray);
+				IL.LoadConstantInt32(i);
+				
+				IL.LoadArgument(i);
+				if (parameters[i].IsByRefOrOut())
+					IL.LoadFromAddress(parameters[i].ParameterType);
+				
+				IL.Box(parameters[i]);
+				IL.Emit(OpCodes.Stelem_Ref);
+			}
+
+			return argsArray;
 		}
 	}
 
