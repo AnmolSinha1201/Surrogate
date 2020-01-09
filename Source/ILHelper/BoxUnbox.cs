@@ -17,9 +17,12 @@ namespace Surrogate.Helpers
 		public static void Unbox(this ILGenerator IL, ParameterInfo Info)
         {
 			if (Info.IsByRefOrOut())
-				IL.Emit(OpCodes.Unbox_Any, Info.ParameterType.GetElementType());
+				IL.Unbox(Info.ParameterType.GetElementType());
 			else
-				IL.Emit(OpCodes.Box, Info.ParameterType);
+				IL.Unbox(Info.ParameterType);
         }
+
+		public static void Unbox(this ILGenerator IL, Type ItemType)
+		=> IL.Emit(OpCodes.Unbox_Any, ItemType);
 	}
 }
