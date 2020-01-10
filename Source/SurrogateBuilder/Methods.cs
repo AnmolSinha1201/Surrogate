@@ -24,6 +24,7 @@ namespace Surrogate
 			ILGenerator il = methodBuilder.GetILGenerator();
 			var args = il.CreateParameterProxy(OriginalMethod);
 			
+			// Attribute.InterceptMethod(MethodSurrogateInfo)
 			il.LoadExternalAttribute(OriginalMethod, AttributeInfo.GetType());			
 			var info = il.CreateMethodSurrogateInfo(backingMethod, args);
 			il.Emit(OpCodes.Ldloc, info);
