@@ -25,17 +25,12 @@ namespace Surrogate
 			var args = il.CreateParameterProxy(OriginalMethod);
 			
 			il.LoadExternalAttribute(OriginalMethod, AttributeInfo.GetType());			
-			var info = il.CreateMethodProxyInfo(backingMethod, args);
+			var info = il.CreateMethodSurrogateInfo(backingMethod, args);
 			il.Emit(OpCodes.Ldloc, info);
 			il.Emit(OpCodes.Call, AttributeInfo.GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
 
 			il.CopyArrayToArgs(OriginalMethod, args);
-
-			// Pass the return value of interceptor back to original method
-			il.Emit(OpCodes.Ldloc, info);
-			il.Emit(OpCodes.Ldfld, typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue)));
-			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
-			il.Emit(OpCodes.Ret);
+			il.ReturnMethodSurrogateInfoValue(info, OriginalMethod.ReturnType);
 
 			Builder.DefineMethodOverride(methodBuilder, OriginalMethod);
 		}
@@ -63,7 +58,7 @@ namespace Surrogate
 			return methodBuilder;
 		}
 
-		private static LocalBuilder CreateMethodProxyInfo(this ILGenerator IL, MethodInfo BackingMethod, LocalBuilder ArgumentsArrayVariable)
+		private static LocalBuilder CreateMethodSurrogateInfo(this ILGenerator IL, MethodInfo BackingMethod, LocalBuilder ArgumentsArrayVariable)
 		{
 			IL.Emit(OpCodes.Ldarg_0);
 			IL.LoadExternalMethodInfo(BackingMethod);
@@ -92,6 +87,14 @@ namespace Surrogate
 				IL.StoreIntoAddress(parameters[i].ParameterType);
 				// IL.Emit(OpCodes.Stind_I4);
 			}
+		}
+
+		private static void ReturnMethodSurrogateInfoValue(this ILGenerator IL, LocalBuilder SurrogateInfoVariable, Type ReturnType)
+		{
+			IL.Emit(OpCodes.Ldloc, SurrogateInfoVariable);
+			IL.Emit(OpCodes.Ldfld, typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue)));
+			IL.Emit(OpCodes.Unbox_Any, ReturnType);
+			IL.Emit(OpCodes.Ret);
 		}
 	}
 }
