@@ -67,26 +67,5 @@ namespace Surrogate
 
 			return methodBuilder;
 		}
-
-		// Array is object[]
-		private static void CopyArrayToArgs(this ILGenerator IL, MethodInfo Method, LocalBuilder LocalArray)
-		{
-			var parameters = Method.GetParameters();
-
-			// Args[i] = Value returned from Surrogate
-			for (int i = 0; i < parameters.Count(); i++)
-			{
-				if (!parameters[i].IsByRefOrOut())
-					continue;
-			
-				IL.LoadArgument(i);
-				IL.Emit(OpCodes.Ldloc, LocalArray);
-				IL.LoadConstantInt32(i);
-				IL.Emit(OpCodes.Ldelem_Ref);
-				IL.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
-				IL.StoreIntoAddress(parameters[i].ParameterType);
-				// IL.Emit(OpCodes.Stind_I4);
-			}
-		}
 	}
 }
