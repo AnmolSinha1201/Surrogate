@@ -27,7 +27,8 @@ namespace Surrogate
 			il.LoadExternalAttribute(OriginalMethod, AttributeInfo.GetType());
 			il.Emit(OpCodes.Ldarg_0);
 			il.LoadExternalMethodInfo(backingMethod);
-			var args = il.CreateArrayFromArgs(OriginalMethod);
+			var args = methodBuilder.CreateParameterProxy(OriginalMethod);
+			// var args = il.CreateArrayFromArgs(OriginalMethod);
 			il.Emit(OpCodes.Ldloc, args);
 			var info = il.CreateExternalType(typeof(MethodSurrogateInfo), new [] { typeof(object), typeof(MethodInfo), typeof(object[]) });
 			

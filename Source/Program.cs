@@ -18,7 +18,7 @@ namespace Surrogate
             // var instance = new Foo();
             // retType.GetMethod("NewM").Invoke(instance, null);
             var num = 456;
-            var retVal = instance.ActualMethod("foobar is real", ref num);
+            var retVal = instance.ActualMethod("foobar is real", num);
             // instance.foo();
         }
 
@@ -31,7 +31,7 @@ namespace Surrogate
     public class Foo
     {
         [MethodSurrogate]
-        public virtual int ActualMethod(string InputText, ref int InputNum)
+        public virtual int ActualMethod([ParameterSurrogate] string InputText, int InputNum)
         {
             Console.WriteLine("Actual Method");
             Console.WriteLine($"Received : {InputText}");
