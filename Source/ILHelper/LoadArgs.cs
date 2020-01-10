@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using System.Reflection.Emit;
 
 namespace Surrogate.Helpers
@@ -20,6 +22,16 @@ namespace Surrogate.Helpers
 				IL.Emit(LoadArgsOpCodes[Index]);
 			else
 				IL.Emit(OpCodes.Ldarg, Index + 1);
+		}
+
+		/// <summary>
+		/// <param name="Index">Base 0 Index. Indexes are automatically converted to Base 1 since they are the original index types.</para>
+		/// </summary>
+		public static void LoadArgument(this ILGenerator IL, int Index, ParameterInfo Info)
+		{
+			IL.LoadArgument(Index);
+			if (Info.IsByRefOrOut())
+				IL.LoadFromAddress(Info.ParameterType);
 		}
 	}
 }
