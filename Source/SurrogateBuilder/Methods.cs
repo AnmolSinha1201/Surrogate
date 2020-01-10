@@ -68,33 +68,6 @@ namespace Surrogate
 			return methodBuilder;
 		}
 
-		private static LocalBuilder CreateArrayFromArgs(this ILGenerator IL, MethodInfo Method)
-		{
-			var parameters = Method.GetParameters();
-
-			// var argsArray = new object[Size]
-			var argsArray = IL.DeclareLocal(typeof(object[]));
-			IL.LoadConstantInt32(parameters.Count());
-			IL.Emit(OpCodes.Newarr, typeof(object));
-			IL.Emit(OpCodes.Stloc, argsArray);
-
-			// argsArray[i] = Args[i]
-			for (int i = 0; i < parameters.Count(); i++)
-			{
-				IL.Emit(OpCodes.Ldloc, argsArray);
-				IL.LoadConstantInt32(i);
-				
-				IL.LoadArgument(i);
-				if (parameters[i].IsByRefOrOut())
-					IL.LoadFromAddress(parameters[i].ParameterType);
-				
-				IL.Emit(OpCodes.Box, parameters[i].ActualParameterType());
-				IL.Emit(OpCodes.Stelem_Ref);
-			}
-
-			return argsArray;
-		}
-
 		// Array is object[]
 		private static void CopyArrayToArgs(this ILGenerator IL, MethodInfo Method, LocalBuilder LocalArray)
 		{
