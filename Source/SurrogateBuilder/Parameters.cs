@@ -26,13 +26,13 @@ namespace Surrogate
 		{
 			var il = Builder.GetILGenerator();
 			var parameters = OriginalMethod.GetParameters();
-
 			var argsArray = il.CreateArray(typeof(object), parameters.Count());
 			var ILParameters = il.CreateParametersArray(OriginalMethod);
 
 			// argsArray[i] = Args[i]
 			for (int i = 0; i < parameters.Count(); i++)
 			{
+				// argsArray[i]
 				il.Emit(OpCodes.Ldloc, argsArray);
 				il.LoadConstantInt32(i);
 				
@@ -46,17 +46,10 @@ namespace Surrogate
 						if (!typeof(IParameterSurrogate).IsAssignableFrom(attributes[o].GetType()))
 							continue;
 						
+						// Attribute.InterceptParameter(new ParameterSurrogateInfo(ParameterInfo, ParameterValue))
 						il.LoadValueAtArrayIndex(localAttributes, o);
-						il.LoadValueAtArrayIndex(ILParameters, i);
-
-						il.LoadArgument(i);
-						if (parameters[i].IsByRefOrOut())
-							il.LoadFromAddress(parameters[i].ParameterType);
-						il.Emit(OpCodes.Box, parameters[i].ActualParameterType());
-						
-						var info = il.CreateExternalType(typeof(ParameterSurrogateInfo), new[] { typeof(ParameterInfo), typeof(object) });
+						var info = il.CreateParameterSurrogateInfo(parameters[i], ILParameters, i);
 						il.Emit(OpCodes.Ldloc, info);
-
 						il.Emit(OpCodes.Call, attributes[o].GetType().GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
 						
 						il.Emit(OpCodes.Ldloc, info);
@@ -65,9 +58,7 @@ namespace Surrogate
 				}
 				else
 				{
-					il.LoadArgument(i);
-					if (parameters[i].IsByRefOrOut())
-						il.LoadFromAddress(parameters[i].ParameterType);
+					il.LoadArgument(i, parameters[i]);
 				}
 				
 				il.Emit(OpCodes.Box, parameters[i].ActualParameterType());
@@ -99,25 +90,15 @@ namespace Surrogate
 			return localAttributes;
 		}
 
-		/// <summary>
-		/// <param name="ArrayType">Must be base type like typeof(object) instead of typeof(object[])</para>
-		/// </summary>
-		private static LocalBuilder CreateArray(this ILGenerator IL, Type ArrayType, int ArraySize)
+		private static LocalBuilder CreateParameterSurrogateInfo(this ILGenerator IL, ParameterInfo PInfo, LocalBuilder ILParameterInfo, int Index)
 		{
-			var array = IL.DeclareLocal(ArrayType.MakeArrayType());
+			IL.LoadValueAtArrayIndex(ILParameterInfo, Index);
 
-			IL.LoadConstantInt32(ArraySize);
-			IL.Emit(OpCodes.Newarr, ArrayType);
-			IL.Emit(OpCodes.Stloc, array);
+			IL.LoadArgument(Index, PInfo);
+			IL.Emit(OpCodes.Box, PInfo.ActualParameterType());
 
-			return array;
-		}
-
-		private static void LoadValueAtArrayIndex(this ILGenerator IL, LocalBuilder LocalArray, int Index)
-		{
-			IL.Emit(OpCodes.Ldloc, LocalArray);
-			IL.LoadConstantInt32(Index);
-			IL.Emit(OpCodes.Ldelem_Ref);
+			var info = IL.CreateExternalType(typeof(ParameterSurrogateInfo), new[] { typeof(ParameterInfo), typeof(object) });
+			return info;
 		}
 	}
 }
