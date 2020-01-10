@@ -22,23 +22,22 @@ namespace Surrogate
 			return false;
 		}
 
-		private static LocalBuilder CreateParameterProxy(this MethodBuilder Builder, MethodInfo OriginalMethod)
+		private static LocalBuilder CreateParameterProxy(this ILGenerator IL, MethodInfo OriginalMethod)
 		{
-			var il = Builder.GetILGenerator();
 			var parameters = OriginalMethod.GetParameters();
-			var argsArray = il.CreateArray(typeof(object), parameters.Count());
-			var ILParameters = il.CreateParametersArray(OriginalMethod);
+			var argsArray = IL.CreateArray(typeof(object), parameters.Count());
+			var ILParameters = IL.CreateParametersArray(OriginalMethod);
 
 			// argsArray[i] = Args[i]
 			for (int i = 0; i < parameters.Count(); i++)
 			{
 				// argsArray[i]
-				il.Emit(OpCodes.Ldloc, argsArray);
-				il.LoadConstantInt32(i);
+				IL.Emit(OpCodes.Ldloc, argsArray);
+				IL.LoadConstantInt32(i);
 				
 				if (parameters[i].EligibleParameterProxy())
 				{
-					var localAttributes = il.LoadAttributesFromParameter(ILParameters, i);
+					var localAttributes = IL.LoadAttributesFromParameter(ILParameters, i);
 					var attributes = Attribute.GetCustomAttributes(parameters[i]);
 
 					for (int o = 0; o < attributes.Count(); o++)
@@ -47,22 +46,22 @@ namespace Surrogate
 							continue;
 						
 						// Attribute.InterceptParameter(new ParameterSurrogateInfo(ParameterInfo, ParameterValue))
-						il.LoadValueAtArrayIndex(localAttributes, o);
-						var info = il.CreateParameterSurrogateInfo(parameters[i], ILParameters, i);
-						il.Emit(OpCodes.Ldloc, info);
-						il.Emit(OpCodes.Call, attributes[o].GetType().GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
+						IL.LoadValueAtArrayIndex(localAttributes, o);
+						var info = IL.CreateParameterSurrogateInfo(parameters[i], ILParameters, i);
+						IL.Emit(OpCodes.Ldloc, info);
+						IL.Emit(OpCodes.Call, attributes[o].GetType().GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
 						
-						il.Emit(OpCodes.Ldloc, info);
-						il.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.ParamValue)));
+						IL.Emit(OpCodes.Ldloc, info);
+						IL.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.ParamValue)));
 					}
 				}
 				else
 				{
-					il.LoadArgument(i, parameters[i]);
+					IL.LoadArgument(i, parameters[i]);
 				}
 				
-				il.Emit(OpCodes.Box, parameters[i].ActualParameterType());
-				il.Emit(OpCodes.Stelem_Ref);
+				IL.Emit(OpCodes.Box, parameters[i].ActualParameterType());
+				IL.Emit(OpCodes.Stelem_Ref);
 			}
 
 			return argsArray;
@@ -99,27 +98,6 @@ namespace Surrogate
 
 			var info = IL.CreateExternalType(typeof(ParameterSurrogateInfo), new[] { typeof(ParameterInfo), typeof(object) });
 			return info;
-		}
-
-		// Array is object[]
-		private static void CopyArrayToArgs(this ILGenerator IL, MethodInfo Method, LocalBuilder LocalArray)
-		{
-			var parameters = Method.GetParameters();
-
-			// Args[i] = Value returned from Surrogate
-			for (int i = 0; i < parameters.Count(); i++)
-			{
-				if (!parameters[i].IsByRefOrOut())
-					continue;
-			
-				IL.LoadArgument(i);
-				IL.Emit(OpCodes.Ldloc, LocalArray);
-				IL.LoadConstantInt32(i);
-				IL.Emit(OpCodes.Ldelem_Ref);
-				IL.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
-				IL.StoreIntoAddress(parameters[i].ParameterType);
-				// IL.Emit(OpCodes.Stind_I4);
-			}
 		}
 	}
 }
