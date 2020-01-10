@@ -33,21 +33,6 @@ namespace Surrogate
 			il.Emit(OpCodes.Newarr, typeof(object));
 			il.Emit(OpCodes.Stloc, argsArray);
 
-			// argsArray[i] = Args[i]
-			for (int i = 0; i < parameters.Count(); i++)
-			{
-				il.Emit(OpCodes.Ldloc, argsArray);
-				il.LoadConstantInt32(i);
-				
-				il.LoadArgument(i);
-				if (parameters[i].IsByRefOrOut())
-					il.LoadFromAddress(parameters[i].ParameterType);
-				
-				il.Emit(OpCodes.Box, parameters[i].ActualParameterType());
-				il.Emit(OpCodes.Stelem_Ref);
-			}
-
-
 			var ILparameters = il.DeclareLocal(typeof(ParameterInfo[]));
 			foreach (var parameter in parameters)
 			{
@@ -60,8 +45,12 @@ namespace Surrogate
 				}
 			}
 
+			// argsArray[i] = Args[i]
 			for (int i = 0; i < parameters.Count(); i++)
 			{
+				il.Emit(OpCodes.Ldloc, argsArray);
+				il.LoadConstantInt32(i);
+				
 				if (parameters[i].EligibleParameterProxy())
 				{
 					il.Emit(OpCodes.Ldloc, ILparameters);
@@ -96,16 +85,22 @@ namespace Surrogate
 
 						il.Emit(OpCodes.Call, attributes[o].GetType().GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
 						
-						// il.Emit(OpCodes.Ldloc, info);
-						// il.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.ParamValue)));
-						// il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
-
+						il.Emit(OpCodes.Ldloc, info);
+						il.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.ParamValue)));
 					}
 				}
+				else
+				{
+					il.LoadArgument(i);
+					if (parameters[i].IsByRefOrOut())
+						il.LoadFromAddress(parameters[i].ParameterType);
+				}
+				
+				il.Emit(OpCodes.Box, parameters[i].ActualParameterType());
+				il.Emit(OpCodes.Stelem_Ref);
 			}
 
 			return argsArray;
-
 		}
 	}
 }
