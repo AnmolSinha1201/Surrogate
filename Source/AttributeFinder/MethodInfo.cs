@@ -9,13 +9,12 @@ namespace Surrogate.Helpers
 {
 	public static partial class AttributeFinder
 	{
-		public static Attribute[] FindAttribute(MethodInfo Method, Type AttributeType)
+		public static Attribute[] LoadAttributes(MethodInfo Method, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
-			
-
 			var attributes = AttributeType == typeof(IReturnSurrogate) ?
 				Method.ReturnTypeCustomAttributes.GetCustomAttributes(true).Cast<Attribute>() : Method.GetCustomAttributes();
+			
 			foreach (var attribute in attributes)
 			{
 				if (AttributeType.IsAssignableFrom(attribute.GetType()))
@@ -25,11 +24,17 @@ namespace Surrogate.Helpers
 			return retVal.ToArray();
 		}
 
-		public static void ILFindAttribute(this ILGenerator IL, MethodInfo Method, Type AttributeType)
+		public static ILArray ILLoadAttributes<TAttribute>(this ILGenerator IL, MethodInfo Method)
 		{
 			IL.LoadExternalMethodInfo(Method);
-			IL.LoadExternalType(AttributeType);
-			IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.FindAttribute), new[] { typeof(MethodInfo), typeof(Type) }));
+			IL.LoadExternalType(typeof(TAttribute));
+
+			var array = IL.CreateArray<TAttribute>(() =>
+			{
+				IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.LoadAttributes), new[] { typeof(MethodInfo), typeof(Type) }));
+			});
+
+			return array;
 		}
 	}
 }
