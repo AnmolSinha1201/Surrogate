@@ -8,6 +8,7 @@ namespace Surrogate
     {
         static void Main(string[] args)
         {
+            // SurrogateBuilder.FindAttributes(123456);
             // var asd = Activator.CreateInstance(typeof(MethodSurrogateInfo), new object[] { 12345 });
             var member = typeof(Foo).GetMethod(nameof(Foo.ActualMethod));
             Expression<Func<Attribute>> f = () => Attribute.GetCustomAttribute(member, typeof(Foo));
@@ -18,7 +19,8 @@ namespace Surrogate
             // var instance = new Foo();
             // retType.GetMethod("NewM").Invoke(instance, null);
             var num = 456;
-            var retVal = instance.ActualMethod("foobar is real", num);
+            var strings = "Foobar is real";
+            var retVal = instance.ActualMethod(ref strings, ref num);
             // instance.foo();
         }
 
@@ -30,8 +32,9 @@ namespace Surrogate
 
     public class Foo
     {
+        [return: ReturnSurrogate]
         [MethodSurrogate]
-        public virtual int ActualMethod([ParameterSurrogate] string InputText, int InputNum)
+        public virtual int ActualMethod([ParameterSurrogate] ref string InputText, ref int InputNum)
         {
             Console.WriteLine("Actual Method");
             Console.WriteLine($"Received : {InputText}");
