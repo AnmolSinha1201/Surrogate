@@ -10,43 +10,22 @@ namespace Surrogate
 {
 	public static partial class SurrogateBuilder
 	{
-		private static LocalBuilder CreateMethodProxy(this TypeBuilder Builder, MethodInfo OriginalMethod)
+		private static LocalBuilder CreateMethodInterceptor(this ILGenerator IL, MethodInfo Method, MethodBuilder BackingMethod, LocalBuilder Arguments)
 		{
-			var parameterTypes = OriginalMethod.GetParameters().Select(i => i.ParameterType).ToArray();
-			MethodBuilder methodBuilder = Builder.DefineMethod(
-				OriginalMethod.Name,
-				OriginalMethod.Attributes,
-				CallingConventions.HasThis,
-				OriginalMethod.ReturnType,
-				parameterTypes
-			);
-			var backingMethod = Builder.CreateBackingMethod(OriginalMethod);
-			ILGenerator il = methodBuilder.GetILGenerator();
-			var args = il.CreateParameterProxy(OriginalMethod);
-			
-			// Attribute.InterceptMethod(MethodSurrogateInfo)
-			var attributes = AttributeFinder.FindAttributes(OriginalMethod, typeof(IMethodSurrogate));
-			var ILAttributes = il.ILLoadAttributes<IMethodSurrogate>(OriginalMethod);
-			var returnValue = il.DeclareLocal(typeof(object));
+			var attributes = AttributeFinder.FindAttributes(Method, typeof(IMethodSurrogate));
+			var ILAttributes = IL.ILLoadAttributes<IMethodSurrogate>(Method);
+			var returnValue = IL.DeclareLocal(typeof(object));
 
 			for (int i = 0; i < attributes.Count(); i++)
 			{
 				ILAttributes.LoadElementAt(i);		
-				var info = il.CreateMethodSurrogateInfo(backingMethod, args, returnValue);
-				il.Emit(OpCodes.Ldloc, info);
-				il.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
+				var info = IL.CreateMethodSurrogateInfo(BackingMethod, Arguments, returnValue);
+				IL.Emit(OpCodes.Ldloc, info);
+				IL.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
 
-				il.CopyArrayToArgs(OriginalMethod, args);
-				il.ReturnMethodSurrogateInfoValue(info, OriginalMethod.ReturnType, returnValue);
+				IL.CopyArrayToArgs(Method, Arguments);
+				IL.ReturnMethodSurrogateInfoValue(info, Method.ReturnType, returnValue);
 			}
-
-			il.CreateReturnProxy(OriginalMethod, returnValue);
-
-			il.Emit(OpCodes.Ldloc, returnValue);	
-			il.Emit(OpCodes.Unbox_Any, OriginalMethod.ReturnType);
-			il.Emit(OpCodes.Ret);
-
-			Builder.DefineMethodOverride(methodBuilder, OriginalMethod);
 
 			return returnValue;
 		}
@@ -106,13 +85,12 @@ namespace Surrogate
 			}
 		}
 
-		private static LocalBuilder ReturnMethodSurrogateInfoValue(this ILGenerator IL, LocalBuilder SurrogateInfoVariable, Type ReturnType, LocalBuilder ReturnValue)
+		private static void ReturnMethodSurrogateInfoValue(this ILGenerator IL, LocalBuilder SurrogateInfoVariable, Type ReturnType, LocalBuilder ReturnValue)
 		{
 			IL.Emit(OpCodes.Ldloc, SurrogateInfoVariable);
 			IL.Emit(OpCodes.Ldfld, typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue)));
 
 			IL.Emit(OpCodes.Stloc, ReturnValue);
-			return ReturnValue;
 		}
 	}
 }

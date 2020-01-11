@@ -36,7 +36,33 @@ namespace Surrogate
 			if (methodAttributes.Length == 0 && parameterAttributes.Length == 0 && returnAttributes.Length == 0)
 				return;
 			
-			Builder.CreateMethodProxy(Method);
+			Builder.OverrideMethod(Method);
+		}
+
+		private static LocalBuilder OverrideMethod(this TypeBuilder Builder, MethodInfo Method)
+		{
+			var parameterTypes = Method.GetParameters().Select(i => i.ParameterType).ToArray();
+			MethodBuilder methodBuilder = Builder.DefineMethod(
+				Method.Name,
+				Method.Attributes,
+				CallingConventions.HasThis,
+				Method.ReturnType,
+				parameterTypes
+			);
+			var backingMethod = Builder.CreateBackingMethod(Method);
+			ILGenerator il = methodBuilder.GetILGenerator();
+			var args = il.CreateParameterProxy(Method);
+			
+			var returnValue = il.CreateMethodInterceptor(Method, backingMethod, args);
+
+			il.CreateReturnProxy(Method, returnValue);
+
+			il.Emit(OpCodes.Ldloc, returnValue);	
+			il.Emit(OpCodes.Unbox_Any, Method.ReturnType);
+			il.Emit(OpCodes.Ret);
+
+			Builder.DefineMethodOverride(methodBuilder, Method);
+			return returnValue;
 		}
 	}
 }
