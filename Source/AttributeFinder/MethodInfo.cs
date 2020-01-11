@@ -9,7 +9,7 @@ namespace Surrogate.Helpers
 {
 	public static partial class AttributeFinder
 	{
-		public static Attribute[] LoadAttributes(MethodInfo Method, Type AttributeType)
+		public static Attribute[] FindAttributes(MethodInfo Method, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
 			var attributes = AttributeType == typeof(IReturnSurrogate) ?

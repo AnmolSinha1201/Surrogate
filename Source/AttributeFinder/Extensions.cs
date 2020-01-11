@@ -16,12 +16,12 @@ namespace Surrogate.Helpers
 
 			var array = IL.CreateArray<TAttribute>(() =>
 			{
-				IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.LoadAttributes), new[] { ActionType, typeof(Type) }));
+				IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.FindAttributes), new[] { ActionType, typeof(Type) }));
 			});
 
 			return array;
 		}
-		
+
 		public static ILArray ILLoadAttributes<TAttribute>(this ILGenerator IL, MethodInfo Method)
 		{			
 			return IL.ILLoadAttributes<TAttribute>(() => IL.LoadExternalMethodInfo(Method), typeof(MethodInfo));

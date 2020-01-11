@@ -14,7 +14,7 @@ namespace Surrogate
 	{
 		private static void CreateReturnProxy(this ILGenerator IL, MethodInfo Method, LocalBuilder ReturnValue)
 		{
-			var attributes = AttributeFinder.LoadAttributes(Method, typeof(IReturnSurrogate));
+			var attributes = AttributeFinder.FindAttributes(Method, typeof(IReturnSurrogate));
 			var ILAttributes = IL.ILLoadAttributes<IReturnSurrogate>(Method);
 
 			for (int i = 0; i < attributes.Count(); i++)

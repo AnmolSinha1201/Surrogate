@@ -18,7 +18,7 @@ namespace Surrogate
 
 			for (int i = 0; i < parameters.Count(); i++)
 			{
-				if (!parameters[i].EligibleParameterProxy())
+				if (!parameters[i].EligibleForParameterInterceptor())
 					continue;
 
 				IL.ResolveArguments(parameters[i], ILParameters, ILArguments, i);
@@ -27,7 +27,7 @@ namespace Surrogate
 			return ILArguments.Address;
 		}
 
-		private static bool EligibleParameterProxy(this ParameterInfo PInfo)
+		private static bool EligibleForParameterInterceptor(this ParameterInfo PInfo)
 		{
 			var attributes = PInfo.GetCustomAttributes();
 			foreach (var attribute in attributes)
@@ -42,16 +42,13 @@ namespace Surrogate
 		private static void ResolveArguments(this ILGenerator IL, ParameterInfo PInfo, ILArray ILParameters, ILArray ILArguments, int Index)
 		{
 			var ILAttributes = IL.ILLoadAttributes<IParameterSurrogate>(ILParameters.ElementAtIL(Index), typeof(ParameterInfo));
-			var attributes = Attribute.GetCustomAttributes(PInfo);
+			var attributes = AttributeFinder.FindAttributes(PInfo, typeof(IParameterSurrogate));
 
 			for (int i = 0; i < attributes.Count(); i++)
 			{
-				if (!typeof(IParameterSurrogate).IsAssignableFrom(attributes[i].GetType()))
-					continue;
-				
 				// Attribute.InterceptParameter(ParameterSurrogateInfo)
 				ILAttributes.LoadElementAt(i);
-				var info = IL.CreateParameterSurrogateInfo(ILParameters, ILArguments, Index);
+				var info = IL.CreateParameterSurrogateInfo(ILParameters.ElementAtIL(i), ILArguments.ElementAtIL(i));
 				IL.Emit(OpCodes.Ldloc, info);
 				IL.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
 				
@@ -65,7 +62,6 @@ namespace Surrogate
 
 		private static ILArray CreateParametersArray(this ILGenerator IL, MethodInfo Method)
 		{
-			var parameters = Method.GetParameters();
 			var ILParameters = IL.CreateArray<ParameterInfo>(() =>
 			{
 				IL.LoadExternalMethodInfo(Method);
@@ -87,10 +83,10 @@ namespace Surrogate
 			return ILArguments;
 		}
 
-		private static LocalBuilder CreateParameterSurrogateInfo(this ILGenerator IL, ILArray ILParameters, ILArray ILArguments, int Index)
+		private static LocalBuilder CreateParameterSurrogateInfo(this ILGenerator IL, Action ParameterAction, Action ArgumentAction)
 		{
-			ILParameters.LoadElementAt(Index);
-			ILArguments.LoadElementAt(Index);
+			ParameterAction();
+			ArgumentAction();
 
 			var info = IL.CreateExternalType(typeof(ParameterSurrogateInfo), new[] { typeof(ParameterInfo), typeof(object) });
 			return info;

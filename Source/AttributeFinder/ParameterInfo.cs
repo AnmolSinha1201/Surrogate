@@ -9,7 +9,7 @@ namespace Surrogate.Helpers
 {
 	public static partial class AttributeFinder
 	{
-		public static Attribute[] LoadAttributes(ParameterInfo Parameter, Type AttributeType)
+		public static Attribute[] FindAttributes(ParameterInfo Parameter, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
 			var attributes = Parameter.GetCustomAttributes();
