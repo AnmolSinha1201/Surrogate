@@ -66,11 +66,12 @@ namespace Surrogate
 
 		private static LocalBuilder CreateParametersArray(this ILGenerator IL, MethodInfo Method)
 		{
-			var ILParameters = IL.DeclareLocal(typeof(ParameterInfo[]));
-
-			IL.LoadExternalMethodInfo(Method);
-			IL.Emit(OpCodes.Callvirt, typeof(MethodInfo).GetMethod(nameof(MethodInfo.GetParameters)));
-			IL.Emit(OpCodes.Stloc, ILParameters);
+			var parameters = Method.GetParameters();
+			var ILParameters = IL.CreateArray(parameters, () =>
+			{
+				IL.LoadExternalMethodInfo(Method);
+				IL.Emit(OpCodes.Callvirt, typeof(MethodInfo).GetMethod(nameof(MethodInfo.GetParameters)));
+			}).Address;
 
 			return ILParameters;
 		}
@@ -78,17 +79,11 @@ namespace Surrogate
 		private static LocalBuilder CreateArgumentsArray(this ILGenerator IL, MethodInfo Method)
 		{
 			var parameters = Method.GetParameters();
-			var ILArguments = IL.CreateArray(typeof(object), parameters.Count());
-
-			for (int i = 0; i < parameters.Count(); i++)
+			var ILArguments = IL.CreateArray<object>(parameters, (i) =>
 			{
-				IL.Emit(OpCodes.Ldloc, ILArguments);
-				IL.LoadConstantInt32(i);
 				IL.LoadArgument(i, parameters[i]);
-				
 				IL.Emit(OpCodes.Box, parameters[i].ActualParameterType());
-				IL.Emit(OpCodes.Stelem_Ref);
-			}
+			}).Address;
 			
 
 			return ILArguments;
