@@ -14,12 +14,10 @@ namespace Surrogate
 	{
 		private static void CreateReturnProxy(this ILGenerator IL, MethodInfo Method, LocalBuilder ReturnValue)
 		{
-			var attributes = AttributeFinder.Find(Method, typeof(IReturnSurrogate));
+			var attributes = AttributeFinder.FindAttribute(Method, typeof(IReturnSurrogate));
 			var ILAttributes = IL.CreateArray<IReturnSurrogate>(() =>
 			{
-				IL.LoadExternalMethodInfo(Method);
-				IL.LoadExternalType(typeof(IReturnSurrogate));
-				IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.Find), new[] { typeof(MethodInfo), typeof(Type) }));
+				IL.ILFindAttribute(Method, typeof(IReturnSurrogate));
 			});
 
 

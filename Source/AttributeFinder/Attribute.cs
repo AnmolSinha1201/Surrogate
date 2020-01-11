@@ -9,7 +9,7 @@ namespace Surrogate.Helpers
 {
 	public static partial class AttributeFinder
 	{
-		public static Attribute[] Find(MethodInfo Method, Type AttributeType)
+		public static Attribute[] FindAttribute(MethodInfo Method, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
 			
@@ -23,6 +23,13 @@ namespace Surrogate.Helpers
 			}
 
 			return retVal.ToArray();
+		}
+
+		public static void ILFindAttribute(this ILGenerator IL, MethodInfo Method, Type AttributeType)
+		{
+			IL.LoadExternalMethodInfo(Method);
+			IL.LoadExternalType(AttributeType);
+			IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.FindAttribute), new[] { typeof(MethodInfo), typeof(Type) }));
 		}
 	}
 }
