@@ -23,18 +23,5 @@ namespace Surrogate.Helpers
 
 			return retVal.ToArray();
 		}
-
-		public static ILArray ILLoadAttributes<TAttribute>(this ILGenerator IL, MethodInfo Method)
-		{
-			IL.LoadExternalMethodInfo(Method);
-			IL.LoadExternalType(typeof(TAttribute));
-
-			var array = IL.CreateArray<TAttribute>(() =>
-			{
-				IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.LoadAttributes), new[] { typeof(MethodInfo), typeof(Type) }));
-			});
-
-			return array;
-		}
 	}
 }

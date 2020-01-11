@@ -41,7 +41,7 @@ namespace Surrogate
 
 		private static void ResolveArguments(this ILGenerator IL, ParameterInfo PInfo, ILArray ILParameters, ILArray ILArguments, int Index)
 		{
-			var ILAttributes = IL.ILLoadAttributes<IParameterSurrogate>(ILParameters.ElementAtIL(Index));
+			var ILAttributes = IL.ILLoadAttributes<IParameterSurrogate>(ILParameters.ElementAtIL(Index), typeof(ParameterInfo));
 			var attributes = Attribute.GetCustomAttributes(PInfo);
 
 			for (int i = 0; i < attributes.Count(); i++)
