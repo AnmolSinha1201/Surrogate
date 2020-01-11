@@ -32,6 +32,11 @@ namespace Surrogate.Helpers
 			IL.Emit(OpCodes.Ldlen);
 			// IL.Emit(OpCodes.Call, typeof(Console).GetMethod(nameof(Console.WriteLine), new[] { typeof(int) }));
 		}
+
+		public Action ElementAtIL(int Index)
+		{
+			return () => LoadElementAt(Index);
+		}
 	}
 
 	internal static partial class ILHelpers

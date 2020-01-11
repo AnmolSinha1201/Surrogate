@@ -18,6 +18,9 @@ namespace Surrogate
 
 			for (int i = 0; i < parameters.Count(); i++)
 			{
+				if (!parameters[i].EligibleParameterProxy())
+					continue;
+
 				IL.ResolveArguments(parameters[i], ILParameters, ILArguments, i);
 			}
 
@@ -38,10 +41,7 @@ namespace Surrogate
 
 		private static void ResolveArguments(this ILGenerator IL, ParameterInfo PInfo, ILArray ILParameters, ILArray ILArguments, int Index)
 		{
-			if (!PInfo.EligibleParameterProxy())
-				return;
-
-			var ILAttributes = IL.LoadAttributesFromParameter(ILParameters, Index);
+			var ILAttributes = IL.ILLoadAttributes<IParameterSurrogate>(ILParameters.ElementAtIL(Index));
 			var attributes = Attribute.GetCustomAttributes(PInfo);
 
 			for (int i = 0; i < attributes.Count(); i++)
@@ -85,18 +85,6 @@ namespace Surrogate
 			});
 			
 			return ILArguments;
-		}
-
-		private static ILArray LoadAttributesFromParameter(this ILGenerator IL, ILArray ILParameters, int Index)
-		{
-			ILParameters.LoadElementAt(Index);
-
-			var ILAttributes = IL.CreateArray<IParameterSurrogate>(() =>
-			{
-				IL.Emit(OpCodes.Call, typeof(Attribute).GetMethod(nameof(Attribute.GetCustomAttributes), new [] { typeof(ParameterInfo) }));
-			});
-
-			return ILAttributes;
 		}
 
 		private static LocalBuilder CreateParameterSurrogateInfo(this ILGenerator IL, ILArray ILParameters, ILArray ILArguments, int Index)
