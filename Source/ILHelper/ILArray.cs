@@ -9,9 +9,7 @@ namespace Surrogate.Helpers
 	{
 		public ILGenerator IL;
 		public Type BaseType, ArrayType;
-		public int Size;
 		public LocalBuilder Address;
-		public object CorrespondingObject;
 
 		public void LoadElementAt(int Index)
 		{
@@ -27,25 +25,30 @@ namespace Surrogate.Helpers
 			ILAction();
 			IL.Emit(OpCodes.Stelem_Ref);
 		}
+
+		public void LoadLength()
+		{
+			IL.Emit(OpCodes.Ldloc, Address);
+			IL.Emit(OpCodes.Ldlen);
+			// IL.Emit(OpCodes.Call, typeof(Console).GetMethod(nameof(Console.WriteLine), new[] { typeof(int) }));
+		}
 	}
 
 	internal static partial class ILHelpers
 	{
-		public  static ILArray CreateArray<T>(this ILGenerator IL, T[] CorrespondingObject, bool Initialize = false)
+		public  static ILArray CreateArray<T>(this ILGenerator IL, int Size = 0)
 		{
 			var array = new ILArray();
 
 			array.IL = IL;
 			array.BaseType = typeof(T);
 			array.ArrayType = array.BaseType.MakeArrayType();
-			array.Size = CorrespondingObject.Length;
-			array.CorrespondingObject = CorrespondingObject;
 
 			array.Address = IL.DeclareLocal(array.ArrayType);
 			
-			if (Initialize)
+			if (Size != 0)
 			{
-				IL.LoadConstantInt32(array.Size);
+				IL.LoadConstantInt32(Size);
 				IL.Emit(OpCodes.Newarr, array.BaseType);
 				IL.Emit(OpCodes.Stloc, array.Address);
 			}
@@ -53,9 +56,9 @@ namespace Surrogate.Helpers
 			return array;
 		}
 
-		public static ILArray CreateArray<T>(this ILGenerator IL, T[] CorrespondingObject, Action AddressAction)
+		public static ILArray CreateArray<T>(this ILGenerator IL, Action AddressAction)
 		{
-			var array = IL.CreateArray<T>(CorrespondingObject, false);
+			var array = IL.CreateArray<T>();
 
 			AddressAction();
 			IL.Emit(OpCodes.Stloc, array.Address);
@@ -63,11 +66,11 @@ namespace Surrogate.Helpers
 			return array;
 		}
 
-		public static ILArray CreateArray<T>(this ILGenerator IL, T[] CorrespondingObject, Action<int> AddressAction)
+		public static ILArray CreateArray<T>(this ILGenerator IL, int Size, Action<int> AddressAction)
 		{
-			var array = IL.CreateArray<T>(CorrespondingObject, true);
+			var array = IL.CreateArray<T>(Size);
 			
-			for (int i = 0; i < array.Size; i++)
+			for (int i = 0; i < Size; i++)
 			{
 				IL.Emit(OpCodes.Ldloc, array.Address);
 				IL.LoadConstantInt32(i);
