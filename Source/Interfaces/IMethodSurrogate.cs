@@ -22,6 +22,14 @@ namespace Surrogate.Interfaces
 			this.Arguments = Arguments;
 		}
 
+		public MethodSurrogateInfo(object Item, MethodInfo Member, object[] Arguments, object ReturnValue)
+		{
+			this.Item = Item;
+			this.Member = Member;
+			this.Arguments = Arguments;
+			this.ReturnValue = ReturnValue;
+		}
+
 		public object Execute()
 		{
 			return Member.Invoke(Item, Arguments);

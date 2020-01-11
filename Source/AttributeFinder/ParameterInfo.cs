@@ -22,5 +22,15 @@ namespace Surrogate.Helpers
 
 			return retVal.ToArray();
 		}
+
+		public static Attribute[] FindAttributes(ParameterInfo[] Parameters, Type AttributeType)
+		{
+			var retVal = new List<Attribute>();
+
+			foreach (var parameter in Parameters)
+				retVal.AddRange(FindAttributes(parameter, AttributeType));
+
+			return retVal.ToArray();
+		}
 	}
 }
