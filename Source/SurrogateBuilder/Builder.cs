@@ -9,7 +9,7 @@ namespace Surrogate
 {
 	public static partial class SurrogateBuilder
 	{
-		public static Type Build(Type ItemType)
+		public static object Build(Type ItemType)
 		{
 			var builder = ItemType.CreateTypeBuilder();
 			// var method = ItemType.GetMethod(nameof(Foo.ActualMethod));
@@ -22,10 +22,14 @@ namespace Surrogate
 				MethodWorkflowDispatch(builder, method);
 			}
 
-			return builder.CreateType();
+			var type = builder.CreateType();
+			return Activator.CreateInstance(type);
 		}
 
-		
+		public static object Build<T>()
+		{
+			return Build(typeof(T));
+		}
 
 		private static void MethodWorkflowDispatch(TypeBuilder Builder, MethodInfo Method)
 		{

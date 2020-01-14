@@ -10,12 +10,11 @@ namespace Surrogate
         {
             // SurrogateBuilder.FindAttributes(123456);
             // var asd = Activator.CreateInstance(typeof(MethodSurrogateInfo), new object[] { 12345 });
-            var member = typeof(Foo).GetMethod(nameof(Foo.ActualMethod));
-            Expression<Func<Attribute>> f = () => Attribute.GetCustomAttribute(member, typeof(Foo));
+            // var member = typeof(Foo).GetMethod(nameof(Foo.ActualMethod));
+            // Expression<Func<Attribute>> f = () => Attribute.GetCustomAttribute(member, typeof(Foo));
             // Expression<Action> f = () => this.foobar();
 
-            var retType = SurrogateBuilder.Build(typeof(Foo));
-            var instance = (Foo)Activator.CreateInstance(retType);
+            var instance = (Foo)SurrogateBuilder.Build<Foo>();
             // var instance = new Foo();
             // retType.GetMethod("NewM").Invoke(instance, null);
             var num = 456;
