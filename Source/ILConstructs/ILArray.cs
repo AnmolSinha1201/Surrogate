@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using Surrogate.ILConstructs;
 
 namespace Surrogate.Helpers
 {
@@ -15,6 +16,13 @@ namespace Surrogate.Helpers
 		{
 			IL.Emit(OpCodes.Ldloc, Address);
 			IL.LoadConstantInt32(Index);
+			IL.Emit(OpCodes.Ldelem_Ref);
+		}
+
+		public void LoadElementAt(ILVariable Local)
+		{
+			IL.Emit(OpCodes.Ldloc, Address);
+			Local.Load();
 			IL.Emit(OpCodes.Ldelem_Ref);
 		}
 
@@ -37,6 +45,7 @@ namespace Surrogate.Helpers
 		{
 			return () => LoadElementAt(Index);
 		}
+
 	}
 
 	internal static partial class ILHelpers
