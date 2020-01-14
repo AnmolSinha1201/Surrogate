@@ -14,12 +14,15 @@ namespace Surrogate
 		private static LocalBuilder CreateMethodInterceptor(this ILGenerator IL, MethodInfo Method, MethodBuilder BackingMethod, LocalBuilder Arguments)
 		{
 			var attributes = AttributeFinder.FindAttributes(Method, typeof(IMethodSurrogate));
-			if (attributes.Count() == 0)
-				return IL.InstallMethodSurrogateStub(Method, BackingMethod, Arguments);
-
 			var ILAttributes = IL.ILLoadAttributes<IMethodSurrogate>(Method);
 			var returnValue = IL.DeclareLocal(typeof(object));
 
+			if (attributes.Count() == 0)
+			{
+				ILAttributes = IL.CreateArray<IMethodSurrogate>(1, (i) => IL.CreateExternalType(typeof(MethodSurrogateStub), new Type[] {}));
+				attributes = new Attribute[] { new MethodSurrogateStub() };
+			}
+			
 			for (int i = 0; i < attributes.Count(); i++)
 			{
 				ILAttributes.LoadElementAt(i);		
@@ -28,24 +31,8 @@ namespace Surrogate
 				IL.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
 
 				IL.CopyArrayToArgs(Method, Arguments);
-				IL.ReturnMethodSurrogateInfoValue(info, Method.ReturnType, returnValue);
+				IL.ReturnMethodSurrogateInfoValue(info, returnValue);
 			}
-
-			return returnValue;
-		}
-
-		private static LocalBuilder InstallMethodSurrogateStub(this ILGenerator IL, MethodInfo Method, MethodBuilder BackingMethod, LocalBuilder Arguments)
-		{
-			var ILAttribute = IL.CreateExternalType(typeof(MethodSurrogateStub), new Type[] {});
-			var returnValue = IL.DeclareLocal(typeof(object));
-
-			IL.Emit(OpCodes.Ldloc, ILAttribute);
-			var info = IL.CreateMethodSurrogateInfo(BackingMethod, Arguments, returnValue);
-			IL.Emit(OpCodes.Ldloc, info);
-			IL.Emit(OpCodes.Call, typeof(MethodSurrogateStub).GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
-
-			IL.CopyArrayToArgs(Method, Arguments);
-			IL.ReturnMethodSurrogateInfoValue(info, Method.ReturnType, returnValue);
 
 			return returnValue;
 		}
@@ -105,7 +92,7 @@ namespace Surrogate
 			}
 		}
 
-		private static void ReturnMethodSurrogateInfoValue(this ILGenerator IL, LocalBuilder SurrogateInfoVariable, Type ReturnType, LocalBuilder ReturnValue)
+		private static void ReturnMethodSurrogateInfoValue(this ILGenerator IL, LocalBuilder SurrogateInfoVariable, LocalBuilder ReturnValue)
 		{
 			IL.Emit(OpCodes.Ldloc, SurrogateInfoVariable);
 			IL.Emit(OpCodes.Ldfld, typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue)));
