@@ -85,5 +85,14 @@ namespace Surrogate.Helpers
 
 			return array;
 		}
+
+		public static ILArray CreateArray<T>(this ILGenerator IL, int Size, Func<int, LocalBuilder> AddressAction)
+		{
+			return IL.CreateArray<T>(Size, (i) =>
+			{
+				var local = AddressAction(i);
+				IL.Emit(OpCodes.Ldloc, local);
+			});
+		}
 	}
 }
