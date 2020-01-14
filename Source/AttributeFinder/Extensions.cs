@@ -23,6 +23,20 @@ namespace Surrogate.Helpers
 			return array;
 		}
 
+		public static ILArray ILLoadAttributes<TAttribute>(this ILGenerator IL, ILVariable Variable)
+		{
+			Variable.Load();
+			IL.LoadExternalType(typeof(TAttribute));
+
+			var array = IL.CreateArray<TAttribute>(() =>
+			{
+				IL.Emit(OpCodes.Call, typeof(AttributeFinder).GetMethod(nameof(AttributeFinder.FindAttributes), new[] { Variable.Address.LocalType, typeof(Type) }));
+			});
+
+			return array;
+		}
+
+
 		public static ILArray ILLoadAttributes<TAttribute>(this ILGenerator IL, MethodInfo Method)
 		{			
 			return IL.ILLoadAttributes<TAttribute>(() => IL.LoadExternalMethodInfo(Method), typeof(MethodInfo));
