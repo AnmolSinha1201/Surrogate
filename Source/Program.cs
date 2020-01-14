@@ -32,9 +32,9 @@ namespace Surrogate
 
     public class Foo
     {
-        [return: ReturnSurrogate]
+        [return: Clamp(5, 10)]
         [MethodSurrogate]
-        public virtual int ActualMethod([ParameterSurrogate] ref string InputText, ref int InputNum)
+        public virtual int ActualMethod([NotNull] ref string InputText, ref int InputNum)
         {
             Console.WriteLine("Actual Method");
             Console.WriteLine($"Received : {InputText}");
