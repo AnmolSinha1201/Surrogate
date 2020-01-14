@@ -22,7 +22,10 @@ namespace Surrogate
 				if (!parameters[i].EligibleForParameterInterceptor())
 					continue;
 
-				IL.ResolveArguments(ILParameters, ILArguments, i);
+				var ILParameter = ILParameters.ElementAt(i);
+				var ILArgument = ILArguments.ElementAt(i);
+				IL.ResolveArgument(ILParameter, ILArgument);
+				ILArguments.StoreElementAt(i, ILArgument);
 			}
 
 			return ILArguments.Address;
@@ -40,19 +43,19 @@ namespace Surrogate
 			return false;
 		}
 
-		private static void ResolveArguments(this ILGenerator IL, ILArray ILParameters, ILArray ILArguments, int Index)
+		private static void ResolveArgument(this ILGenerator IL, ILVariable ILParameter, ILVariable ILArgument)
 		{
-			var ILAttributes = IL.ILLoadAttributes<IParameterSurrogate>(ILParameters.ElementAtIL(Index), typeof(ParameterInfo));
+			var ILAttributes = IL.ILLoadAttributes<IParameterSurrogate>(ILParameter);
 
 			ILAttributes.ForEach((attribute) =>
 			{
 				// Attribute.InterceptParameter(ParameterSurrogateInfo)
 				attribute.Load();
-				var info = IL.CreateParameterSurrogateInfo(ILParameters.ElementAtIL(Index), ILArguments.ElementAtIL(Index));
+				var info = IL.CreateParameterSurrogateInfo(ILParameter, ILArgument);
 				IL.Emit(OpCodes.Ldloc, info);
 				IL.Emit(OpCodes.Callvirt, typeof(IParameterSurrogate).GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
 				
-				ILArguments.StoreElementAt(Index, () =>
+				ILArgument.Store(() =>
 				{
 					IL.Emit(OpCodes.Ldloc, info);
 					IL.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.Value)));
@@ -83,10 +86,10 @@ namespace Surrogate
 			return ILArguments;
 		}
 
-		private static LocalBuilder CreateParameterSurrogateInfo(this ILGenerator IL, Action ParameterAction, Action ArgumentAction)
+		private static LocalBuilder CreateParameterSurrogateInfo(this ILGenerator IL, ILVariable Parameter, ILVariable Argument)
 		{
-			ParameterAction();
-			ArgumentAction();
+			Parameter.Load();
+			Argument.Load();
 
 			var info = IL.CreateExternalType(typeof(ParameterSurrogateInfo), new[] { typeof(ParameterInfo), typeof(object) });
 			return info;
