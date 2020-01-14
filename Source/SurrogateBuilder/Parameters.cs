@@ -22,7 +22,7 @@ namespace Surrogate
 				if (!parameters[i].EligibleForParameterInterceptor())
 					continue;
 
-				IL.ResolveArguments(parameters[i], ILParameters, ILArguments, i);
+				IL.ResolveArguments(ILParameters, ILArguments, i);
 			}
 
 			return ILArguments.Address;
@@ -40,25 +40,24 @@ namespace Surrogate
 			return false;
 		}
 
-		private static void ResolveArguments(this ILGenerator IL, ParameterInfo PInfo, ILArray ILParameters, ILArray ILArguments, int Index)
+		private static void ResolveArguments(this ILGenerator IL, ILArray ILParameters, ILArray ILArguments, int Index)
 		{
 			var ILAttributes = IL.ILLoadAttributes<IParameterSurrogate>(ILParameters.ElementAtIL(Index), typeof(ParameterInfo));
-			var attributes = AttributeFinder.FindAttributes(PInfo, typeof(IParameterSurrogate));
 
-			for (int i = 0; i < attributes.Count(); i++)
+			ILAttributes.ForEach((attribute) =>
 			{
 				// Attribute.InterceptParameter(ParameterSurrogateInfo)
-				ILAttributes.LoadElementAt(i);
+				attribute.Load();
 				var info = IL.CreateParameterSurrogateInfo(ILParameters.ElementAtIL(Index), ILArguments.ElementAtIL(Index));
 				IL.Emit(OpCodes.Ldloc, info);
-				IL.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
+				IL.Emit(OpCodes.Callvirt, typeof(IParameterSurrogate).GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
 				
 				ILArguments.StoreElementAt(Index, () =>
 				{
 					IL.Emit(OpCodes.Ldloc, info);
 					IL.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.Value)));
 				});
-			}
+			});
 		}
 
 		private static ILArray CreateParametersArray(this ILGenerator IL, MethodInfo Method)
