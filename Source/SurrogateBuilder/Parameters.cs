@@ -48,7 +48,7 @@ namespace Surrogate
 			{
 				// Attribute.InterceptParameter(ParameterSurrogateInfo)
 				ILAttributes.LoadElementAt(i);
-				var info = IL.CreateParameterSurrogateInfo(ILParameters.ElementAtIL(i), ILArguments.ElementAtIL(i));
+				var info = IL.CreateParameterSurrogateInfo(ILParameters.ElementAtIL(Index), ILArguments.ElementAtIL(Index));
 				IL.Emit(OpCodes.Ldloc, info);
 				IL.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IParameterSurrogate.InterceptParameter), new[] { typeof(ParameterSurrogateInfo) }));
 				
