@@ -1,5 +1,6 @@
 using System;
 using System.Reflection.Emit;
+using Surrogate.Helpers;
 
 namespace Surrogate.ILConstructs
 {
@@ -12,6 +13,15 @@ namespace Surrogate.ILConstructs
 		{
 			this.IL = IL;
 			this.Address = IL.DeclareLocal(VariableType);
+		}
+
+		public ILVariable(ILGenerator IL, int Value)
+		{
+			this.IL = IL;
+			this.Address = IL.DeclareLocal(typeof(int));
+
+			IL.LoadConstantInt32(Value);
+			IL.Emit(OpCodes.Stloc, Address);
 		}
 
 		public void Load()
@@ -28,12 +38,19 @@ namespace Surrogate.ILConstructs
 
 	internal static partial class ILHelpers
 	{
-		public static ILVariable NewVariable(this ILGenerator IL, Type VariableType, Action StoreAction)
+		public static ILVariable NewVariable(this ILGenerator IL, Type VariableType, Action StoreAction = null)
 		{
 			var variable = new ILVariable(IL, VariableType);
-			variable.Store(StoreAction);
+
+			if (StoreAction != null)
+				variable.Store(StoreAction);
 
 			return variable;
+		}
+
+		public static ILVariable NewVariable(this ILGenerator IL, int Value)
+		{
+			return new ILVariable(IL, Value);
 		}
 	}
 }
