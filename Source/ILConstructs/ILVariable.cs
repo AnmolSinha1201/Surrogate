@@ -34,6 +34,16 @@ namespace Surrogate.ILConstructs
 			StoreAction();
 			IL.Emit(OpCodes.Stloc, Address);
 		}
+
+		public void Add(int Number)
+		{
+			Store(() =>
+			{
+				Load();
+				IL.LoadConstantInt32(Number);
+				IL.Emit(OpCodes.Add);
+			});
+		}
 	}
 
 	internal static partial class ILHelpers
