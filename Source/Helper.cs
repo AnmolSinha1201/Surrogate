@@ -9,12 +9,7 @@ namespace Surrogate.Helpers
 			if (Item == null)
 				return null;
 
-			var itemType = Item.GetType();
-
-			if (itemType.IsValueType)
-				return Activator.CreateInstance(itemType);
-
-			return null;
+			return Item.GetType().Default();
 		}
 
 		public static object Default(this Type ItemType)
