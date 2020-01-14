@@ -35,6 +35,14 @@ namespace Surrogate.ILConstructs
 			IL.Emit(OpCodes.Stelem_Ref);
 		}
 
+		public void StoreElementAt(int Index, ILVariable Variable)
+		{
+			IL.Emit(OpCodes.Ldloc, Address);
+			IL.LoadConstantInt32(Index);
+			Variable.Load();
+			IL.Emit(OpCodes.Stelem_Ref);
+		}
+
 		public void LoadLength()
 		{
 			IL.Emit(OpCodes.Ldloc, Address);
