@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Surrogate.Interfaces;
 using Surrogate.Helpers;
+using Surrogate.Samples;
 
 namespace Surrogate
 {
@@ -13,6 +14,9 @@ namespace Surrogate
 		private static LocalBuilder CreateMethodInterceptor(this ILGenerator IL, MethodInfo Method, MethodBuilder BackingMethod, LocalBuilder Arguments)
 		{
 			var attributes = AttributeFinder.FindAttributes(Method, typeof(IMethodSurrogate));
+			if (attributes.Count() == 0)
+				return IL.InstallMethodSurrogateStub(Method, BackingMethod, Arguments);
+
 			var ILAttributes = IL.ILLoadAttributes<IMethodSurrogate>(Method);
 			var returnValue = IL.DeclareLocal(typeof(object));
 
@@ -26,6 +30,22 @@ namespace Surrogate
 				IL.CopyArrayToArgs(Method, Arguments);
 				IL.ReturnMethodSurrogateInfoValue(info, Method.ReturnType, returnValue);
 			}
+
+			return returnValue;
+		}
+
+		private static LocalBuilder InstallMethodSurrogateStub(this ILGenerator IL, MethodInfo Method, MethodBuilder BackingMethod, LocalBuilder Arguments)
+		{
+			var ILAttribute = IL.CreateExternalType(typeof(MethodSurrogateStub), new Type[] {});
+			var returnValue = IL.DeclareLocal(typeof(object));
+
+			IL.Emit(OpCodes.Ldloc, ILAttribute);
+			var info = IL.CreateMethodSurrogateInfo(BackingMethod, Arguments, returnValue);
+			IL.Emit(OpCodes.Ldloc, info);
+			IL.Emit(OpCodes.Call, typeof(MethodSurrogateStub).GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
+
+			IL.CopyArrayToArgs(Method, Arguments);
+			IL.ReturnMethodSurrogateInfoValue(info, Method.ReturnType, returnValue);
 
 			return returnValue;
 		}
