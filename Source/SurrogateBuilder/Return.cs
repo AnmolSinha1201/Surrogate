@@ -14,21 +14,20 @@ namespace Surrogate
 	{
 		private static void CreateReturnProxy(this ILGenerator IL, MethodInfo Method, LocalBuilder ReturnValue)
 		{
-			var attributes = AttributeFinder.FindAttributes(Method, typeof(IReturnSurrogate));
 			var ILAttributes = IL.ILLoadAttributes<IReturnSurrogate>(Method);
 
-			for (int i = 0; i < attributes.Count(); i++)
+			ILAttributes.ForEach(attribute =>
 			{
-				ILAttributes.LoadElementAt(i);
+				attribute.Load();
 				var info = IL.CreateReturnSurrogateInfo(Method, ReturnValue);
 				IL.Emit(OpCodes.Ldloc, info);
 				
-				IL.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IReturnSurrogate.InterceptReturn), new[] { typeof(ReturnSurrogateInfo) }));
+				IL.Emit(OpCodes.Callvirt, typeof(IReturnSurrogate).GetMethod(nameof(IReturnSurrogate.InterceptReturn), new[] { typeof(ReturnSurrogateInfo) }));
 				
 				IL.Emit(OpCodes.Ldloc, info);
 				IL.Emit(OpCodes.Ldfld, typeof(ReturnSurrogateInfo).GetField(nameof(ReturnSurrogateInfo.Value)));
 				IL.Emit(OpCodes.Stloc, ReturnValue);
-			}
+			});
 		}
 
 		private static LocalBuilder CreateReturnSurrogateInfo(this ILGenerator IL, MethodInfo Method, LocalBuilder ReturnValue)
