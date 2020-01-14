@@ -23,7 +23,8 @@ namespace Surrogate
     public class Foo
     {
         [return: Clamp(5, 10)]
-        [MethodSurrogate]
+        // [MethodSurrogate]
+        [Bypass]
         public virtual int ActualMethod([NotNull] ref string InputText, ref int InputNum)
         {
             Console.WriteLine("Actual Method");
