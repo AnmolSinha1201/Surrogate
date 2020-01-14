@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -9,8 +10,13 @@ namespace Surrogate
 {
 	public static partial class SurrogateBuilder
 	{
-		public static object Build(Type ItemType)
+		public static Dictionary<Type, Type> Cache = new Dictionary<Type, Type>();
+		
+		public static object Build(Type ItemType, bool FromCache = true)
 		{
+			if (FromCache && Cache.ContainsKey(ItemType))
+				return Cache[ItemType];
+
 			var builder = ItemType.CreateTypeBuilder();
 			// var method = ItemType.GetMethod(nameof(Foo.ActualMethod));
 			var methods = ItemType.GetMethods();
@@ -23,12 +29,13 @@ namespace Surrogate
 			}
 
 			var type = builder.CreateType();
+			Cache.Add(ItemType, type);
 			return Activator.CreateInstance(type);
 		}
 
-		public static object Build<T>()
+		public static object Build<T>(bool FromCache = true)
 		{
-			return Build(typeof(T));
+			return Build(typeof(T), FromCache);
 		}
 
 		private static void MethodWorkflowDispatch(TypeBuilder Builder, MethodInfo Method)
