@@ -1,4 +1,5 @@
 using System;
+using Surrogate.Helpers;
 using Surrogate.Interfaces;
 
 namespace Surrogate.Samples
@@ -26,6 +27,9 @@ namespace Surrogate.Samples
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
 		{
+			if (Info.Value == null)
+				Info.Value = LowerBound;
+
 			if ((int)Info.Value < LowerBound || (int)Info.Value > UpperBound)
 				Info.Value = Math.Clamp((int)Info.Value, LowerBound, UpperBound);
 		}
