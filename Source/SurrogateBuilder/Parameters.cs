@@ -11,7 +11,7 @@ namespace Surrogate
 {
 	public static partial class SurrogateBuilder
 	{
-		private static LocalBuilder CreateParameterProxy(this ILGenerator IL, MethodInfo OriginalMethod)
+		private static ILArray CreateParameterProxy(this ILGenerator IL, MethodInfo OriginalMethod)
 		{
 			var parameters = OriginalMethod.GetParameters();
 			var ILParameters = IL.CreateParametersArray(OriginalMethod);
@@ -28,7 +28,7 @@ namespace Surrogate
 				ILArguments.StoreElementAt(i, ILArgument);
 			}
 
-			return ILArguments.Address;
+			return ILArguments;
 		}
 
 		private static bool EligibleForParameterInterceptor(this ParameterInfo PInfo)

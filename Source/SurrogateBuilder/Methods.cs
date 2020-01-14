@@ -12,7 +12,7 @@ namespace Surrogate
 {
 	public static partial class SurrogateBuilder
 	{
-		private static LocalBuilder CreateMethodInterceptor(this ILGenerator IL, MethodInfo Method, MethodBuilder BackingMethod, LocalBuilder Arguments)
+		private static LocalBuilder CreateMethodInterceptor(this ILGenerator IL, MethodInfo Method, MethodBuilder BackingMethod, ILArray Arguments)
 		{
 			var attributes = AttributeFinder.FindAttributes(Method, typeof(IMethodSurrogate));
 			var ILAttributes = IL.ILLoadAttributes<IMethodSurrogate>(Method);
@@ -61,11 +61,11 @@ namespace Surrogate
 			return methodBuilder;
 		}
 
-		private static LocalBuilder CreateMethodSurrogateInfo(this ILGenerator IL, MethodInfo BackingMethod, LocalBuilder ArgumentsArrayVariable, LocalBuilder ReturnValue)
+		private static LocalBuilder CreateMethodSurrogateInfo(this ILGenerator IL, MethodInfo BackingMethod, ILArray ArgumentsArray, LocalBuilder ReturnValue)
 		{
 			IL.Emit(OpCodes.Ldarg_0);
 			IL.LoadExternalMethodInfo(BackingMethod);
-			IL.Emit(OpCodes.Ldloc, ArgumentsArrayVariable);
+			IL.Emit(OpCodes.Ldloc, ArgumentsArray.Address);
 			IL.Emit(OpCodes.Ldloc, ReturnValue);
 
 			var info = IL.CreateExternalType(typeof(MethodSurrogateInfo), new [] { typeof(object), typeof(MethodInfo), typeof(object[]), typeof(object) });
@@ -73,7 +73,7 @@ namespace Surrogate
 		}
 
 		// Array is object[]
-		private static void CopyArrayToArgs(this ILGenerator IL, MethodInfo Method, LocalBuilder LocalArray)
+		private static void CopyArrayToArgs(this ILGenerator IL, MethodInfo Method, ILArray ArgumentsArray)
 		{
 			var parameters = Method.GetParameters();
 
@@ -84,9 +84,7 @@ namespace Surrogate
 					continue;
 			
 				IL.LoadArgument(i);
-				IL.Emit(OpCodes.Ldloc, LocalArray);
-				IL.LoadConstantInt32(i);
-				IL.Emit(OpCodes.Ldelem_Ref);
+				ArgumentsArray.LoadElementAt(i);
 				IL.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
 				IL.StoreIntoAddress(parameters[i].ParameterType);
 				// IL.Emit(OpCodes.Stind_I4);
