@@ -41,11 +41,37 @@ namespace Surrogate.Helpers
 			// IL.Emit(OpCodes.Call, typeof(Console).GetMethod(nameof(Console.WriteLine), new[] { typeof(int) }));
 		}
 
+		public void ForEach(Action<ILVariable> ForEachAction)
+		{
+			var currentIndex = IL.NewVariable(0);
+			var currentItem = IL.NewVariable(BaseType);
+
+			var loopStart = IL.DefineLabel();
+			var end = IL.DefineLabel();
+			var validation = IL.DefineLabel();
+
+			IL.MarkLabel(validation);
+			currentIndex.Load();
+			LoadLength();
+			IL.Emit(OpCodes.Bge, end);
+
+			currentItem.Store(() => LoadElementAt(currentIndex));
+			ForEachAction(currentItem);
+			currentIndex.Add(1);
+
+			IL.Emit(OpCodes.Br, validation);
+			IL.MarkLabel(end);
+		}
+
 		public Action ElementAtIL(int Index)
 		{
 			return () => LoadElementAt(Index);
 		}
 
+		public ILVariable ElementAt(int Index)
+		{
+			return IL.NewVariable(BaseType, () => LoadElementAt(Index));
+		}
 	}
 
 	internal static partial class ILHelpers
