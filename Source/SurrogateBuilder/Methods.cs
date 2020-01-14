@@ -6,6 +6,7 @@ using System.Reflection.Emit;
 using Surrogate.Interfaces;
 using Surrogate.Helpers;
 using Surrogate.Samples;
+using Surrogate.ILConstructs;
 
 namespace Surrogate
 {

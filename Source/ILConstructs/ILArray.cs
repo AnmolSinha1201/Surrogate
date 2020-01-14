@@ -2,9 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using Surrogate.Helpers;
 using Surrogate.ILConstructs;
 
-namespace Surrogate.Helpers
+namespace Surrogate.ILConstructs
 {
 	public class ILArray
 	{
@@ -49,6 +50,7 @@ namespace Surrogate.Helpers
 			var loopStart = IL.DefineLabel();
 			var end = IL.DefineLabel();
 			var validation = IL.DefineLabel();
+
 
 			IL.MarkLabel(validation);
 			currentIndex.Load();

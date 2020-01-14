@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Surrogate.Interfaces;
 using Surrogate.Helpers;
+using Surrogate.ILConstructs;
 
 namespace Surrogate
 {
