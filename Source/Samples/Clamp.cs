@@ -20,8 +20,8 @@ namespace Surrogate.Samples
 
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
-			if ((int)Info.ParamValue < LowerBound || (int)Info.ParamValue > UpperBound)
-				Info.ParamValue = Math.Clamp((int)Info.ParamValue, LowerBound, UpperBound);
+			if ((int)Info.Value < LowerBound || (int)Info.Value > UpperBound)
+				Info.Value = Math.Clamp((int)Info.Value, LowerBound, UpperBound);
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)

@@ -55,7 +55,7 @@ namespace Surrogate
 				ILArguments.StoreElementAt(Index, () =>
 				{
 					IL.Emit(OpCodes.Ldloc, info);
-					IL.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.ParamValue)));
+					IL.Emit(OpCodes.Ldfld, typeof(ParameterSurrogateInfo).GetField(nameof(ParameterSurrogateInfo.Value)));
 				});
 			}
 		}

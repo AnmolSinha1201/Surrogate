@@ -13,13 +13,13 @@ namespace Surrogate.Interfaces
 	// ParameterInfo.Member.DeclaringType : Provides Type of Declaring class.
 	public class ParameterSurrogateInfo
 	{
-		public object ParamValue;
+		public object Value;
 		public ParameterInfo ParamInfo;
 		
 		public ParameterSurrogateInfo(ParameterInfo ParamInfo, object ParamValue)
 		{
 			this.ParamInfo = ParamInfo;
-			this.ParamValue = ParamValue;
+			this.Value = ParamValue;
 		}
 	}
 }

@@ -8,7 +8,7 @@ namespace Surrogate.Samples
 	{
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
-			if (Info.ParamValue == null)
+			if (Info.Value == null)
 				throw new ArgumentNullException($"{Info.ParamInfo.Name} is null");
 		}
 

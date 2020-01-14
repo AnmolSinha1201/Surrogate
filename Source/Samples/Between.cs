@@ -20,7 +20,7 @@ namespace Surrogate.Samples
 
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
-			if ((int)Info.ParamValue < LowerBound || (int)Info.ParamValue > UpperBound)
+			if ((int)Info.Value < LowerBound || (int)Info.Value > UpperBound)
 				throw new ArgumentNullException($"{Info.ParamInfo.Name} for ${Info.ParamInfo.Member.Name}exceeds bounds");
 		}
 
