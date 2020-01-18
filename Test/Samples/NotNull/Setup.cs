@@ -7,7 +7,7 @@ namespace Surrogate.Tests.NotNullTest
     public class Setup
     {
 		[return : NotNull]
-		public virtual string Method([Samples.NotNull]string InputText)
+		public virtual string Method([NotNull]string InputText)
 		{
 			return InputText;
 		}
