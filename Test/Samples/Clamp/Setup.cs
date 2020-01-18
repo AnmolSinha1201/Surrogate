@@ -7,7 +7,7 @@ namespace Surrogate.Tests.ClampTest
     public class Setup
     {
 		// String is passed. Show throw exception.
-		public virtual string Method([Clamp(15, 20)]string Input)
+		public virtual string Method([Clamp(5, 10)]string Input)
 		{
 			return Input;
 		}
