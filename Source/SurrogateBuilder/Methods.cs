@@ -20,8 +20,8 @@ namespace Surrogate
 
 			if (attributes.Count() == 0)
 			{
-				ILAttributes = IL.CreateArray<IMethodSurrogate>(1, (i) => IL.CreateExternalType(typeof(MethodSurrogateStub), new Type[] {}));
-				attributes = new Attribute[] { new MethodSurrogateStub() };
+				ILAttributes = IL.CreateArray<IMethodSurrogate>(1, (i) => IL.CreateExternalType(typeof(MethodSurrogate), new Type[] {}));
+				attributes = new Attribute[] { new MethodSurrogate() };
 			}
 			
 			for (int i = 0; i < attributes.Count(); i++)
