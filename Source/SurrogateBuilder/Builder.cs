@@ -15,7 +15,7 @@ namespace Surrogate
 		public static object Build(Type ItemType, bool FromCache = true)
 		{
 			if (FromCache && Cache.ContainsKey(ItemType))
-				return Cache[ItemType];
+				return Activator.CreateInstance(Cache[ItemType]);
 
 			var builder = ItemType.CreateTypeBuilder();
 			// var method = ItemType.GetMethod(nameof(Foo.ActualMethod));
