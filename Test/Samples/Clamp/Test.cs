@@ -8,11 +8,9 @@ namespace Surrogate.Tests.ClampTest
     public class Cases
     {
 		public Setup TestObject;
-		public Random RGen;
 		public Cases()
 		{
 			TestObject = (Setup)SurrogateBuilder.Build<Setup>();
-			RGen = new Random();
 		}
 
 		[Fact]
