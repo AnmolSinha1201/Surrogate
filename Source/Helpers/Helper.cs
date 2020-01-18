@@ -21,5 +21,16 @@ namespace Surrogate.Helpers
 			return null;
 		}
 
+		public static bool IsNumber(this object Value)
+		{
+			return Value.GetType().IsNumber();
+		}
+
+		public static bool IsNumber(this Type ItemType)
+		{
+			var typeCode = Type.GetTypeCode(ItemType);
+			return typeCode == TypeCode.Decimal || 
+				(ItemType.IsPrimitive && typeCode != TypeCode.Object && typeCode != TypeCode.Boolean && typeCode != TypeCode.Char); 
+		}
 	}
 }
