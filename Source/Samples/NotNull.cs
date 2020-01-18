@@ -10,13 +10,13 @@ namespace Surrogate.Samples
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
 			if (Info.Value == null)
-				throw new Exception($"[NotNull] : {Info.ParamInfo.Name} for {Info.ParamInfo.FullMemberName()} cannot be null");
+				throw new Exception(Info.ParamInfo.ParameterError("NotNull"));
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
 		{
 			if (Info.Value == null)
-				throw new Exception($"[NotNull] : Return value of {Info.Member.FullMemberName()} cannot be null");
+				throw new Exception(Info.Member.ReturnError("NotNull"));
 		}
 	}
 }
