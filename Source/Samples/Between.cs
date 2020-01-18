@@ -1,5 +1,7 @@
 using System;
+using Surrogate.Helpers;
 using Surrogate.Interfaces;
+using Surrogate.Internal.Helpers;
 
 namespace Surrogate.Samples
 {
@@ -9,10 +11,10 @@ namespace Surrogate.Samples
 	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
 	public class Between : Attribute, IParameterSurrogate, IReturnSurrogate
 	{
-		public int LowerBound;
-		public int UpperBound;
+		public double LowerBound;
+		public double UpperBound;
 
-		public Between(int LowerBound, int UpperBound)
+		public Between(double LowerBound, double UpperBound)
 		{
 			this.LowerBound = LowerBound;
 			this.UpperBound = UpperBound;
@@ -20,14 +22,28 @@ namespace Surrogate.Samples
 
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
-			if ((int)Info.Value < LowerBound || (int)Info.Value > UpperBound)
-				throw new ArgumentNullException($"{Info.ParamInfo.Name} for ${Info.ParamInfo.Member.Name}exceeds bounds");
+			if (Info.Value == null)
+				throw new Exception(Info.ParamInfo.ParameterError("Between"));
+
+			if (!Info.Value.IsNumber())
+				throw new Exception(Info.ParamInfo.ParameterError("Between", "number"));
+				
+			var value = Convert.ToDouble(Info.Value);
+			if (value < LowerBound || value > UpperBound)
+				throw new Exception(Info.ParamInfo.ParameterError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
 		{
-			if ((int)Info.Value < LowerBound || (int)Info.Value > UpperBound)
-				throw new ArgumentNullException($"return value of {Info.Member.Name} exceeds bounds");
+			if (Info.Value == null)
+				throw new Exception(Info.Member.ReturnError("Between"));
+
+			if (!Info.Value.IsNumber())
+				throw new Exception(Info.Member.ReturnError("Between", "number"));
+				
+			var value = Convert.ToDouble(Info.Value);
+			if (value < LowerBound || value > UpperBound)
+				throw new Exception(Info.Member.ReturnError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
 		}
 	}
 }
