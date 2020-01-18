@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using Surrogate.ILConstructs;
+using Surrogate.Internal.ILConstructs;
 using Surrogate.Interfaces;
+using Surrogate.Helpers;
 
-namespace Surrogate.Helpers
+namespace Surrogate.Internal.Helpers
 {
 	public static partial class AttributeFinder
 	{

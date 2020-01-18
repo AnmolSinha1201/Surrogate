@@ -7,6 +7,7 @@ using Surrogate.Interfaces;
 using Surrogate.Helpers;
 using Surrogate.Samples;
 using System.Collections.Generic;
+using Surrogate.Internal.Helpers;
 
 namespace Surrogate
 {

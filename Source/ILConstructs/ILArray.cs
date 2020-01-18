@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using Surrogate.Helpers;
-using Surrogate.ILConstructs;
+using Surrogate.Internal.ILConstructs;
 
-namespace Surrogate.ILConstructs
+namespace Surrogate.Internal.ILConstructs
 {
-	internal class ILArray
+	public class ILArray
 	{
 		public ILGenerator IL;
 		public Type BaseType, ArrayType;

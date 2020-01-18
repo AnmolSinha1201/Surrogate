@@ -2,9 +2,9 @@ using System;
 using System.Reflection.Emit;
 using Surrogate.Helpers;
 
-namespace Surrogate.ILConstructs
+namespace Surrogate.Internal.ILConstructs
 {
-	internal class ILVariable
+	public class ILVariable
 	{
 		public LocalBuilder Address;
 		public ILGenerator IL;

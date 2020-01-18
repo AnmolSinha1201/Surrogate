@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using Surrogate.Interfaces;
 
-namespace Surrogate.Helpers
+namespace Surrogate.Internal.Helpers
 {
 	public static partial class AttributeFinder
 	{
