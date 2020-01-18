@@ -30,7 +30,7 @@ namespace Surrogate.Helpers
 		{
 			var typeCode = Type.GetTypeCode(ItemType);
 			return typeCode == TypeCode.Decimal || 
-				(ItemType.IsPrimitive && typeCode != TypeCode.Object && typeCode != TypeCode.Boolean && typeCode != TypeCode.Char); 
+				(ItemType.IsPrimitive && typeCode != TypeCode.Object && typeCode != TypeCode.Boolean && typeCode != TypeCode.Char && typeCode != TypeCode.String); 
 		}
 	}
 }
