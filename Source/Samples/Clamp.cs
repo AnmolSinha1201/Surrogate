@@ -28,10 +28,8 @@ namespace Surrogate.Samples
 			if (!Info.Value.IsNumber())
 				throw new Exception(Info.ParamInfo.ParameterError("Clamp", "number"));
 
-			var value = (double)Info.Value;
-
-			if (value < LowerBound || (int)Info.Value > UpperBound)
-				Info.Value = Math.Clamp(value, LowerBound, UpperBound);
+			var retVal = Math.Clamp(Convert.ToDouble(Info.Value), LowerBound, UpperBound);
+			Info.Value = Convert.ChangeType(retVal, Info.ParamInfo.ParameterType);
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
@@ -42,9 +40,8 @@ namespace Surrogate.Samples
 			if (!Info.Value.IsNumber())
 				throw new Exception(Info.Member.ReturnError("Clamp", "number"));
 
-			var value = (double)Info.Value;
-			if (value < LowerBound || value > UpperBound)
-				Info.Value = Math.Clamp(value, LowerBound, UpperBound);
+			var retVal = Math.Clamp(Convert.ToDouble(Info.Value), LowerBound, UpperBound);
+			Info.Value = Convert.ChangeType(retVal, Info.Member.ReturnType);
 		}
 	}
 }
