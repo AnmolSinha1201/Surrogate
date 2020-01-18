@@ -1,6 +1,7 @@
 using System;
 using Surrogate.Helpers;
 using Surrogate.Interfaces;
+using Surrogate.Internal.Helpers;
 
 namespace Surrogate.Samples
 {
@@ -10,10 +11,10 @@ namespace Surrogate.Samples
 	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
 	public class Clamp : Attribute, IParameterSurrogate, IReturnSurrogate
 	{
-		public int LowerBound;
-		public int UpperBound;
+		public double LowerBound;
+		public double UpperBound;
 
-		public Clamp(int LowerBound, int UpperBound)
+		public Clamp(double LowerBound, double UpperBound)
 		{
 			this.LowerBound = LowerBound;
 			this.UpperBound = UpperBound;
@@ -21,17 +22,29 @@ namespace Surrogate.Samples
 
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
-			if ((int)Info.Value < LowerBound || (int)Info.Value > UpperBound)
-				Info.Value = Math.Clamp((int)Info.Value, LowerBound, UpperBound);
+			if (Info.Value == null)
+				throw new Exception(Info.ParamInfo.ParameterError("Clamp"));
+
+			if (!Info.Value.IsNumber())
+				throw new Exception(Info.ParamInfo.ParameterError("Clamp", "number"));
+
+			var value = (double)Info.Value;
+
+			if (value < LowerBound || (int)Info.Value > UpperBound)
+				Info.Value = Math.Clamp(value, LowerBound, UpperBound);
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
 		{
 			if (Info.Value == null)
-				Info.Value = LowerBound;
+				throw new Exception(Info.Member.ReturnError("Clamp"));
 
-			if ((int)Info.Value < LowerBound || (int)Info.Value > UpperBound)
-				Info.Value = Math.Clamp((int)Info.Value, LowerBound, UpperBound);
+			if (!Info.Value.IsNumber())
+				throw new Exception(Info.Member.ReturnError("Clamp", "number"));
+
+			var value = (double)Info.Value;
+			if (value < LowerBound || value > UpperBound)
+				Info.Value = Math.Clamp(value, LowerBound, UpperBound);
 		}
 	}
 }
