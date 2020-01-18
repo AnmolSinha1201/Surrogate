@@ -1,7 +1,7 @@
 using System;
 using Surrogate.Interfaces;
 
-namespace Surrogate.Samples
+namespace Surrogate.Internal.BaseSurrogates
 {
 	[AttributeUsage(AttributeTargets.Method)]
 	public class MethodSurrogate : Attribute, IMethodSurrogate
