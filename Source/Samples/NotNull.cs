@@ -1,6 +1,6 @@
 using System;
 using Surrogate.Interfaces;
-using Surrogate.Helpers;
+using Surrogate.Internal.Helpers;
 
 namespace Surrogate.Samples
 {
