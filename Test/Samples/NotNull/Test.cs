@@ -3,7 +3,7 @@ using AutoFixture.Xunit2;
 using Surrogate.Samples;
 using Xunit;
 
-namespace Surrogate.Tests.NotNull
+namespace Surrogate.Tests.NotNullTest
 {
     public class Cases
     {
