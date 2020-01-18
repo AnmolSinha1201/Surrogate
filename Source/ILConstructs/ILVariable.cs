@@ -4,7 +4,7 @@ using Surrogate.Helpers;
 
 namespace Surrogate.ILConstructs
 {
-	public class ILVariable
+	internal class ILVariable
 	{
 		public LocalBuilder Address;
 		public ILGenerator IL;

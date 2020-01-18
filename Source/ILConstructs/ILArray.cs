@@ -7,7 +7,7 @@ using Surrogate.ILConstructs;
 
 namespace Surrogate.ILConstructs
 {
-	public class ILArray
+	internal class ILArray
 	{
 		public ILGenerator IL;
 		public Type BaseType, ArrayType;
