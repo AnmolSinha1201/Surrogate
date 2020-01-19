@@ -20,21 +20,18 @@ namespace Surrogate
 			var returnValue = IL.DeclareLocal(typeof(object));
 
 			if (attributes.Count() == 0)
-			{
 				ILAttributes = IL.CreateArray<IMethodSurrogate>(1, (i) => IL.CreateExternalType(typeof(MethodSurrogate), new Type[] {}));
-				attributes = new Attribute[] { new MethodSurrogate() };
-			}
 			
-			for (int i = 0; i < attributes.Count(); i++)
+			ILAttributes.ForEach((attribute) =>
 			{
-				ILAttributes.LoadElementAt(i);		
+				attribute.Load();
 				var info = IL.CreateMethodSurrogateInfo(BackingMethod, Arguments, returnValue);
 				IL.Emit(OpCodes.Ldloc, info);
-				IL.Emit(OpCodes.Call, attributes[i].GetType().GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
+				IL.Emit(OpCodes.Callvirt, typeof(IMethodSurrogate).GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
 
 				IL.CopyArrayToArgs(Method, Arguments);
 				IL.ReturnMethodSurrogateInfoValue(info, returnValue);
-			}
+			});
 
 			return returnValue;
 		}
