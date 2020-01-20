@@ -27,78 +27,39 @@ namespace Surrogate.Tests.BetweenTest
 			Assert.ThrowsAny<Exception>(() => TestObject.Method2(Input));
         }
 
-		[Fact]
-        public void Input_OutputGreater()
+		[Theory]
+		[InlineAutoData(11)]
+		[InlineAutoData(4)]
+        public void Input_OutputOutOfRange(int Input)
         {
-			var Input = RGen.Next(11, 100);
 			Assert.ThrowsAny<Exception>(() => TestObject.Method3(Input));
         }
 
-		[Fact]
-        public void Input_OutputGreaterEqual()
+		[Theory]
+		[InlineAutoData(5)]
+		[InlineAutoData(10)]
+		[InlineAutoData(8)]
+        public void Input_OutputInRange(int Input)
         {
-			var Input = 10;
 			var retVal = TestObject.Method3(Input);
 			Assert.Equal(Input, retVal);
         }
 
-		[Fact]
-        public void Input_OutputLesser()
-        {
-			var Input = RGen.Next(4);
-			Assert.ThrowsAny<Exception>(() => TestObject.Method3(Input));
-        }
 
-		[Fact]
-        public void Input_OutputLesserEqual()
+		[Theory]
+		[InlineAutoData(11)]
+		[InlineAutoData(4)]
+        public void InputOutOfRange_Output(int Input)
         {
-			var Input = 5;
-			var retVal = TestObject.Method3(Input);
-			Assert.Equal(Input, retVal);
-        }
-
-		[Fact]
-        public void Input_OutputRange()
-        {
-			var Input = RGen.Next(5, 10);
-			var retVal = TestObject.Method3(Input);
-			Assert.Equal(Input, retVal);
-        }
-
-		[Fact]
-        public void InputGreater_Output()
-        {
-			var Input = RGen.Next(11, 100);
 			Assert.ThrowsAny<Exception>(() => TestObject.Method4(Input));
         }
 
-		[Fact]
-        public void InputGreaterEqual_Output()
+		[Theory]
+		[InlineAutoData(5)]
+		[InlineAutoData(10)]
+		[InlineAutoData(8)]
+        public void InputInRange_Output(int Input)
         {
-			var Input = 10;
-			var retVal = TestObject.Method4(Input);
-			Assert.Equal(Input, retVal);
-        }
-
-		[Fact]
-        public void InputLesser_Output()
-        {
-			var Input = RGen.Next(4);
-			Assert.ThrowsAny<Exception>(() => TestObject.Method4(Input));
-        }
-
-		[Fact]
-        public void InputLesserEqual_Output()
-        {
-			var Input = 5;
-			var retVal = TestObject.Method4(Input);
-			Assert.Equal(Input, retVal);
-        }
-
-		[Fact]
-        public void InputRange_Output()
-        {
-			var Input = RGen.Next(5, 10);
 			var retVal = TestObject.Method4(Input);
 			Assert.Equal(Input, retVal);
         }
