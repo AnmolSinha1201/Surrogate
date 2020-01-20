@@ -49,6 +49,7 @@ Feature| Status
 FieldSurrogate|Cancelled *
 PropertySurrogate|WIP
 ClassSurrogate|WIP **
+Ref Returns|Cancelled ***
 
 \* = Not feasible, as `FieldSurrogate`s would require converting them into properties, which means we cannot inherit from the original class (as converting from field to property means there would be two members with the name). Even the classical way of C# notifications require that we use properties and not objects. Even if create an entire new object from scratch, we would not be able to back cast it into original type, which means we would be reliant on reflection for this implementation.
 
@@ -59,5 +60,7 @@ That said, I am still exploring the possibility of using `DynamicObject` API to 
 - A class with any thing allowed, which means that we would have to convert fields into properties and convert non virtual methods into virtual ones. With this, we can't back cast the output instance into original type and we will miss out on the strict type checking and autocompletion. We would be reliant on reflection on this implementation.
 - Use `DynamicObject` API which would mean we would have to use `dynamic` data type and thus, every thing would be late bound. This also means there would be no compile time safety. This is still a lot better than the second approach.
 - A hybrid approach, where we check the members of the class and based on whether they satisfy the first condition, chose first or second or third approach.
+
+\*\*\* = Ref returns cannot be supported due to limitations of C#, reflection in particular. `System.Reflection`'s `Invoke` does not return a ref, therefore even though the original method returns a ref, it cannot be chained back via surrogates.
 
 Please let me know what you guys think and report any bugs using "issues".
