@@ -29,7 +29,7 @@ namespace Surrogate.Samples
 				throw new Exception(Info.ParamInfo.ParameterError("Clamp", "number"));
 
 			var retVal = Math.Clamp(Convert.ToDouble(Info.Value), LowerBound, UpperBound);
-			Info.Value = Convert.ChangeType(retVal, Info.ParamInfo.ParameterType);
+			Info.Value = Convert.ChangeType(retVal, Info.ParamInfo.ActualParameterType());
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
