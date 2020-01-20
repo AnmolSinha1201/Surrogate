@@ -12,7 +12,6 @@ namespace Surrogate.Internal.ILConstructs
 		public ILGenerator IL;
 		public Type BaseType, ArrayType;
 		public LocalBuilder Address;
-		public object[] CorrespondingArray;
 
 		public void LoadElementAt(int Index)
 		{
@@ -81,11 +80,7 @@ namespace Surrogate.Internal.ILConstructs
 
 		public ILVariable ElementAt(int Index)
 		{
-			var variable = IL.NewVariable(BaseType, () => LoadElementAt(Index));
-
-			if (CorrespondingArray == null)
-				return variable;
-			return variable.WithCorrespondingObject(CorrespondingArray[Index]);
+			return IL.NewVariable(BaseType, () => LoadElementAt(Index));
 		}
 	}
 

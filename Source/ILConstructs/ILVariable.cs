@@ -8,7 +8,6 @@ namespace Surrogate.Internal.ILConstructs
 	{
 		public LocalBuilder Address;
 		public ILGenerator IL;
-		public object CorrespondingObject;
 
 		public ILVariable(ILGenerator IL, Type VariableType)
 		{
@@ -62,12 +61,6 @@ namespace Surrogate.Internal.ILConstructs
 		public static ILVariable NewVariable(this ILGenerator IL, int Value)
 		{
 			return new ILVariable(IL, Value);
-		}
-
-		public static ILVariable WithCorrespondingObject(this ILVariable Variable, object CorrespondingObject)
-		{
-			Variable.CorrespondingObject = CorrespondingObject;
-			return Variable;
 		}
 	}
 }
