@@ -12,7 +12,7 @@ namespace Surrogate
             var instance = (Foo)SurrogateBuilder.Build<Foo>();
             var num = 456;
             var inputText = "Foobar is real";
-            var retVal = instance.ActualMethod(null, ref num);
+            var retVal = instance.ActualMethod(inputText, ref num);
         }
 
         void foobar()
