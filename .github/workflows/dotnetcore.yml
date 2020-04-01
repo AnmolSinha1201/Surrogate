@@ -22,20 +22,8 @@ jobs:
       run: |
         cd Source
         dotnet build --configuration Release --no-restore
+        
     - name: Testing
       run: |
-        cd Test
-        dotnet test --no-restore --verbosity normal
-
-  Test:
-    needs: Build
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.101
-    - name: Testing
-      run: |
-        ls
         cd Test
         dotnet test --no-restore --verbosity normal
