@@ -17,9 +17,9 @@ jobs:
       with:
         dotnet-version: 3.1.101
     - run: |
-        ls -R
+        ls
         cd ./Source
-        ls -R
+        ls
     - run: dotnet restore
     - run: dotnet build --configuration Release --no-restore
     - run: cd ../Test
