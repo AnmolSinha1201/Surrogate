@@ -19,8 +19,11 @@ jobs:
     - run: |
         ls
         cd ./Source
+        echo 'foobar'
         ls
-    - run: dotnet restore
+    - run: |
+        ls
+        dotnet restore
     - run: dotnet build --configuration Release --no-restore
     - run: cd ../Test
     - run: dotnet test --no-restore --verbosity normal
