@@ -16,9 +16,10 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - run: ls -R
-    - run: cd ./Source
-    - run: ls -R
+    - run: |
+        ls -R
+        cd ./Source
+        ls -R
     - run: dotnet restore
     - run: dotnet build --configuration Release --no-restore
     - run: cd ../Test
