@@ -14,17 +14,12 @@ namespace Surrogate
             var inputText = "Foobar is real";
             var retVal = instance.ActualMethod(inputText, ref num);
         }
-
-        void foobar()
-        {
-
-        }
     }
 
     public class Foo
     {
         [return: ReturnSurrogate]
-        [return: Clamp(5, 10)]
+        // [return: Clamp(5, 10)]
         [MethodSurrogate]
         // [Bypass]
         public virtual int ActualMethod([NotNull] string InputText, ref int InputNum)
