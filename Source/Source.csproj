@@ -2,7 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>Surrogate</AssemblyName>
+    <TargetFrameworks>netcoreapp3.0;net45</TargetFrameworks>
+
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE" Pack="true" PackagePath="LICENSE.md" />
+  </ItemGroup>
 
 </Project>
