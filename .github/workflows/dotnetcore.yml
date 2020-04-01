@@ -16,14 +16,15 @@ jobs:
     - uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.101
-    - run: |
-        ls
-        cd ./Source
-        echo 'foobar'
-        ls
-    - run: |
-        ls
+    - name: Restoring
+      run: |
+        cd Source
         dotnet restore
-    - run: dotnet build --configuration Release --no-restore
-    - run: cd ../Test
-    - run: dotnet test --no-restore --verbosity normal
+    - name: Building
+      run: |
+        cd Source
+        dotnet build --configuration Release --no-restore
+    - name: Testing
+      run: |
+        cd Test
+        dotnet test --no-restore --verbosity normal
