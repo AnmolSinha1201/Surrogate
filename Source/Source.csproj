@@ -3,8 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>Surrogate</AssemblyName>
-    <TargetFrameworks>netcoreapp3.0;net45</TargetFrameworks>
 
+    <TargetFrameworks>netcoreapp3.0;net45</TargetFrameworks>
+    <Version>1.0.0</Version>
+    <Authors>Anmol Sinha</Authors>
+    <Description>Aspect Oriented Programming framework which supports dynamic code generation</Description>
+    <Summary>Aspect Oriented Programming framework which supports dynamic code generation</Summary>
+    <PackageProjectUrl>https://github.com/AnmolSinha1201/Surrogate/</PackageProjectUrl>
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
