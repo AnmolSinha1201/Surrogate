@@ -30,3 +30,9 @@ jobs:
         cd Test
         nuget restore
         dotnet test
+        
+    - name: Publish NuGet
+      uses: rohith/publish-nuget@v2.2.0
+      with:
+        PROJECT_FILE_PATH: Source/Sourcs.csproj
+        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
