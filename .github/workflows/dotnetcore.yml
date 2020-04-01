@@ -34,5 +34,5 @@ jobs:
     - name: Publish NuGet
       uses: rohith/publish-nuget@v2.2.0
       with:
-        PROJECT_FILE_PATH: Source/Source.csproj
+        PROJECT_FILE_PATH: Source\Source.csproj
         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
