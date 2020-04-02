@@ -30,9 +30,5 @@ namespace Surrogate.Interfaces
 			this.ReturnValue = ReturnValue;
 		}
 
-		public object Execute()
-		{
-			return Member.Invoke(Item, Arguments);
-		}
 	}
 }
