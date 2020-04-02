@@ -8,8 +8,8 @@ namespace Surrogate.Internal.BaseSurrogates
 	{
 		public void InterceptMethod(MethodSurrogateInfo Info)
 		{
-			var retVal = Info.Execute();
-			Info.ReturnValue = retVal;
+			// var retVal = Info.Execute();
+			// Info.ReturnValue = retVal;
 		}
 	}
 }

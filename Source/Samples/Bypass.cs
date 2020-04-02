@@ -10,7 +10,7 @@ namespace Surrogate.Samples
 		public void InterceptMethod(MethodSurrogateInfo Info)
 		{
 			Console.WriteLine($"Bypassing {Info.Member.Name}");
-			Info.ReturnValue = Info.Member.ReturnType.Default();
+			// Info.ReturnValue = Info.Member.ReturnType.Default();
 		}
 	}
 }

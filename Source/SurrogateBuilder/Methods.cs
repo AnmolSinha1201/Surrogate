@@ -25,13 +25,18 @@ namespace Surrogate
 			ILAttributes.ForEach((attribute) =>
 			{
 				attribute.Load();
-				var info = IL.CreateMethodSurrogateInfo(BackingMethod, Arguments, returnValue);
+				var info = IL.CreateMethodSurrogateInfo(BackingMethod, Arguments);
 				IL.Emit(OpCodes.Ldloc, info);
 				IL.Emit(OpCodes.Callvirt, typeof(IMethodSurrogate).GetMethod(nameof(IMethodSurrogate.InterceptMethod), new [] { typeof(MethodSurrogateInfo) }));
 
 				IL.CopyArrayToArgs(Method, Arguments);
-				IL.ReturnMethodSurrogateInfoValue(info, returnValue);
+				// IL.ReturnMethodSurrogateInfoValue(info, returnValue);
 			});
+
+			IL.Emit(OpCodes.Ldarg_0);
+			IL.Emit(OpCodes.Call, Method);
+			IL.Emit(OpCodes.Box, Method.ReturnType);
+			IL.Emit(OpCodes.Stloc, returnValue);
 
 			return returnValue;
 		}
@@ -59,14 +64,13 @@ namespace Surrogate
 			return methodBuilder;
 		}
 
-		private static LocalBuilder CreateMethodSurrogateInfo(this ILGenerator IL, MethodInfo BackingMethod, ILArray ArgumentsArray, LocalBuilder ReturnValue)
+		private static LocalBuilder CreateMethodSurrogateInfo(this ILGenerator IL, MethodInfo BackingMethod, ILArray ArgumentsArray)
 		{
 			IL.Emit(OpCodes.Ldarg_0);
 			IL.LoadExternalMethodInfo(BackingMethod);
 			IL.Emit(OpCodes.Ldloc, ArgumentsArray.Address);
-			IL.Emit(OpCodes.Ldloc, ReturnValue);
 
-			var info = IL.CreateExternalType(typeof(MethodSurrogateInfo), new [] { typeof(object), typeof(MethodInfo), typeof(object[]), typeof(object) });
+			var info = IL.CreateExternalType(typeof(MethodSurrogateInfo), new [] { typeof(object), typeof(MethodInfo), typeof(object[]) });
 			return info;
 		}
 
@@ -87,14 +91,6 @@ namespace Surrogate
 				IL.StoreIntoAddress(parameters[i].ParameterType);
 				// IL.Emit(OpCodes.Stind_I4);
 			}
-		}
-
-		private static void ReturnMethodSurrogateInfoValue(this ILGenerator IL, LocalBuilder SurrogateInfoVariable, LocalBuilder ReturnValue)
-		{
-			IL.Emit(OpCodes.Ldloc, SurrogateInfoVariable);
-			IL.Emit(OpCodes.Ldfld, typeof(MethodSurrogateInfo).GetField(nameof(MethodSurrogateInfo.ReturnValue)));
-
-			IL.Emit(OpCodes.Stloc, ReturnValue);
 		}
 	}
 }
