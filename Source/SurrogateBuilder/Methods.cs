@@ -33,6 +33,11 @@ namespace Surrogate
 				IL.ReturnMethodSurrogateInfoValue(info, returnValue);
 			});
 
+			IL.Emit(OpCodes.Ldarg_0);
+			IL.Emit(OpCodes.Call, Method);
+			IL.Emit(OpCodes.Box, Method.ReturnType);
+			IL.Emit(OpCodes.Stloc, returnValue);
+
 			return returnValue;
 		}
 
