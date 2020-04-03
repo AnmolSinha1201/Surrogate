@@ -33,7 +33,16 @@ namespace Surrogate
 				// IL.ReturnMethodSurrogateInfoValue(info, returnValue);
 			});
 
+			
 			IL.Emit(OpCodes.Ldarg_0);
+
+			// IL.Emit(OpCodes.Ldstr, "123123123");
+			// IL.LoadConstantInt32(12345);
+			for (int i = 0; i < Method.GetParameters().Count(); i++)
+				IL.LoadArgument(i);
+			// IL.Emit(OpCodes.Ldarg_1);
+			// IL.Emit(OpCodes.Ldarg_2);
+
 			IL.Emit(OpCodes.Call, Method);
 			IL.Emit(OpCodes.Box, Method.ReturnType);
 			IL.Emit(OpCodes.Stloc, returnValue);
