@@ -13,9 +13,9 @@ namespace Surrogate
 	{
 		public static Dictionary<Type, Type> Cache = new Dictionary<Type, Type>();
 		
-		public static object Build(Type ItemType, bool FromCache = true)
+		public static object Build(Type ItemType, params object[] Arguments)
 		{
-			if (FromCache && Cache.ContainsKey(ItemType))
+			if (Cache.ContainsKey(ItemType))
 				return Activator.CreateInstance(Cache[ItemType]);
 
 			var builder = ItemType.CreateTypeBuilder();
@@ -31,12 +31,12 @@ namespace Surrogate
 
 			var type = builder.CreateType();
 			Cache.Add(ItemType, type);
-			return Activator.CreateInstance(type);
+			return Activator.CreateInstance(type, Arguments);
 		}
 
-		public static object Build<T>(bool FromCache = true)
+		public static object Build<T>(params object[] Arguments)
 		{
-			return Build(typeof(T), FromCache);
+			return Build(typeof(T), Arguments);
 		}
 
 		private static void MethodWorkflowDispatch(TypeBuilder Builder, MethodInfo Method)

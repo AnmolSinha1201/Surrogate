@@ -9,20 +9,26 @@ namespace Surrogate
     {
         static void Main(string[] args)
         {
-            var instance = (Foo)SurrogateBuilder.Build<Foo>();
+            // var instance = new Foo("Foobar is real");
+            var instance = (Foo)SurrogateBuilder.Build<Foo>("Foobar is real");
             var num = 456;
             var inputText = "Foobar is real";
-            var retVal = instance.ActualMethod(inputText, ref num);
+            var retVal = instance.ActualMethod(inputText, num);
         }
     }
 
     public class Foo
     {
+        public Foo() {}
+        public Foo(string foobar)
+        {
+
+        }
         [return: ReturnSurrogate]
         // [return: Clamp(5, 10)]
         [MethodSurrogate]
         // [Bypass]
-        public virtual int ActualMethod([NotNull] string InputText, ref int InputNum)
+        public virtual int ActualMethod(string InputText, int InputNum)
         {
             Console.WriteLine("Actual Method");
             Console.WriteLine($"Received : {InputText}");
