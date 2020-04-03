@@ -38,10 +38,16 @@ namespace Surrogate
 
 			// IL.Emit(OpCodes.Ldstr, "123123123");
 			// IL.LoadConstantInt32(12345);
-			for (int i = 0; i < Method.GetParameters().Count(); i++)
-				IL.LoadArgument(i);
-			// IL.Emit(OpCodes.Ldarg_1);
-			// IL.Emit(OpCodes.Ldarg_2);
+			// for (int i = 0; i < Method.GetParameters().Count(); i++)
+			// 	IL.LoadArgument(i);
+
+			var parameters = Method.GetParameters();
+			for (int i = 0; i < parameters.Count(); i++)
+			{
+				Arguments.LoadElementAt(i);
+				IL.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
+			}
+		
 
 			IL.Emit(OpCodes.Call, Method);
 			IL.Emit(OpCodes.Box, Method.ReturnType);

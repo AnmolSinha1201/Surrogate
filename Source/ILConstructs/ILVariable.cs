@@ -8,10 +8,12 @@ namespace Surrogate.Internal.ILConstructs
 	{
 		public LocalBuilder Address;
 		public ILGenerator IL;
+		public Type VariableType;
 
 		public ILVariable(ILGenerator IL, Type VariableType)
 		{
 			this.IL = IL;
+			this.VariableType = VariableType;
 			this.Address = IL.DeclareLocal(VariableType);
 		}
 
@@ -19,6 +21,7 @@ namespace Surrogate.Internal.ILConstructs
 		{
 			this.IL = IL;
 			this.Address = IL.DeclareLocal(typeof(int));
+			this.VariableType = typeof(int);
 
 			IL.LoadConstantInt32(Value);
 			IL.Emit(OpCodes.Stloc, Address);
