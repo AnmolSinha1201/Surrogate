@@ -50,8 +50,11 @@ namespace Surrogate
 		
 
 			IL.Emit(OpCodes.Call, Method);
-			IL.Emit(OpCodes.Box, Method.ReturnType);
-			IL.Emit(OpCodes.Stloc, returnValue);
+			if (Method.ReturnType != null && Method.ReturnType != typeof(void))
+			{
+				IL.Emit(OpCodes.Box, Method.ReturnType);
+				IL.Emit(OpCodes.Stloc, returnValue);
+			}
 
 			return returnValue;
 		}

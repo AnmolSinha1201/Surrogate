@@ -67,10 +67,13 @@ namespace Surrogate
 			
 			var returnValue = il.CreateMethodInterceptor(Method, backingMethod, args);
 
-			il.CreateReturnProxy(Method, returnValue);
+			if (Method.ReturnType != null && Method.ReturnType != typeof(void))
+			{
+				il.CreateReturnProxy(Method, returnValue);
 
-			il.Emit(OpCodes.Ldloc, returnValue);	
-			il.Emit(OpCodes.Unbox_Any, Method.ReturnType);
+				il.Emit(OpCodes.Ldloc, returnValue);	
+				il.Emit(OpCodes.Unbox_Any, Method.ReturnType);
+			}
 			il.Emit(OpCodes.Ret);
 
 			Builder.DefineMethodOverride(methodBuilder, Method);
