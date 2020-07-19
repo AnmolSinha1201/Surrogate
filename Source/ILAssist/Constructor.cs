@@ -35,14 +35,7 @@ namespace Surrogate.ILAssist
 		internal static void CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
 		{
 			var parameters = Constructor.GetParameters();
-			if (parameters.Length > 0 && parameters.Last().IsDefined(typeof(ParamArrayAttribute), false))
-				throw new InvalidOperationException("Variadic constructors are not supported");
-
-			var parameterTypes = parameters.Select(p => p.ParameterType).ToArray();
-			var requiredCustomModifiers = parameters.Select(p => p.GetRequiredCustomModifiers()).ToArray();
-			var optionalCustomModifiers = parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
-
-			var ctor = Builder.DefineConstructor(MethodAttributes.Public, Constructor.CallingConvention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers).ToILConstructor();
+			var ctor = Builder.DefineConstructor(parameters, Constructor.CallingConvention).ToILConstructor();
 			ctor.CopyParameters(parameters);
 
 			foreach (var attribute in Constructor.GetCustomAttributesData().ToCustomAttributeBuilder())
@@ -53,5 +46,20 @@ namespace Surrogate.ILAssist
 
 		internal static ILConstructor ToILConstructor(this ConstructorBuilder Builder)
 		=> new ILConstructor(Builder);
+
+		internal static ConstructorBuilder DefineConstructor(this TypeBuilder Builder, ParameterInfo[] Parameters, CallingConventions Convention)
+		{
+			if (Parameters.Length > 0 && Parameters.Last().IsDefined(typeof(ParamArrayAttribute), false))
+				throw new InvalidOperationException("Variadic constructors are not supported");
+
+			var parameterTypes = Parameters.Select(p => p.ParameterType).ToArray();
+			var requiredCustomModifiers = Parameters.Select(p => p.GetRequiredCustomModifiers()).ToArray();
+			var optionalCustomModifiers = Parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
+
+			var ctor = Builder.DefineConstructor(MethodAttributes.Public, Convention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers);
+			ctor.CopyParameters(Parameters);
+
+			return ctor;
+		}
 	}
 }
