@@ -10,12 +10,6 @@ namespace Surrogate.ILAssist
 	{
 		public ILConstructor(ConstructorBuilder Builder) : base(Builder)
 		{ }
-
-		public void CopyParameters(ParameterInfo[] OriginalParameters)
-		=> ((ConstructorBuilder)Base).CopyParameters(OriginalParameters);
-
-		public void SetCustomAttribute(CustomAttributeBuilder Attribute)
-		=> ((ConstructorBuilder)Base).SetCustomAttribute(Attribute);
 	}
 
 	public static partial class Extensions
@@ -35,13 +29,13 @@ namespace Surrogate.ILAssist
 		internal static void CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
 		{
 			var parameters = Constructor.GetParameters();
-			var ctor = Builder.DefineConstructor(parameters, Constructor.CallingConvention).ToILConstructor();
+			var ctor = Builder.DefineConstructor(parameters, Constructor.CallingConvention);
 			ctor.CopyParameters(parameters);
 
 			foreach (var attribute in Constructor.GetCustomAttributesData().ToCustomAttributeBuilder())
 				ctor.SetCustomAttribute(attribute);
 			
-			ctor.EmitCallBase();
+			ctor.ToILConstructor().EmitCallBase();
 		}
 
 		internal static ILConstructor ToILConstructor(this ConstructorBuilder Builder)
