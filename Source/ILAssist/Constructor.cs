@@ -30,7 +30,7 @@ namespace Surrogate.ILAssist
 		{
 			var parameters = Constructor.GetParameters();
 			var ctor = Builder.DefineConstructor(parameters, Constructor.CallingConvention);
-			ctor.CopyParameters(parameters);
+			ctor.ApplyParameters(parameters);
 
 			foreach (var attribute in Constructor.GetCustomAttributesData().ToCustomAttributeBuilder())
 				ctor.SetCustomAttribute(attribute);
@@ -51,7 +51,7 @@ namespace Surrogate.ILAssist
 			var optionalCustomModifiers = Parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
 
 			var ctor = Builder.DefineConstructor(MethodAttributes.Public, Convention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers);
-			ctor.CopyParameters(Parameters);
+			ctor.ApplyParameters(Parameters);
 
 			return ctor;
 		}
