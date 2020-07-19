@@ -43,17 +43,7 @@ namespace Surrogate.ILAssist
 			var optionalCustomModifiers = parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
 
 			var ctor = Builder.DefineConstructor(MethodAttributes.Public, Constructor.CallingConvention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers);
-			for (var i = 0; i < parameters.Length; ++i) {
-				var parameter = parameters[i];
-				var parameterBuilder = ctor.DefineParameter(i + 1, parameter.Attributes, parameter.Name);
-				if (((int)parameter.Attributes & (int)ParameterAttributes.HasDefault) != 0) {
-					parameterBuilder.SetConstant(parameter.RawDefaultValue);
-				}
-
-				foreach (var attribute in ToCustomAttributeBuilder(parameter.GetCustomAttributesData())) {
-					parameterBuilder.SetCustomAttribute(attribute);
-				}
-			}
+			ctor.CopyParameters(parameters);
 
 			foreach (var attribute in ToCustomAttributeBuilder(Constructor.GetCustomAttributesData())) {
 				ctor.SetCustomAttribute(attribute);
