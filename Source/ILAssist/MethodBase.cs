@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	public class BaseILMethodBase
+	public abstract class BaseILMethodBase
 	{
 		public ILGenerator Generator;
 		public MethodBase Base;
@@ -37,6 +37,7 @@ namespace Surrogate.ILAssist
 				LoadArgument(i);
 			
 			Generator.Emit(OpCodes.Call, (dynamic)Base);
+			Generator.Emit(OpCodes.Ret);
 		}
 	}
 }
