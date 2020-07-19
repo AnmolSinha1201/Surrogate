@@ -10,6 +10,12 @@ namespace Surrogate.ILAssist
 	{
 		public ILConstructor(ConstructorBuilder Builder) : base(Builder)
 		{ }
+
+		public void CopyParameters(ParameterInfo[] OriginalParameters)
+		=> ((ConstructorBuilder)Base).CopyParameters(OriginalParameters);
+
+		public void SetCustomAttribute(CustomAttributeBuilder Attribute)
+		=> ((ConstructorBuilder)Base).SetCustomAttribute(Attribute);
 	}
 
 	public static partial class Extensions
@@ -36,24 +42,16 @@ namespace Surrogate.ILAssist
 			var requiredCustomModifiers = parameters.Select(p => p.GetRequiredCustomModifiers()).ToArray();
 			var optionalCustomModifiers = parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
 
-			var ctor = Builder.DefineConstructor(MethodAttributes.Public, Constructor.CallingConvention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers);
+			var ctor = Builder.DefineConstructor(MethodAttributes.Public, Constructor.CallingConvention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers).ToILConstructor();
 			ctor.CopyParameters(parameters);
 
-			foreach (var attribute in ToCustomAttributeBuilder(Constructor.GetCustomAttributesData())) {
+			foreach (var attribute in Constructor.GetCustomAttributesData().ToCustomAttributeBuilder())
 				ctor.SetCustomAttribute(attribute);
-			}
-
-			var emitter = ctor.GetILGenerator();
-			emitter.Emit(OpCodes.Nop);
-
-			// Load `this` and call base constructor with arguments
-			emitter.Emit(OpCodes.Ldarg_0);
-			for (var i = 1; i <= parameters.Length; ++i) {
-				emitter.Emit(OpCodes.Ldarg, i);
-			}
-			emitter.Emit(OpCodes.Call, Constructor);
-
-			emitter.Emit(OpCodes.Ret);
+			
+			ctor.EmitCallBase();
 		}
+
+		internal static ILConstructor ToILConstructor(this ConstructorBuilder Builder)
+		=> new ILConstructor(Builder);
 	}
 }
