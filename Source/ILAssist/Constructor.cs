@@ -6,16 +6,10 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	public class ILConstructor
+	public class ILConstructor : BaseILMethodBase
 	{
-		public ILGenerator Generator;
-		public ConstructorBuilder Base;
-
-		public ILConstructor(ConstructorBuilder Builder)
-		{
-			Base = Builder;
-			Generator = Builder.GetILGenerator();
-		}
+		public ILConstructor(ConstructorBuilder Builder) : base(Builder)
+		{ }
 	}
 
 	public static partial class Extensions
