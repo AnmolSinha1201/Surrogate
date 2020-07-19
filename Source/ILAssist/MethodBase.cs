@@ -31,7 +31,7 @@ namespace Surrogate.ILAssist
 				Generator.Emit(OpCodes.Ldarg, Index);
 		}
 
-		public void CallBase() // Also loads this
+		public void EmitCallBase() // Also loads this
 		{
 			for (int i = 0; i <= Base.GetParameters().Length; i++)
 				LoadArgument(i);
