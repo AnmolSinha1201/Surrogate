@@ -28,9 +28,7 @@ namespace Surrogate.ILAssist
 
 		internal static void CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
 		{
-			var parameters = Constructor.GetParameters();
-			var ctor = Builder.DefineConstructor(parameters, Constructor.CallingConvention);
-			ctor.ApplyParameters(parameters);
+			var ctor = Builder.DefineConstructor(Constructor.GetParameters(), Constructor.CallingConvention);
 
 			foreach (var attribute in Constructor.GetCustomAttributesData().ToCustomAttributeBuilder())
 				ctor.SetCustomAttribute(attribute);
