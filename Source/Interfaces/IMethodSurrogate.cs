@@ -5,7 +5,7 @@ namespace Surrogate.Interfaces
 {
 	public interface IMethodSurrogate
 	{
-		void InterceptMethod(MethodSurrogateInfo Info);
+		void InterceptMethod(object Item, MethodInfo Member, object[] Arguments);
 	}
 
 	public class MethodSurrogateInfo
