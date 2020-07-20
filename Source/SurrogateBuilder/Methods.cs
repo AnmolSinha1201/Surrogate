@@ -59,29 +59,6 @@ namespace Surrogate
 			return returnValue;
 		}
 
-		private static MethodBuilder CreateBackingMethod(this TypeBuilder Builder, MethodInfo OriginalMethod)
-		{
-			var parameters = OriginalMethod.GetParameters();
-
-			MethodBuilder methodBuilder = Builder.DefineMethod(
-				$"<{OriginalMethod.Name}>k__BackingMethod",
-				OriginalMethod.Attributes,
-				CallingConventions.HasThis,
-				OriginalMethod.ReturnType,
-				parameters.Select(i => i.ParameterType).ToArray()
-			);
-			
-			// base.OriginalMethod(args);
-			ILGenerator il = methodBuilder.GetILGenerator();
-			il.Emit(OpCodes.Ldarg_0);
-			for (int i = 0; i < parameters.Count(); i++)
-				il.LoadArgument(i);
-			il.Emit(OpCodes.Call, OriginalMethod);
-			il.Emit(OpCodes.Ret);
-
-			return methodBuilder;
-		}
-
 		private static LocalBuilder CreateMethodSurrogateInfo(this ILGenerator IL, MethodInfo BackingMethod, ILArray ArgumentsArray)
 		{
 			IL.Emit(OpCodes.Ldarg_0);
