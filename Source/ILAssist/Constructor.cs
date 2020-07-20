@@ -14,24 +14,24 @@ namespace Surrogate.ILAssist
 		{
 			this.Base = Info;
 		}
-
-		public ConstructorBuilder CreatePassThroughConstructor(TypeBuilder Builder)
-		{
-			var ctor = Builder.DefineConstructor(Base.GetParameters(), Base.CallingConvention);
-
-			foreach (var attribute in Base.GetCustomAttributesData().ToCustomAttributeBuilder())
-				ctor.SetCustomAttribute(attribute);
-			
-			ctor.GetILGenerator().EmitCallBaseAndReturn(ctor);
-
-			return ctor;
-		}
 	}
 
 	public static partial class Extensions
 	{
 		internal static ILConstructor ToILConstructor(this ConstructorInfo Info)
 		=> new ILConstructor(Info);
+
+		public static ConstructorBuilder CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
+		{
+			var ctor = Builder.DefineConstructor(Constructor.GetParameters(), Constructor.CallingConvention);
+
+			foreach (var attribute in Constructor.GetCustomAttributesData().ToCustomAttributeBuilder())
+				ctor.SetCustomAttribute(attribute);
+			
+			ctor.GetILGenerator().EmitCallBaseAndReturn(Constructor);
+
+			return ctor;
+		}
 
 		internal static ConstructorBuilder DefineConstructor(this TypeBuilder Builder, ParameterInfo[] Parameters, CallingConventions Convention)
 		{
