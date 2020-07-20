@@ -5,25 +5,16 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	public abstract class BaseILMethodBase
+	public static partial class Extensions
 	{
-		public ILGenerator Generator;
-		public MethodBase Base;
-		public BaseILMethodBase(MethodBase Builder)
-		{
-			Base = Builder;
-			Generator = ((dynamic)Builder).GetILGenerator();
-		}
-
-
-		private readonly OpCode[] LoadArgsOpCodes =
+		private static readonly OpCode[] LoadArgsOpCodes =
 		{
 			OpCodes.Ldarg_0,
 			OpCodes.Ldarg_1,
 			OpCodes.Ldarg_2,
 			OpCodes.Ldarg_3
 		};
-		public void LoadArgument(int Index)
+		public static void LoadArgument(this ILGenerator Generator, int Index)
 		{
 			if (Index <= LoadArgsOpCodes.Length)
 				Generator.Emit(LoadArgsOpCodes[Index]);
@@ -31,10 +22,10 @@ namespace Surrogate.ILAssist
 				Generator.Emit(OpCodes.Ldarg, Index);
 		}
 
-		public void EmitCallBase() // Also loads this
+		public static void EmitCallBaseAndReturn(this ILGenerator Generator, MethodBase Base) // Also loads this
 		{
 			for (int i = 0; i <= Base.GetParameters().Length; i++)
-				LoadArgument(i);
+				Generator.LoadArgument(i);
 			
 			Generator.Emit(OpCodes.Call, (dynamic)Base);
 			Generator.Emit(OpCodes.Ret);

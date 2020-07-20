@@ -5,9 +5,13 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	public class ILMethod : BaseILMethodBase
+	public class ILMethod
 	{
-		public ILMethod(MethodBuilder Builder) : base(Builder)
-		{ }
+		MethodInfo Base;
+
+		public ILMethod(MethodInfo Info)
+		{ 
+			this.Base = Info;
+		}
 	}
 }

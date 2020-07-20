@@ -45,44 +45,44 @@ namespace Surrogate.ILAssist
 			}
 		}
 
-		// public static void CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
-		// {
-		// 	var parameters = Constructor.GetParameters();
-		// 	if (parameters.Length > 0 && parameters.Last().IsDefined(typeof(ParamArrayAttribute), false)) 
-		// 	{
-		// 		throw new InvalidOperationException("Variadic constructors are not supported");
-		// 	}
+		public static void CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
+		{
+			var parameters = Constructor.GetParameters();
+			if (parameters.Length > 0 && parameters.Last().IsDefined(typeof(ParamArrayAttribute), false)) 
+			{
+				throw new InvalidOperationException("Variadic constructors are not supported");
+			}
 
-		// 	var parameterTypes = parameters.Select(p => p.ParameterType).ToArray();
-		// 	var requiredCustomModifiers = parameters.Select(p => p.GetRequiredCustomModifiers()).ToArray();
-		// 	var optionalCustomModifiers = parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
-		// 	var ctor = Builder.DefineConstructor(MethodAttributes.Public, Constructor.CallingConvention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers);
+			var parameterTypes = parameters.Select(p => p.ParameterType).ToArray();
+			var requiredCustomModifiers = parameters.Select(p => p.GetRequiredCustomModifiers()).ToArray();
+			var optionalCustomModifiers = parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
+			var ctor = Builder.DefineConstructor(MethodAttributes.Public, Constructor.CallingConvention, parameterTypes, requiredCustomModifiers, optionalCustomModifiers);
 			
-		// 	for (var i = 0; i < parameters.Length; ++i)
-		// 	{
-		// 		var parameter = parameters[i];
-		// 		var parameterBuilder = ctor.DefineParameter(i + 1, parameter.Attributes, parameter.Name);
-		// 		if (((int)parameter.Attributes & (int)ParameterAttributes.HasDefault) != 0) 
-		// 			parameterBuilder.SetConstant(parameter.RawDefaultValue);
+			for (var i = 0; i < parameters.Length; ++i)
+			{
+				var parameter = parameters[i];
+				var parameterBuilder = ctor.DefineParameter(i + 1, parameter.Attributes, parameter.Name);
+				if (((int)parameter.Attributes & (int)ParameterAttributes.HasDefault) != 0) 
+					parameterBuilder.SetConstant(parameter.RawDefaultValue);
 
-		// 		foreach (var attribute in parameter.GetCustomAttributesData().Select(i => i.ToCustomAttributeBuilder()))
-		// 			parameterBuilder.SetCustomAttribute(attribute);
-		// 	}
+				foreach (var attribute in parameter.GetCustomAttributesData().Select(i => i.ToCustomAttributeBuilder()))
+					parameterBuilder.SetCustomAttribute(attribute);
+			}
 
-		// 	foreach (var attribute in Constructor.GetCustomAttributesData().Select(i => i.ToCustomAttributeBuilder())) 
-		// 		ctor.SetCustomAttribute(attribute);
+			foreach (var attribute in Constructor.GetCustomAttributesData().Select(i => i.ToCustomAttributeBuilder())) 
+				ctor.SetCustomAttribute(attribute);
 
-		// 	var emitter = ctor.GetILGenerator();
-		// 	emitter.Emit(OpCodes.Nop);
+			var emitter = ctor.GetILGenerator();
+			emitter.Emit(OpCodes.Nop);
 
-		// 	// Load `this` and call base constructor with arguments
-		// 	emitter.Emit(OpCodes.Ldarg_0);
-		// 	for (var i = 1; i <= parameters.Length; ++i) {
-		// 		emitter.Emit(OpCodes.Ldarg, i);
-		// 	}
-		// 	emitter.Emit(OpCodes.Call, Constructor);
+			// Load `this` and call base constructor with arguments
+			emitter.Emit(OpCodes.Ldarg_0);
+			for (var i = 1; i <= parameters.Length; ++i) {
+				emitter.Emit(OpCodes.Ldarg, i);
+			}
+			emitter.Emit(OpCodes.Call, Constructor);
 
-		// 	emitter.Emit(OpCodes.Ret);
-		// }
+			emitter.Emit(OpCodes.Ret);
+		}
 	}
 }
