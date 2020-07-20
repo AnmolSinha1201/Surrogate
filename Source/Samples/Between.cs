@@ -9,7 +9,7 @@ namespace Surrogate.Samples
 	/// UpperBounds and LowerBounds are inclusive.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
-	public class Between : Attribute, IParameterSurrogate, IReturnSurrogate
+	public class Between : Attribute
 	{
 		public double LowerBound;
 		public double UpperBound;

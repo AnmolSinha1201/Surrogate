@@ -5,7 +5,7 @@ using Surrogate.Internal.Helpers;
 namespace Surrogate.Samples
 {
 	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
-	public class NotNull : Attribute, IParameterSurrogate, IReturnSurrogate
+	public class NotNull : Attribute
 	{
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
