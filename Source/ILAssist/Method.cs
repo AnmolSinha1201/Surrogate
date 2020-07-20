@@ -50,8 +50,7 @@ namespace Surrogate.ILAssist
 			
 			// base.OriginalMethod(args);
 			ILGenerator il = methodBuilder.GetILGenerator();
-			il.Emit(OpCodes.Ldarg_0);
-			for (int i = 0; i < parameters.Count(); i++)
+			for (int i = 0; i <= parameters.Count(); i++)
 				il.LoadArgument(i);
 			il.Emit(OpCodes.Call, OriginalMethod);
 			il.Emit(OpCodes.Ret);
