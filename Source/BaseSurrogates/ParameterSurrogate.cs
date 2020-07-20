@@ -4,7 +4,7 @@ using Surrogate.Interfaces;
 namespace Surrogate.Internal.BaseSurrogates
 {
 	[AttributeUsage(AttributeTargets.Parameter)]
-	public class ParameterSurrogate : Attribute, IParameterSurrogate
+	public class ParameterSurrogate : Attribute
 	{
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{

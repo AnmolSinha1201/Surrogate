@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Surrogate.Interfaces;
 
 namespace Surrogate.Internal.BaseSurrogates
@@ -10,6 +11,11 @@ namespace Surrogate.Internal.BaseSurrogates
 		{
 			// var retVal = Info.Execute();
 			// Info.ReturnValue = retVal;
+		}
+
+		public void InterceptMethod(object Item, MethodInfo Member, object[] Arguments)
+		{
+			// throw new NotImplementedException();
 		}
 	}
 }
