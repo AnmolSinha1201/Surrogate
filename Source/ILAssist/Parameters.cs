@@ -22,5 +22,27 @@ namespace Surrogate.ILAssist
 					parameterBuilder.SetCustomAttribute(attribute);
 			}
 		}
+
+		internal static void ApplyParameters(this MethodBuilder Builder, ParameterInfo[] OriginalParameters)
+		{
+			for (var i = 0; i < OriginalParameters.Length; i++) 
+				Builder.ApplyParameterAt(OriginalParameters[i], i + 1);
+		}
+
+
+		/// <summary>
+		/// <para>Index 0 is for return</para>
+		/// <para>Index 1+ is for parameters</para>
+		/// </summary>
+		internal static void ApplyParameterAt(this MethodBuilder Builder, ParameterInfo Parameter, int Index)
+		{
+			var parameterBuilder = Builder.DefineParameter(Index, Parameter.Attributes, Parameter.Name);
+
+			if ((Parameter.Attributes & ParameterAttributes.HasDefault) != 0) 
+				parameterBuilder.SetConstant(Parameter.RawDefaultValue);
+
+			foreach (var attribute in Parameter.GetCustomAttributesData().ToCustomAttributeBuilder())
+				parameterBuilder.SetCustomAttribute(attribute);
+		}
 	}
 }
