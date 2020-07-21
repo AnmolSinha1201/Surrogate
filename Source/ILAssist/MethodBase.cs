@@ -32,24 +32,33 @@ namespace Surrogate.ILAssist
 			Generator.Emit(OpCodes.Ret);
 		}
 
-		public static object SurrogateHook(object Item, MethodInfo Method, object[] Params)
+		public static object SurrogateHook(MethodInfo BackingMethod, object Item, MethodInfo OriginalMethod, object[] Params)
 		{
-			for (int i = 0; i < Params.Length; i++)
+			var parameters = OriginalMethod.GetParameters();
+			for (int i = 0; i < parameters.Length; i++)
 			{
-				var parameterAttributes = Method.FindAttributes<IParameterSurrogate>();
+				var parameterAttributes = parameters[i].FindAttributes<IParameterSurrogate>();
 				if (parameterAttributes.Length == 0)
 					continue;
 
 				foreach (var attribute in parameterAttributes)
-					attribute.InterceptParameter(ref Params[i]);
+				{
+					if (i < Params.Length)
+						attribute.InterceptParameter(ref Params[i]);
+					else
+					{
+						var value = parameters[i].RawDefaultValue;
+						attribute.InterceptParameter(ref value);
+					}
+				}
 			}
 			
-			var methodAttributes = Method.FindAttributes<IMethodSurrogate>();
+			var methodAttributes = OriginalMethod.FindAttributes<IMethodSurrogate>();
 			foreach (var attribute in methodAttributes)
-				attribute.InterceptMethod(Item, Method, Params);
+				attribute.InterceptMethod(Item, OriginalMethod, Params);
 
-			var returnAttributes = Method.FindAttributes<IReturnSurrogate>();
-			var retVal = Method.Invoke(Item, Params);
+			var returnAttributes = OriginalMethod.FindAttributes<IReturnSurrogate>();
+			var retVal = BackingMethod.Invoke(Item, Params);
 			foreach (var attribute in returnAttributes)
 				attribute.InterceptReturn(ref retVal);
 
