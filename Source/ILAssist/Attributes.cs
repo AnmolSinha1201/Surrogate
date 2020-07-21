@@ -30,10 +30,12 @@ namespace Surrogate.ILAssist
 		internal static Attribute[] FindAttributes(this MethodInfo Method, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
-			var attributes = AttributeType == typeof(IReturnSurrogate) ?
-				Method.ReturnTypeCustomAttributes.GetCustomAttributes(true).Cast<Attribute>() : Method.GetCustomAttributes();
+			var attributes = 
+				AttributeType == typeof(IMethodSurrogate) ?  Method.GetCustomAttributes(true) :
+				AttributeType == typeof(IReturnSurrogate) ? Method.ReturnParameter.GetCustomAttributes(true):
+				new object[] { };
 			
-			foreach (var attribute in attributes)
+			foreach (var attribute in attributes.Cast<Attribute>())
 			{
 				if (AttributeType.IsAssignableFrom(attribute.GetType()))
 					retVal.Add(attribute);
