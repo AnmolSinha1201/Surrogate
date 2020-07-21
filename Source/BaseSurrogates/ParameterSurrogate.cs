@@ -4,10 +4,11 @@ using Surrogate.Interfaces;
 namespace Surrogate.Internal.BaseSurrogates
 {
 	[AttributeUsage(AttributeTargets.Parameter)]
-	public class ParameterSurrogate : Attribute
+	public class ParameterSurrogate : Attribute, IParameterSurrogate
 	{
-		public void InterceptParameter(ParameterSurrogateInfo Info)
+		public void InterceptParameter(ref object Argument)
 		{
+			// throw new NotImplementedException();
 		}
 	}
 }
