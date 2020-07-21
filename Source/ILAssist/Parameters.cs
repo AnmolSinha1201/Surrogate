@@ -10,7 +10,7 @@ namespace Surrogate.ILAssist
 	{
 		internal static void ApplyParameters(this ConstructorBuilder Constructor, ParameterInfo[] OriginalParameters)
 		{
-			for (var i = 0; i < OriginalParameters.Length; ++i) 
+			for (var i = 0; i < OriginalParameters.Length; i++) 
 			{
 				var parameter = OriginalParameters[i];
 				var parameterBuilder = Constructor.DefineParameter(i + 1, parameter.Attributes, parameter.Name);
