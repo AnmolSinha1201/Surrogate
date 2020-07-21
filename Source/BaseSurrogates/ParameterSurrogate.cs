@@ -8,7 +8,6 @@ namespace Surrogate.Internal.BaseSurrogates
 	{
 		public void InterceptParameter(ref object Argument)
 		{
-			// throw new NotImplementedException();
 		}
 	}
 }

@@ -8,7 +8,6 @@ namespace Surrogate.Internal.BaseSurrogates
 	{
 		public void InterceptReturn(ref object ReturnValue)
 		{
-			// throw new NotImplementedException();
 		}
 	}
 }
