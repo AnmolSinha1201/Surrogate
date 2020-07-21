@@ -46,5 +46,22 @@ namespace Surrogate.ILAssist
 
 		internal static T[] FindAttributes<T>(this MethodInfo Method)
 		=> Method.FindAttributes(typeof(T)).Cast<T>().ToArray();
+
+		internal static Attribute[] FindAttributes(this ParameterInfo Parameter, Type AttributeType)
+		{
+			var retVal = new List<Attribute>();
+			var attributes = Parameter.GetCustomAttributes(true);
+			
+			foreach (var attribute in attributes.Cast<Attribute>())
+			{
+				if (AttributeType.IsAssignableFrom(attribute.GetType()))
+					retVal.Add(attribute);
+			}
+
+			return retVal.ToArray();
+		}
+
+		internal static T[] FindAttributes<T>(this ParameterInfo Parameter)
+		=> Parameter.FindAttributes(typeof(T)).Cast<T>().ToArray();
 	}
 }
