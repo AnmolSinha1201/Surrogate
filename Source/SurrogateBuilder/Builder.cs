@@ -14,14 +14,14 @@ namespace Surrogate
 	{
 		public static Dictionary<Type, Type> Cache = new Dictionary<Type, Type>();
 
-		public static object Build(Type BaseType)
+		public static object Build(Type BaseType, params object[] Params)
 		{
 			var builder = BaseType.ToTypeBuilder();
 			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
 			foreach (var method in methods)
 				builder.OverrideMethod(method);
 
-			return Activator.CreateInstance(builder.CreateType());
+			return Activator.CreateInstance(builder.CreateType(), Params);
 		}
 
 		internal static void OverrideMethod(this TypeBuilder Builder, MethodInfo Method)
