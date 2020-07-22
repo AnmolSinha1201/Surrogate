@@ -47,6 +47,13 @@ namespace Surrogate.ILAssist
 				OriginalMethod.ReturnType,
 				parameters.Select(i => i.ParameterType).ToArray()
 			);
+
+			// methodBuilder.ApplyParameters(parameters);
+			
+			// foreach (var attribute in OriginalMethod.GetCustomAttributesData().ToCustomAttributeBuilder())
+			// 	methodBuilder.SetCustomAttribute(attribute);
+
+			// methodBuilder.ApplyParameterAt(OriginalMethod.ReturnParameter, 0);
 			
 			// base.OriginalMethod(args);
 			ILGenerator il = methodBuilder.GetILGenerator();
