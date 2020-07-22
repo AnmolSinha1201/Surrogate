@@ -41,6 +41,7 @@ namespace Surrogate
 
 		private static void OverrideMethod(this TypeBuilder Builder, MethodInfo Method)
 		{
+			var parameters = Method.GetParameters();
 			Builder.OverrideMethod(Method, il =>
 			{
 				var backingMethod = Builder.CreateBackingMethod(Method);
@@ -53,6 +54,23 @@ namespace Surrogate
 				il.Emit(OpCodes.Ldloc, array.Address);
 
 				il.Emit(OpCodes.Call, typeof(Extensions).GetMethod(nameof(Extensions.SurrogateHook)));
+				var returnValue = il.DeclareLocal(Method.ReturnType);
+				il.Emit(OpCodes.Stloc, returnValue);
+
+
+				for (int i = 0; i < parameters.Length; i++)
+				{
+					if (!parameters[i].IsByRefOrOut())
+						continue;
+
+					ILAssist.Extensions.LoadArgument(il, i + 1);
+					array.LoadElementAt(i);
+					il.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
+					il.StoreIntoAddress(parameters[i].ActualParameterType());
+				}
+
+
+				il.Emit(OpCodes.Ldloc, returnValue);
 				il.Emit(OpCodes.Unbox_Any, Method.ReturnType);
 				il.Emit(OpCodes.Ret);
 			});
