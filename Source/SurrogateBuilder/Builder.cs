@@ -15,7 +15,7 @@ namespace Surrogate
 	{
 		public static ConcurrentDictionary<Type, Type> Cache = new ConcurrentDictionary<Type, Type>();
 
-		public static object Build(Type BaseType, params object[] Params)
+		public static object Build(this Type BaseType, params object[] Params)
 		{
 			if (Cache.ContainsKey(BaseType))
 				return Activator.CreateInstance(Cache[BaseType], Params);
