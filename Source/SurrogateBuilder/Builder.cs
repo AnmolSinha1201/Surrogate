@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace Surrogate
 {
 	public static partial class SurrogateBuilder
 	{
-		public static Dictionary<Type, Type> Cache = new Dictionary<Type, Type>();
+		public static ConcurrentDictionary<Type, Type> Cache = new ConcurrentDictionary<Type, Type>();
 
 		public static object Build(Type BaseType, params object[] Params)
 		{
