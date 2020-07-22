@@ -48,13 +48,13 @@ namespace Surrogate.ILAssist
 				parameters.Select(i => i.ParameterType).ToArray()
 			);
 
+			// To copy attributes to backing method
 			// methodBuilder.ApplyParameters(parameters);
-			
 			// foreach (var attribute in OriginalMethod.GetCustomAttributesData().ToCustomAttributeBuilder())
 			// 	methodBuilder.SetCustomAttribute(attribute);
-
 			// methodBuilder.ApplyParameterAt(OriginalMethod.ReturnParameter, 0);
 			
+
 			// base.OriginalMethod(args);
 			ILGenerator il = methodBuilder.GetILGenerator();
 			for (int i = 0; i <= parameters.Count(); i++)
