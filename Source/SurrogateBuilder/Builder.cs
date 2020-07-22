@@ -25,7 +25,7 @@ namespace Surrogate
 			return Activator.CreateInstance(builder.CreateType(), Params);
 		}
 
-		internal static void OverrideMethod(this TypeBuilder Builder, MethodInfo Method)
+		private static void OverrideMethod(this TypeBuilder Builder, MethodInfo Method)
 		{
 			Builder.OverrideMethod(Method, il =>
 			{
