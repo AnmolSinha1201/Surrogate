@@ -72,16 +72,6 @@ namespace Surrogate.Internal.ILConstructs
 			IL.Emit(OpCodes.Br, validation);
 			IL.MarkLabel(end);
 		}
-
-		public Action ElementAtIL(int Index)
-		{
-			return () => LoadElementAt(Index);
-		}
-
-		public ILVariable ElementAt(int Index)
-		{
-			return IL.NewVariable(BaseType, () => LoadElementAt(Index));
-		}
 	}
 
 	internal static partial class ILHelpers
