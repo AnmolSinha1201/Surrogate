@@ -61,6 +61,21 @@ namespace Surrogate.ILAssist
 			return ILArguments;
 		}
 
+		internal static void ArrayToArguments(this ILGenerator IL, ILArray Array, MethodInfo Method)
+		{
+			var parameters = Method.GetParameters();
+			for (int i = 0; i < parameters.Length; i++)
+			{
+				if (!parameters[i].IsByRefOrOut())
+					continue;
+
+				IL.LoadArgument(i + 1);
+				Array.LoadElementAt(i);
+				IL.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
+				IL.StoreIndirect(parameters[i].ActualParameterType());
+			}
+		}
+
 		internal static bool IsByRefOrOut(this ParameterInfo Info)
 		=> Info.IsOut || Info.ParameterType.IsByRef;
 

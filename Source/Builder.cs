@@ -56,16 +56,7 @@ namespace Surrogate
 				il.Emit(OpCodes.Stloc, returnValue);
 
 
-				for (int i = 0; i < parameters.Length; i++)
-				{
-					if (!parameters[i].IsByRefOrOut())
-						continue;
-
-					ILAssist.Extensions.LoadArgument(il, i + 1);
-					array.LoadElementAt(i);
-					il.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
-					il.StoreIndirect(parameters[i].ActualParameterType());
-				}
+				il.ArrayToArguments(array, Method);
 
 
 				il.Emit(OpCodes.Ldloc, returnValue);
