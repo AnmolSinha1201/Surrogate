@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using Surrogate.Helpers;
+using Surrogate.ILAssist;
 using Surrogate.Internal.ILConstructs;
 
 namespace Surrogate.Internal.ILConstructs

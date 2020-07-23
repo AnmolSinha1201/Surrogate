@@ -1,6 +1,6 @@
 using System.Reflection.Emit;
 
-namespace Surrogate.Helpers
+namespace Surrogate.ILAssist
 {
 	internal static partial class ILHelpers
 	{    

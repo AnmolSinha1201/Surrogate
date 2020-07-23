@@ -1,6 +1,6 @@
 using System;
 using System.Reflection.Emit;
-using Surrogate.Helpers;
+using Surrogate.ILAssist;
 
 namespace Surrogate.Internal.ILConstructs
 {

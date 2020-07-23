@@ -1,5 +1,5 @@
 using System;
-using Surrogate.Helpers;
+using Surrogate.ILAssist;
 using Surrogate.Interfaces;
 
 namespace Surrogate.Samples
