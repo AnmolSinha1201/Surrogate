@@ -6,21 +6,8 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	public class ILConstructor
-	{
-		public ConstructorInfo Base;
-
-		public ILConstructor(ConstructorInfo Info)
-		{
-			this.Base = Info;
-		}
-	}
-
 	public static partial class Extensions
 	{
-		internal static ILConstructor ToILConstructor(this ConstructorInfo Info)
-		=> new ILConstructor(Info);
-
 		public static ConstructorBuilder CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
 		{
 			var ctor = Builder.DefineConstructor(Constructor.GetParameters(), Constructor.CallingConvention);
