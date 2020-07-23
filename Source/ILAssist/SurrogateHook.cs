@@ -18,7 +18,7 @@ namespace Surrogate.ILAssist
 					continue;
 
 				foreach (var attribute in parameterAttributes)
-					attribute.InterceptParameter(ref Params[i]);
+					Params[i] = attribute.InterceptParameter(Params[i]);
 			}
 			
 			var methodAttributes = OriginalMethod.FindAttributes<IMethodSurrogate>();
@@ -28,7 +28,7 @@ namespace Surrogate.ILAssist
 			var returnAttributes = OriginalMethod.FindAttributes<IReturnSurrogate>();
 			var retVal = BackingMethod.Invoke(Item, Params);
 			foreach (var attribute in returnAttributes)
-				attribute.InterceptReturn(ref retVal);
+				retVal = attribute.InterceptReturn(retVal);
 
 			return retVal;
 		}

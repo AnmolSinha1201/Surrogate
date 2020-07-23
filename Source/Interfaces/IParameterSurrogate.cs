@@ -6,7 +6,7 @@ namespace Surrogate.Interfaces
 	public interface IParameterSurrogate
 	{
 		// void InterceptParameter(ParameterSurrogateInfo Info);
-		void InterceptParameter(ref object Argument);
+		object InterceptParameter(object Argument);
 	}
 
 
