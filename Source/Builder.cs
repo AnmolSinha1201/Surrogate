@@ -64,7 +64,7 @@ namespace Surrogate
 					ILAssist.Extensions.LoadArgument(il, i + 1);
 					array.LoadElementAt(i);
 					il.Emit(OpCodes.Unbox_Any, parameters[i].ActualParameterType());
-					il.StoreIntoAddress(parameters[i].ActualParameterType());
+					il.StoreIndirect(parameters[i].ActualParameterType());
 				}
 
 

@@ -71,7 +71,7 @@ namespace Surrogate.ILAssist
 		{
 			IL.LoadArgument(Index);
 			if (Info.IsByRefOrOut())
-				IL.LoadFromAddress(Info.ParameterType);
+				IL.LoadIndirect(Info.ParameterType);
 		}
 	}
 }
