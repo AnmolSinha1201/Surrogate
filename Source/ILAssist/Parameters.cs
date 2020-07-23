@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using Surrogate.Helpers;
+using Surrogate.Internal.ILConstructs;
 
 namespace Surrogate.ILAssist
 {
@@ -29,7 +31,6 @@ namespace Surrogate.ILAssist
 				Builder.ApplyParameterAt(OriginalParameters[i], i + 1);
 		}
 
-
 		/// <summary>
 		/// <para>Index 0 is for return</para>
 		/// <para>Index 1+ is for parameters</para>
@@ -43,6 +44,18 @@ namespace Surrogate.ILAssist
 
 			foreach (var attribute in Parameter.GetCustomAttributesData().ToCustomAttributeBuilder())
 				parameterBuilder.SetCustomAttribute(attribute);
+		}
+
+		internal static ILArray CreateArgumentsArray(this ILGenerator IL, MethodInfo Method)
+		{
+			var parameters = Method.GetParameters();
+			var ILArguments = IL.CreateArray<object>(parameters.Count(), (i) =>
+			{
+				IL.LoadArgument(i, parameters[i]);
+				IL.Emit(OpCodes.Box, parameters[i].ActualParameterType());
+			});
+			
+			return ILArguments;
 		}
 	}
 }
