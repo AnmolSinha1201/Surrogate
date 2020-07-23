@@ -50,7 +50,10 @@ namespace Surrogate.ILAssist
 			var parameters = Method.GetParameters();
 			var ILArguments = IL.CreateArray<object>(parameters.Count(), (i) =>
 			{
-				IL.LoadArgument(i + 1, parameters[i]);
+				IL.LoadArgument(i + 1); // 0 not used here
+				if (parameters[i].IsByRefOrOut())
+					IL.LoadIndirect(parameters[i].ParameterType);
+
 				IL.Emit(OpCodes.Box, parameters[i].ActualParameterType());
 			});
 			
@@ -65,13 +68,6 @@ namespace Surrogate.ILAssist
 			if (Info.IsByRefOrOut())
 				return Info.ParameterType.GetElementType();
 			return Info.ParameterType;
-		}
-
-		public static void LoadArgument(this ILGenerator IL, int Index, ParameterInfo Info)
-		{
-			IL.LoadArgument(Index);
-			if (Info.IsByRefOrOut())
-				IL.LoadIndirect(Info.ParameterType);
 		}
 	}
 }
