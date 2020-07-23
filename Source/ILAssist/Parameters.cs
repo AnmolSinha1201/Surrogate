@@ -51,11 +51,28 @@ namespace Surrogate.ILAssist
 			var parameters = Method.GetParameters();
 			var ILArguments = IL.CreateArray<object>(parameters.Count(), (i) =>
 			{
-				IL.LoadArgument(i, parameters[i]);
+				IL.LoadArgument(i + 1, parameters[i]);
 				IL.Emit(OpCodes.Box, parameters[i].ActualParameterType());
 			});
 			
 			return ILArguments;
+		}
+
+		internal static bool IsByRefOrOut(this ParameterInfo Info)
+		=> Info.IsOut || Info.ParameterType.IsByRef;
+
+		internal static Type ActualParameterType(this ParameterInfo Info)
+		{
+			if (Info.IsByRefOrOut())
+				return Info.ParameterType.GetElementType();
+			return Info.ParameterType;
+		}
+
+		public static void LoadArgument(this ILGenerator IL, int Index, ParameterInfo Info)
+		{
+			IL.LoadArgument(Index);
+			if (Info.IsByRefOrOut())
+				IL.LoadFromAddress(Info.ParameterType);
 		}
 	}
 }
