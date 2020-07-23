@@ -18,15 +18,7 @@ namespace Surrogate.ILAssist
 					continue;
 
 				foreach (var attribute in parameterAttributes)
-				{
-					if (i < Params.Length)
-						attribute.InterceptParameter(ref Params[i]);
-					else
-					{
-						var value = parameters[i].RawDefaultValue;
-						attribute.InterceptParameter(ref value);
-					}
-				}
+					attribute.InterceptParameter(ref Params[i]);
 			}
 			
 			var methodAttributes = OriginalMethod.FindAttributes<IMethodSurrogate>();
