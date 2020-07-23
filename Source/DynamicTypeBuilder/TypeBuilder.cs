@@ -9,9 +9,9 @@ namespace Surrogate.ILAssist
 	public static partial class DynamicTypeBuilder
 	{
 		internal static TypeBuilder ToTypeBuilder(this Type BaseType)
-		=> DynamicTypeBuilder.BuildType(BaseType.Name, BaseType);
-		
-		public static TypeBuilder BuildType(string TypeName, Type BaseType)
+		=> DynamicTypeBuilder.ToTypeBuilder(BaseType, BaseType.Name);
+
+		public static TypeBuilder ToTypeBuilder(this Type BaseType, string TypeName)
 		{
 			AssemblyName assemblyName = new AssemblyName(Guid.NewGuid().ToString());
 			var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.RunAndCollect);
