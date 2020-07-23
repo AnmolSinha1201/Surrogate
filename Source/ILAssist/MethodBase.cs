@@ -22,14 +22,5 @@ namespace Surrogate.ILAssist
 			else
 				Generator.Emit(OpCodes.Ldarg, Index);
 		}
-
-		public static void EmitCallBaseAndReturn(this ILGenerator Generator, MethodBase Base) // Also loads this
-		{
-			for (int i = 0; i <= Base.GetParameters().Length; i++)
-				Generator.LoadArgument(i);
-			
-			Generator.Emit(OpCodes.Call, (dynamic)Base);
-			Generator.Emit(OpCodes.Ret);
-		}
 	}
 }
