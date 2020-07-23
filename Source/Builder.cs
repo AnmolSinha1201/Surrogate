@@ -55,9 +55,7 @@ namespace Surrogate
 				var returnValue = il.DeclareLocal(Method.ReturnType);
 				il.Emit(OpCodes.Stloc, returnValue);
 
-
 				il.ArrayToArguments(array, Method);
-
 
 				il.Emit(OpCodes.Ldloc, returnValue);
 				il.Emit(OpCodes.Unbox_Any, Method.ReturnType);
