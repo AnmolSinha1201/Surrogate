@@ -7,7 +7,8 @@ using Surrogate.Interfaces;
 namespace Surrogate.ILAssist
 {
 	public static partial class Extensions
-	{		public static object SurrogateHook(MethodInfo BackingMethod, object Item, MethodInfo OriginalMethod, object[] Params)
+	{		
+		public static object SurrogateHook(MethodInfo BackingMethod, object Item, MethodInfo OriginalMethod, object[] Params)
 		{
 			var parameters = OriginalMethod.GetParameters();
 			for (int i = 0; i < parameters.Length; i++)
