@@ -6,7 +6,7 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	public static partial class Extensions
+	public static partial class DynamicTypeBuilder
 	{
 		public static ConstructorBuilder CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
 		{
