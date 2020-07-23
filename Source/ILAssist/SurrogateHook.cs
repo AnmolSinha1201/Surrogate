@@ -50,10 +50,13 @@ namespace Surrogate.ILAssist
 			return retVal;
 		}
 
-		private static object Default(this Type type)
+		private static object Default(this Type ItemType)
 		{
-			if(type.IsValueType)
-				return Activator.CreateInstance(type);
+			if (ItemType == typeof(void))
+				return null;
+
+			if(ItemType.IsValueType)
+				return Activator.CreateInstance(ItemType);
 			
 			return null;
 		}
