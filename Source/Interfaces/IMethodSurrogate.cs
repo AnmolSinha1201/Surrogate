@@ -6,7 +6,7 @@ namespace Surrogate.Interfaces
 	public interface IMethodSurrogate
 	{
 		/// <summary>
-		/// Return true to continue execution, false to cancel
+		/// <para>Return : True - if you want to continue execution, False if you want to stop</para>
 		/// </summary>
 		bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments);
 	}
