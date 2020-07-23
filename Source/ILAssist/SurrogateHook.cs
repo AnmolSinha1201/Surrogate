@@ -23,15 +23,19 @@ namespace Surrogate.ILAssist
 			}
 			
 			var methodAttributes = OriginalMethod.FindAttributes<IMethodSurrogate>().Order();
+			var continueExecution = true;
 			foreach (var attribute in methodAttributes)
 			{
-				var continueExecution = attribute.InterceptMethod(Item, OriginalMethod, ref Params);
+				continueExecution = attribute.InterceptMethod(Item, OriginalMethod, ref Params);
 				if (!continueExecution)
 					break;
 			}
 
+			object retVal = OriginalMethod.ReturnType.Default();
+			if (continueExecution)
+				retVal = BackingMethod.Invoke(Item, Params);
+			
 			var returnAttributes = OriginalMethod.FindAttributes<IReturnSurrogate>().Order();
-			var retVal = BackingMethod.Invoke(Item, Params);
 			foreach (var attribute in returnAttributes)
 				retVal = attribute.InterceptReturn(retVal);
 
@@ -44,6 +48,14 @@ namespace Surrogate.ILAssist
 			var retVal = groups[true].OrderBy(i => ((IOrderOfExecution)i).OrderOfExecution).Concat(groups[false]).ToList();
 
 			return retVal;
+		}
+
+		private static object Default(this Type type)
+		{
+			if(type.IsValueType)
+				return Activator.CreateInstance(type);
+			
+			return null;
 		}
 	}
 }
