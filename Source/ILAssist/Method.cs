@@ -6,16 +6,6 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	public class ILMethod
-	{
-		MethodInfo Base;
-
-		public ILMethod(MethodInfo Info)
-		{ 
-			this.Base = Info;
-		}
-	}
-
 	public static partial class Extensions
 	{
 		internal static MethodBuilder CreateBackingMethod(this TypeBuilder Builder, MethodInfo OriginalMethod)
