@@ -5,7 +5,7 @@ namespace Surrogate.Interfaces
 {
 	public interface IReturnSurrogate
 	{
-		void InterceptReturn(ref object ReturnValue);
+		void InterceptReturn(ref object Argument);
 	}
 
 	public class ReturnSurrogateInfo
