@@ -1,7 +1,6 @@
 using System;
 using Surrogate.Helpers;
 using Surrogate.Interfaces;
-using Surrogate.Internal.Helpers;
 
 namespace Surrogate.Samples
 {
@@ -22,28 +21,28 @@ namespace Surrogate.Samples
 
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
-			if (Info.Value == null)
-				throw new Exception(Info.ParamInfo.ParameterError("Between"));
+			// if (Info.Value == null)
+			// 	throw new Exception(Info.ParamInfo.ParameterError("Between"));
 
-			if (!Info.Value.IsNumber())
-				throw new Exception(Info.ParamInfo.ParameterError("Between", "number"));
+			// // if (!Info.Value.IsNumber())
+			// // 	throw new Exception(Info.ParamInfo.ParameterError("Between", "number"));
 				
-			var value = Convert.ToDouble(Info.Value);
-			if (value < LowerBound || value > UpperBound)
-				throw new Exception(Info.ParamInfo.ParameterError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
+			// var value = Convert.ToDouble(Info.Value);
+			// if (value < LowerBound || value > UpperBound)
+			// 	throw new Exception(Info.ParamInfo.ParameterError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
 		{
-			if (Info.Value == null)
-				throw new Exception(Info.Member.ReturnError("Between"));
+			// if (Info.Value == null)
+			// 	throw new Exception(Info.Member.ReturnError("Between"));
 
-			if (!Info.Value.IsNumber())
-				throw new Exception(Info.Member.ReturnError("Between", "number"));
+			// // if (!Info.Value.IsNumber())
+			// // 	throw new Exception(Info.Member.ReturnError("Between", "number"));
 				
-			var value = Convert.ToDouble(Info.Value);
-			if (value < LowerBound || value > UpperBound)
-				throw new Exception(Info.Member.ReturnError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
+			// var value = Convert.ToDouble(Info.Value);
+			// if (value < LowerBound || value > UpperBound)
+			// 	throw new Exception(Info.Member.ReturnError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
 		}
 	}
 }

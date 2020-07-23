@@ -7,7 +7,6 @@ using System.Reflection.Emit;
 using Surrogate.Helpers;
 using Surrogate.ILAssist;
 using Surrogate.Interfaces;
-using Surrogate.Internal.Helpers;
 
 namespace Surrogate
 {

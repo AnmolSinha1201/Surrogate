@@ -1,6 +1,5 @@
 using System;
 using Surrogate.Interfaces;
-using Surrogate.Internal.Helpers;
 
 namespace Surrogate.Samples
 {
@@ -9,14 +8,14 @@ namespace Surrogate.Samples
 	{
 		public void InterceptParameter(ParameterSurrogateInfo Info)
 		{
-			if (Info.Value == null)
-				throw new Exception(Info.ParamInfo.ParameterError("NotNull"));
+			// if (Info.Value == null)
+			// 	throw new Exception(Info.ParamInfo.ParameterError("NotNull"));
 		}
 
 		public void InterceptReturn(ReturnSurrogateInfo Info)
 		{
-			if (Info.Value == null)
-				throw new Exception(Info.Member.ReturnError("NotNull"));
+			// if (Info.Value == null)
+			// 	throw new Exception(Info.Member.ReturnError("NotNull"));
 		}
 	}
 }
