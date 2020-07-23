@@ -59,9 +59,6 @@ namespace Surrogate.ILAssist
 		public static void AddAttribute(this PropertyBuilder Builder, CustomAttributeBuilder CustomAttribute)
 		=> Builder.SetCustomAttribute(CustomAttribute);
 
-		public static void AddAttribute<T>(this PropertyBuilder Builder) where T : Attribute
-		=> Builder.SetCustomAttribute(typeof(T).ToCustomAttributeBuilder());
-
 
 		static string BackingFieldNameByConvention(string FieldName)
 		=> $"<{FieldName}>k__BackingField";

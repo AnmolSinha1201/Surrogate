@@ -32,8 +32,5 @@ namespace Surrogate.ILAssist
 
 		public static void AddAttribute(this FieldBuilder Builder, CustomAttributeBuilder CustomAttribute)
 		=> Builder.SetCustomAttribute(CustomAttribute);
-
-		public static void AddAttribute<T>(this FieldBuilder Builder) where T : Attribute
-		=> Builder.SetCustomAttribute(typeof(T).ToCustomAttributeBuilder());
 	}
 }
