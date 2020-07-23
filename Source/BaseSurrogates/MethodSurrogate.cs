@@ -7,8 +7,7 @@ namespace Surrogate.Internal.BaseSurrogates
 	[AttributeUsage(AttributeTargets.Method)]
 	public class MethodSurrogate : Attribute, IMethodSurrogate
 	{
-		public void InterceptMethod(object Item, MethodInfo Member, object[] Arguments)
-		{
-		}
+		public bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments)
+		=> true;
 	}
 }

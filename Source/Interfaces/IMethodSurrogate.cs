@@ -5,7 +5,10 @@ namespace Surrogate.Interfaces
 {
 	public interface IMethodSurrogate
 	{
-		void InterceptMethod(object Item, MethodInfo Member, object[] Arguments);
+		/// <summary>
+		/// Return true to continue execution, false to cancel
+		/// </summary>
+		bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments);
 	}
 
 	public class MethodSurrogateInfo

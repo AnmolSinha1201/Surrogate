@@ -6,8 +6,7 @@ namespace Surrogate.Internal.BaseSurrogates
 	[AttributeUsage(AttributeTargets.ReturnValue)]
 	public class ReturnSurrogate : Attribute, IReturnSurrogate
 	{
-		public void InterceptReturn(ref object ReturnValue)
-		{
-		}
+		public object InterceptReturn(object Argument)
+		=> Argument;
 	}
 }

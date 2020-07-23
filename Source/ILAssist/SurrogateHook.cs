@@ -23,7 +23,11 @@ namespace Surrogate.ILAssist
 			
 			var methodAttributes = OriginalMethod.FindAttributes<IMethodSurrogate>();
 			foreach (var attribute in methodAttributes)
-				attribute.InterceptMethod(Item, OriginalMethod, Params);
+			{
+				var continueExecution = attribute.InterceptMethod(Item, OriginalMethod, ref Params);
+				if (!continueExecution)
+					break;
+			}
 
 			var returnAttributes = OriginalMethod.FindAttributes<IReturnSurrogate>();
 			var retVal = BackingMethod.Invoke(Item, Params);
