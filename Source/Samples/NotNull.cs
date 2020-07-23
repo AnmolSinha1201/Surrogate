@@ -4,18 +4,37 @@ using Surrogate.Interfaces;
 namespace Surrogate.Samples
 {
 	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
-	public class NotNull : Attribute
+	public class NotNull : Attribute, IParameterSurrogate, IReturnSurrogate, IOrderOfExecution, IErrorAction
 	{
-		public void InterceptParameter(ParameterSurrogateInfo Info)
-		{
-			// if (Info.Value == null)
-			// 	throw new Exception(Info.ParamInfo.ParameterError("NotNull"));
+		private static Action<string> DefaultErrorAction = ErrorText => throw new Exception(ErrorText);
+		public Action<string> ErrorAction 
+		{ 
+			get { return DefaultErrorAction; }
+			set { DefaultErrorAction = value; }
 		}
 
-		public void InterceptReturn(ReturnSurrogateInfo Info)
+		private int DefaultOrderOfExecution = 0;
+		public int OrderOfExecution 
 		{
-			// if (Info.Value == null)
-			// 	throw new Exception(Info.Member.ReturnError("NotNull"));
+			get { return DefaultOrderOfExecution; }
+			set { DefaultOrderOfExecution = value; }
+		}
+
+
+		public object InterceptParameter(object Argument)
+		{
+			if (Argument == null)
+				ErrorAction($"{nameof(NotNull)} : Argument is a null");
+
+			return Argument;
+		}
+
+		public object InterceptReturn(object Argument)
+		{
+			if (Argument == null)
+				ErrorAction($"{nameof(NotNull)} : Return value is a null");
+
+			return Argument;
 		}
 	}
 }

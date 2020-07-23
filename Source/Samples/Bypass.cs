@@ -1,16 +1,28 @@
 using System;
+using System.Reflection;
 using Surrogate.ILAssist;
 using Surrogate.Interfaces;
 
 namespace Surrogate.Samples
 {
 	[AttributeUsage(AttributeTargets.Method)]
-	public class Bypass : Attribute
+	public class Bypass : Attribute, IMethodSurrogate, IOrderOfExecution
 	{
-		public void InterceptMethod(MethodSurrogateInfo Info)
+		private int DefaultOrderOfExecution = 0;
+		public int OrderOfExecution 
 		{
-			Console.WriteLine($"Bypassing {Info.Member.Name}");
-			// Info.ReturnValue = Info.Member.ReturnType.Default();
+			get { return DefaultOrderOfExecution; }
+			set { DefaultOrderOfExecution = value; }
+		}
+
+		public Bypass(int OrderOfExecution = 0)
+		{
+			this.DefaultOrderOfExecution = OrderOfExecution;
+		}
+
+		public bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }

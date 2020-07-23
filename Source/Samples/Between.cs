@@ -8,41 +8,49 @@ namespace Surrogate.Samples
 	/// UpperBounds and LowerBounds are inclusive.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
-	public class Between : Attribute
+	public class Between : Attribute, IParameterSurrogate, IReturnSurrogate, IErrorAction, IOrderOfExecution
 	{
-		public double LowerBound;
-		public double UpperBound;
+		public double LowerBound, UpperBound;
 
-		public Between(double LowerBound, double UpperBound)
+		private static Action<string> DefaultErrorAction = ErrorText => throw new Exception(ErrorText);
+		public Action<string> ErrorAction 
+		{ 
+			get { return DefaultErrorAction; }
+			set { DefaultErrorAction = value; }
+		}
+
+		private int DefaultOrderOfExecution = 0;
+		public int OrderOfExecution 
+		{
+			get { return DefaultOrderOfExecution; }
+			set { DefaultOrderOfExecution = value; }
+		}
+
+		public Between(double LowerBound, double UpperBound, int OrderOfExecution = 0)
 		{
 			this.LowerBound = LowerBound;
 			this.UpperBound = UpperBound;
+			this.DefaultOrderOfExecution = OrderOfExecution;
 		}
 
-		public void InterceptParameter(ParameterSurrogateInfo Info)
+		public object InterceptParameter(object Argument)
 		{
-			// if (Info.Value == null)
-			// 	throw new Exception(Info.ParamInfo.ParameterError("Between"));
+			var arg = Convert.ToDouble(Argument);
 
-			// // if (!Info.Value.IsNumber())
-			// // 	throw new Exception(Info.ParamInfo.ParameterError("Between", "number"));
-				
-			// var value = Convert.ToDouble(Info.Value);
-			// if (value < LowerBound || value > UpperBound)
-			// 	throw new Exception(Info.ParamInfo.ParameterError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
+			if (arg > UpperBound || arg < LowerBound)
+				ErrorAction($"{nameof(Between)} : Argument out of bounds");
+
+			return Argument;
 		}
 
-		public void InterceptReturn(ReturnSurrogateInfo Info)
+		public object InterceptReturn(dynamic Argument)
 		{
-			// if (Info.Value == null)
-			// 	throw new Exception(Info.Member.ReturnError("Between"));
+			var arg = Convert.ToDouble(Argument);
 
-			// // if (!Info.Value.IsNumber())
-			// // 	throw new Exception(Info.Member.ReturnError("Between", "number"));
-				
-			// var value = Convert.ToDouble(Info.Value);
-			// if (value < LowerBound || value > UpperBound)
-			// 	throw new Exception(Info.Member.ReturnError("Between", $"within bounds [{LowerBound}, {UpperBound}]"));
+			if (arg > UpperBound || arg < LowerBound)
+				ErrorAction($"{nameof(Between)} : Return value out of bounds");
+
+			return Argument;
 		}
 	}
 }
