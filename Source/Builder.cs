@@ -62,5 +62,11 @@ namespace Surrogate
 				il.Emit(OpCodes.Ret);
 			});
 		}
+
+		public static void WriteAssemblyToDisk(this Type BaseType, string FileName)
+		{
+			var generator = new Lokad.ILPack.AssemblyGenerator();
+			generator.GenerateAssembly(Assembly.GetAssembly(BaseType), FileName);
+		}
 	}
 }

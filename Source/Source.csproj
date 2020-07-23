@@ -16,5 +16,8 @@
   <ItemGroup>
     <None Include="..\LICENSE" Pack="true" PackagePath="LICENSE.md" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Lokad.ILPack" Version="0.1.4" />
+  </ItemGroup>
 
 </Project>
