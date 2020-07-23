@@ -21,8 +21,6 @@ namespace Surrogate.Samples
 		}
 
 		public bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments)
-		{
-			throw new NotImplementedException();
-		}
+		=> false;
 	}
 }
