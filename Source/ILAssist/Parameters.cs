@@ -45,7 +45,8 @@ namespace Surrogate.ILAssist
 				parameterBuilder.SetCustomAttribute(attribute);
 		}
 
-		internal static ILArray CreateArgumentsArray(this ILGenerator IL, MethodInfo Method)
+
+		internal static ILArray ArgumentsToArray(this ILGenerator IL, MethodInfo Method)
 		{
 			var parameters = Method.GetParameters();
 			var ILArguments = IL.CreateArray<object>(parameters.Count(), (i) =>

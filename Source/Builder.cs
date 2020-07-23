@@ -48,7 +48,7 @@ namespace Surrogate
 				il.Emit(OpCodes.Ldarg_0);
 				il.LoadExternalMethodInfo(Method);
 
-				var array = il.CreateArgumentsArray(Method);
+				var array = il.ArgumentsToArray(Method);
 				il.Emit(OpCodes.Ldloc, array.Address);
 
 				il.Emit(OpCodes.Call, typeof(Extensions).GetMethod(nameof(Extensions.SurrogateHook)));
