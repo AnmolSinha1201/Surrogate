@@ -21,10 +21,10 @@ namespace Surrogate.ILAssist
 			var propertyValues = propertyArgs.Select(a => a.TypedValue.Value).ToArray();
 			
 			var fieldArgs = CustomAttribute.NamedArguments.Where(i => i.MemberInfo is FieldInfo);
-			var namedFieldInfos = fieldArgs.Select(a => (FieldInfo)a.MemberInfo).ToArray();
-			var namedFieldValues = fieldArgs.Select(a => a.TypedValue.Value).ToArray();
+			var fieldInfos = fieldArgs.Select(a => (FieldInfo)a.MemberInfo).ToArray();
+			var fieldValues = fieldArgs.Select(a => a.TypedValue.Value).ToArray();
 			
-			return new CustomAttributeBuilder(CustomAttribute.Constructor, attributeArgs, propertyInfos, propertyValues, namedFieldInfos, namedFieldValues);
+			return new CustomAttributeBuilder(CustomAttribute.Constructor, attributeArgs, propertyInfos, propertyValues, fieldInfos, fieldValues);
 		}
 
 		internal static Attribute[] FindAttributes(this MethodInfo Method, Type AttributeType)
