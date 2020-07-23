@@ -106,16 +106,6 @@ namespace Surrogate.Internal.ILConstructs
 			return array;
 		}
 
-		public static ILArray CreateArray<T>(this ILGenerator IL, Action AddressAction)
-		{
-			var array = IL.CreateArray<T>();
-
-			AddressAction();
-			IL.Emit(OpCodes.Stloc, array.Address);
-
-			return array;
-		}
-
 		public static ILArray CreateArray<T>(this ILGenerator IL, int Size, Action<int> AddressAction)
 		{
 			var array = IL.CreateArray<T>(Size);
@@ -129,15 +119,6 @@ namespace Surrogate.Internal.ILConstructs
 			}
 
 			return array;
-		}
-
-		public static ILArray CreateArray<T>(this ILGenerator IL, int Size, Func<int, LocalBuilder> AddressAction)
-		{
-			return IL.CreateArray<T>(Size, (i) =>
-			{
-				var local = AddressAction(i);
-				IL.Emit(OpCodes.Ldloc, local);
-			});
 		}
 	}
 }
