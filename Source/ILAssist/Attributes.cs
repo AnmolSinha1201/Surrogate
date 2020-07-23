@@ -9,7 +9,7 @@ namespace Surrogate.ILAssist
 {
 	public static partial class Extensions
 	{
-		internal static Attribute[] FindAttributes(this MethodInfo Method, Type AttributeType)
+		internal static List<Attribute> FindAttributes(this MethodInfo Method, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
 			var attributes = 
@@ -23,13 +23,13 @@ namespace Surrogate.ILAssist
 					retVal.Add(attribute);
 			}
 
-			return retVal.ToArray();
+			return retVal;
 		}
 
-		internal static T[] FindAttributes<T>(this MethodInfo Method)
-		=> Method.FindAttributes(typeof(T)).Cast<T>().ToArray();
+		internal static List<T> FindAttributes<T>(this MethodInfo Method)
+		=> Method.FindAttributes(typeof(T)).Cast<T>().ToList();
 
-		internal static Attribute[] FindAttributes(this ParameterInfo Parameter, Type AttributeType)
+		internal static List<Attribute> FindAttributes(this ParameterInfo Parameter, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
 			var attributes = Parameter.GetCustomAttributes(true);
@@ -40,10 +40,10 @@ namespace Surrogate.ILAssist
 					retVal.Add(attribute);
 			}
 
-			return retVal.ToArray();
+			return retVal;
 		}
 
-		internal static T[] FindAttributes<T>(this ParameterInfo Parameter)
-		=> Parameter.FindAttributes(typeof(T)).Cast<T>().ToArray();
+		internal static List<T> FindAttributes<T>(this ParameterInfo Parameter)
+		=> Parameter.FindAttributes(typeof(T)).Cast<T>().ToList();
 	}
 }
