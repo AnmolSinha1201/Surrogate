@@ -4,10 +4,10 @@ using System.Reflection.Emit;
 
 namespace Surrogate.ILAssist
 {
-	internal static partial class ILHelpers
+	public static partial class Extensions
 	{
 		// TODO : Find Ldind for U8
-        public static void LoadIndirect(this ILGenerator IL, Type LoadType)
+        internal static void LoadIndirect(this ILGenerator IL, Type LoadType)
         {
 			var opcode = 
 				LoadType == typeof(sbyte) ? OpCodes.Ldind_I1 :
@@ -28,7 +28,7 @@ namespace Surrogate.ILAssist
         }
 
 		// TODO : Find Stind's for U1, U2, U4, U8
-		public static void StoreIndirect(this ILGenerator IL, Type StoreType)
+		internal static void StoreIndirect(this ILGenerator IL, Type StoreType)
         {
 			var opcode = 
 				StoreType == typeof(sbyte) ? OpCodes.Stind_I1 :
