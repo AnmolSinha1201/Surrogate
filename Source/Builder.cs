@@ -52,13 +52,14 @@ namespace Surrogate
 				il.Emit(OpCodes.Ldloc, array.Address);
 
 				il.Emit(OpCodes.Call, typeof(Extensions).GetMethod(nameof(Extensions.SurrogateHook)));
-				var returnValue = il.DeclareLocal(Method.ReturnType);
-				il.Emit(OpCodes.Stloc, returnValue);
-
 				il.ArrayToArguments(array, Method);
 
-				il.Emit(OpCodes.Ldloc, returnValue);
-				il.Emit(OpCodes.Unbox_Any, Method.ReturnType);
+				// Stack still has either null (for void) or default(ReturnType)
+				if (Method.ReturnType != typeof(void))
+					il.Emit(OpCodes.Unbox_Any, Method.ReturnType);
+				else
+					il.Emit(OpCodes.Pop);
+					
 				il.Emit(OpCodes.Ret);
 			});
 		}
