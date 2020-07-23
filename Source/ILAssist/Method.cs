@@ -18,23 +18,6 @@ namespace Surrogate.ILAssist
 
 	public static partial class Extensions
 	{
-		public static void OverrideMethod(this TypeBuilder Builder, MethodInfo OriginalMethod, Action<ILGenerator> BodyAction)
-		{
-			var parameterTypes = OriginalMethod.GetParameters().Select(i => i.ParameterType).ToArray();
-			MethodBuilder methodBuilder = Builder.DefineMethod(
-				OriginalMethod.Name,
-				OriginalMethod.Attributes,
-				CallingConventions.HasThis,
-				OriginalMethod.ReturnType,
-				parameterTypes
-			);
-			
-			ILGenerator il = methodBuilder.GetILGenerator();
-			BodyAction(il);
-
-			Builder.DefineMethodOverride(methodBuilder, OriginalMethod);
-		}
-
 		internal static MethodBuilder CreateBackingMethod(this TypeBuilder Builder, MethodInfo OriginalMethod)
 		{
 			var parameters = OriginalMethod.GetParameters();
