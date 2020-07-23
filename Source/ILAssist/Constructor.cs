@@ -35,9 +35,6 @@ namespace Surrogate.ILAssist
 
 		internal static ConstructorBuilder DefineConstructor(this TypeBuilder Builder, ParameterInfo[] Parameters, CallingConventions Convention)
 		{
-			if (Parameters.Length > 0 && Parameters.Last().IsDefined(typeof(ParamArrayAttribute), false))
-				throw new InvalidOperationException("Variadic constructors are not supported");
-
 			var parameterTypes = Parameters.Select(p => p.ParameterType).ToArray();
 			var requiredCustomModifiers = Parameters.Select(p => p.GetRequiredCustomModifiers()).ToArray();
 			var optionalCustomModifiers = Parameters.Select(p => p.GetOptionalCustomModifiers()).ToArray();
