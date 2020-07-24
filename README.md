@@ -1,6 +1,7 @@
 [![GitHub Test](https://img.shields.io/github/workflow/status/AnmolSinha1201/Surrogate/Test?logo=github&style=for-the-badge)](https://github.com/AnmolSinha1201/Surrogate/actions?query=workflow%3ATest)
 [![GitHub Deploy](https://img.shields.io/github/workflow/status/AnmolSinha1201/Surrogate/Deploy?label=Deploy&logo=github&style=for-the-badge)](https://github.com/AnmolSinha1201/Surrogate/actions?query=workflow%3ADeploy)
 [![GitHub Release](https://img.shields.io/github/v/release/AnmolSinha1201/Surrogate?logo=github&style=for-the-badge)](https://github.com/AnmolSinha1201/Surrogate/releases/)
+[![Nuget Downloads](https://img.shields.io/nuget/dt/Surrogate?color=30343F&logo=Nuget&style=for-the-badge)](https://www.nuget.org/packages/Surrogate/)
 
 [Documentation (Wiki)](https://github.com/AnmolSinha1201/Surrogate/wiki)
 
