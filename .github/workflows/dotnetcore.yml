@@ -24,8 +24,7 @@ jobs:
     - name: Testing
       run: |
         cd Test
-        dotnet restore
-        dotnet test --no-restore --verbosity normal
+        dotnet test
         
     - name: Publish NuGet
       uses: rohith/publish-nuget@v2.5.5
