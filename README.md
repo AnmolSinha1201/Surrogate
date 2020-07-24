@@ -1,4 +1,7 @@
 ![Test](https://github.com/AnmolSinha1201/Surrogate/workflows/Test/badge.svg?branch=master)
+
+[Documentation (Wiki)](https://github.com/AnmolSinha1201/Surrogate/wiki)
+
 # Surrogate
 Surrogate is a `Runtime Weaving Aspect Oriented Programming` framework. It helps developers write cleaner code. As the name description suggest, Surrogate (unlike `PostSharp`) does it's work during Runtime which means, it can deal with types which didn't exist during compilation time.
 
