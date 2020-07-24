@@ -46,3 +46,4 @@ Feature| Status
 PropertySurrogate|WIP
 ClassSurrogate|WIP
 Better DynamicTypeBuilder|WIP
+More Detailed Surrogates|WIP
