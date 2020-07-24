@@ -26,9 +26,9 @@ jobs:
         cd Test
         dotnet test
         
-    - name: Publish NuGet
-      uses: rohith/publish-nuget@v2.5.5
-      with:
-        PROJECT_FILE_PATH: Source/Source.csproj
-        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
-        PACKAGE_NAME: Surrogate
+#    - name: Publish NuGet
+#      uses: rohith/publish-nuget@v2.5.5
+#      with:
+#        PROJECT_FILE_PATH: Source/Source.csproj
+#        NUGET_KEY: ${{secrets.NUGET_API_KEY}}
+#        PACKAGE_NAME: Surrogate
