@@ -7,7 +7,7 @@ namespace Surrogate.ILAssist
 {
 	public static partial class DynamicTypeBuilder
 	{
-		public static List<PropertyBuilder> AddInterface(this TypeBuilder typeBuilder, Type Interface)
+		public static List<PropertyBuilder> ImplementInterface(this TypeBuilder typeBuilder, Type Interface)
 		{
 			var retList = new List<PropertyBuilder>();
 			var methodAttributesForInterface = InheritedFromInterfacePropertyAttributes;
