@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Surrogate.Interfaces;
 
 namespace Surrogate.Internal.BaseSurrogates
@@ -6,10 +7,7 @@ namespace Surrogate.Internal.BaseSurrogates
 	[AttributeUsage(AttributeTargets.Method)]
 	public class MethodSurrogate : Attribute, IMethodSurrogate
 	{
-		public void InterceptMethod(MethodSurrogateInfo Info)
-		{
-			// var retVal = Info.Execute();
-			// Info.ReturnValue = retVal;
-		}
+		public bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments)
+		=> true;
 	}
 }

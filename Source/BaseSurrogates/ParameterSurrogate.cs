@@ -6,8 +6,7 @@ namespace Surrogate.Internal.BaseSurrogates
 	[AttributeUsage(AttributeTargets.Parameter)]
 	public class ParameterSurrogate : Attribute, IParameterSurrogate
 	{
-		public void InterceptParameter(ParameterSurrogateInfo Info)
-		{
-		}
+		public object InterceptParameter(object Argument)
+		=> Argument;
 	}
 }

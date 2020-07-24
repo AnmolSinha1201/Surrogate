@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection.Emit;
-using Surrogate.Helpers;
+using Surrogate.ILAssist;
 using Surrogate.Internal.ILConstructs;
 
 namespace Surrogate.Internal.ILConstructs
@@ -72,16 +72,6 @@ namespace Surrogate.Internal.ILConstructs
 			IL.Emit(OpCodes.Br, validation);
 			IL.MarkLabel(end);
 		}
-
-		public Action ElementAtIL(int Index)
-		{
-			return () => LoadElementAt(Index);
-		}
-
-		public ILVariable ElementAt(int Index)
-		{
-			return IL.NewVariable(BaseType, () => LoadElementAt(Index));
-		}
 	}
 
 	internal static partial class ILHelpers
@@ -106,16 +96,6 @@ namespace Surrogate.Internal.ILConstructs
 			return array;
 		}
 
-		public static ILArray CreateArray<T>(this ILGenerator IL, Action AddressAction)
-		{
-			var array = IL.CreateArray<T>();
-
-			AddressAction();
-			IL.Emit(OpCodes.Stloc, array.Address);
-
-			return array;
-		}
-
 		public static ILArray CreateArray<T>(this ILGenerator IL, int Size, Action<int> AddressAction)
 		{
 			var array = IL.CreateArray<T>(Size);
@@ -129,15 +109,6 @@ namespace Surrogate.Internal.ILConstructs
 			}
 
 			return array;
-		}
-
-		public static ILArray CreateArray<T>(this ILGenerator IL, int Size, Func<int, LocalBuilder> AddressAction)
-		{
-			return IL.CreateArray<T>(Size, (i) =>
-			{
-				var local = AddressAction(i);
-				IL.Emit(OpCodes.Ldloc, local);
-			});
 		}
 	}
 }

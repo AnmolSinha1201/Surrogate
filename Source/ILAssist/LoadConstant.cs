@@ -1,8 +1,8 @@
 using System.Reflection.Emit;
 
-namespace Surrogate.Helpers
+namespace Surrogate.ILAssist
 {
-	internal static partial class ILHelpers
+	public static partial class Extensions
 	{    
         private static readonly OpCode[] LoadConstantInt32OpCodes =
         {
@@ -17,7 +17,7 @@ namespace Surrogate.Helpers
             OpCodes.Ldc_I4_8
         };
 
-		public static void LoadConstantInt32(this ILGenerator IL, int Number)
+		internal static void LoadConstantInt32(this ILGenerator IL, int Number)
         {
             if (Number >= 0 && Number <= 8)
                 IL.Emit(LoadConstantInt32OpCodes[Number]);
