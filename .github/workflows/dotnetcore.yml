@@ -28,6 +28,7 @@ jobs:
     - name: Testing
       run: |
         cd Test
+        nuget restore
         dotnet test --no-restore --verbosity normal
         
     - name: Publish NuGet
