@@ -16,7 +16,7 @@ namespace Surrogate.ILAssist
 			OpCodes.Ldarg_2,
 			OpCodes.Ldarg_3
 		};
-		public static void LoadArgument(this ILGenerator Generator, int Index)
+		internal static void LoadArgument(this ILGenerator Generator, int Index)
 		{
 			if (Index <= LoadArgsOpCodes.Length)
 				Generator.Emit(LoadArgsOpCodes[Index]);

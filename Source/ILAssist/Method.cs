@@ -37,7 +37,7 @@ namespace Surrogate.ILAssist
 			return methodBuilder;
 		}
 
-		public static void EmitCallBaseAndReturn(this ILGenerator Generator, MethodBase Base) // Also loads this
+		internal static void EmitCallBaseAndReturn(this ILGenerator Generator, MethodBase Base) // Also loads this
 		{
 			for (int i = 0; i <= Base.GetParameters().Length; i++)
 				Generator.LoadArgument(i);

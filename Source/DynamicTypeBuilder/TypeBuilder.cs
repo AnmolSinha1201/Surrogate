@@ -8,7 +8,7 @@ namespace Surrogate.ILAssist
 {
 	public static partial class DynamicTypeBuilder
 	{
-		internal static TypeBuilder ToTypeBuilder(this Type BaseType)
+		public static TypeBuilder ToTypeBuilder(this Type BaseType)
 		=> DynamicTypeBuilder.ToTypeBuilder(BaseType, BaseType.Name);
 
 		public static TypeBuilder ToTypeBuilder(this Type BaseType, string TypeName)
