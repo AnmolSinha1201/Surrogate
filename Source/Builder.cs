@@ -20,6 +20,14 @@ namespace Surrogate
 			if (Cache.ContainsKey(BaseType))
 				return Activator.CreateInstance(Cache[BaseType], Params);
 
+			if (!BaseType.IsEligibleForSurrogate())
+			{
+				if (!Cache.ContainsKey(BaseType))
+					Cache.AddOrUpdate(BaseType, BaseType, (key, oldValue) => BaseType);
+
+				return Activator.CreateInstance(BaseType, Params);
+			}
+
 
 			var builder = BaseType.ToTypeBuilder();
 			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
@@ -28,9 +36,6 @@ namespace Surrogate
 
 			var generatedType = builder.CreateType();
 			
-			// To make it truly thread safe, we check need to check if it already exists, and if it doesn't
-			// add or update it, since multiple threads can add it at the same time, and it doesn't make sense
-			// to throw exceptions in such cases.
 			if (!Cache.ContainsKey(BaseType))
 				Cache.AddOrUpdate(BaseType, generatedType, (key, oldValue) => generatedType);
 
