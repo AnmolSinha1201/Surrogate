@@ -33,6 +33,7 @@ public partial class Foo
 and instead of creating objects the regular way, we do it
 ```cs
 var instance = SurrogateBuilder.Build<Foo>("Param1", 12345);
+var instance2 = typeof(Foo).Build("Param1", 12345);
 ```
 
 and then we use it like any other C# object
