@@ -30,9 +30,13 @@ namespace Surrogate
 
 
 			var builder = BaseType.ToTypeBuilder();
-			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Where(i => !i.IsSpecialName);
 			foreach (var method in methods)
 				builder.OverrideMethod(method);
+
+			var properties = BaseType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+			foreach (var property in properties)
+				builder.OverrideProperty(property);
 
 			var generatedType = builder.CreateType();
 			
