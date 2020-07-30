@@ -46,6 +46,25 @@ namespace Surrogate.ILAssist
 		internal static List<T> FindAttributes<T>(this ParameterInfo Parameter)
 		=> Parameter.FindAttributes(typeof(T)).Cast<T>().ToList();
 
+
+		internal static List<Attribute> FindAttributes(this PropertyInfo Property, Type AttributeType)
+		{
+			var retVal = new List<Attribute>();
+			var attributes = Property.GetCustomAttributes(true);
+			
+			foreach (var attribute in attributes.Cast<Attribute>())
+			{
+				if (AttributeType.IsAssignableFrom(attribute.GetType()))
+					retVal.Add(attribute);
+			}
+
+			return retVal;
+		}
+
+		internal static List<T> FindAttributes<T>(this PropertyInfo Property)
+		=> Property.FindAttributes(typeof(T)).Cast<T>().ToList();
+
+
 		internal static bool IsEligibleForSurrogate(this MethodInfo Method)
 		{
 			var parameterAttributes = Method.GetParameters().SelectMany(i => i.FindAttributes<IParameterSurrogate>());
@@ -63,6 +82,8 @@ namespace Surrogate.ILAssist
 			return false;
 		}
 
+
+		// BUG : Derived type's methods are not being considered
 		internal static bool IsEligibleForSurrogate(this Type BaseType)
 		{
 			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
