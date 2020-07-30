@@ -15,6 +15,9 @@ namespace Surrogate.ILAssist
 		public static FieldBuilder AddField(this TypeBuilder Builder, string MemberName, Type MemberType, FieldAttributes Attributes = FieldAttributes.Public)
 		=> Builder.DefineField(MemberName, MemberType, Attributes);
 
+		public static FieldBuilder AddField<T>(this TypeBuilder Builder, string MemberName, FieldAttributes Attributes = FieldAttributes.Public)
+		=> Builder.AddField(MemberName, typeof(T), Attributes);
+
 		public static FieldBuilder AddField(this TypeBuilder Builder, FieldInfo Field)
 		{
 			var field = Builder.AddField(Field.Name, Field.MemberType(), Field.Attributes);
