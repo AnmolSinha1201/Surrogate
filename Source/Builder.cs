@@ -30,7 +30,7 @@ namespace Surrogate
 
 
 			var builder = BaseType.ToTypeBuilder();
-			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+			var methods = BaseType.GetResolvedMethods();
 			foreach (var method in methods)
 				builder.OverrideMethod(method);
 

@@ -25,11 +25,10 @@ namespace Surrogate.ILAssist
 
 			return false;
 		}
-		
-		// BUG : Derived type's methods are not being considered
+
 		internal static bool IsEligibleForSurrogate(this Type BaseType)
 		{
-			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+			var methods = BaseType.GetResolvedMethods();
 			return methods.Select(i => i.IsEligibleForSurrogate()).Aggregate((current, next) => current || next);
 		}
 	}
