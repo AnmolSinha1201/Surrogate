@@ -15,6 +15,7 @@ namespace Surrogate
 
 		public static T Build<T>(params object[] Params)
 		=> (T)typeof(T).Build(Params);
+
 		public static object Build(this Type BaseType, params object[] Params)
 		{
 			if (Cache.ContainsKey(BaseType))
@@ -30,9 +31,12 @@ namespace Surrogate
 
 
 			var builder = BaseType.ToTypeBuilder();
-			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly).Where(i => !i.IsSpecialName);
+			var methods = BaseType.GetResolvedMethods();
 			foreach (var method in methods)
-				builder.OverrideMethod(method);
+			{
+				if (method.IsEligibleForSurrogate())
+					builder.OverrideMethod(method);
+			}
 
 			var properties = BaseType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
 			foreach (var property in properties)

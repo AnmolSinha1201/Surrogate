@@ -45,5 +45,31 @@ namespace Surrogate.ILAssist
 			Generator.Emit(OpCodes.Call, (dynamic)Base);
 			Generator.Emit(OpCodes.Ret);
 		}
+
+		internal static List<MethodInfo> GetResolvedMethods(this Type ItemType)
+		{
+			var methodMethods = ItemType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);            
+			var objectMethods = typeof(object).GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			var filteredMethods = methodMethods
+				.Except(objectMethods, new MethodEqualityComparer())
+				.Where(i => !i.IsSpecialName)
+				.ToList();
+
+			return filteredMethods;
+		}
+
+		internal class MethodEqualityComparer : IEqualityComparer<MethodInfo>
+		{
+			public bool Equals(MethodInfo X, MethodInfo Y)
+			{
+				if (X == null || Y == null)
+					return X == Y;
+
+				return X.Name == Y.Name && X.DeclaringType == Y.DeclaringType;
+			}
+
+			public int GetHashCode(MethodInfo Item)
+			=> Item.Name.GetHashCode();
+		}
 	}
 }
