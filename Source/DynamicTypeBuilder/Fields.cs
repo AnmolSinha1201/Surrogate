@@ -13,9 +13,7 @@ namespace Surrogate.ILAssist
 		/// <para>Default access level is Public, i.e. field is public and instance level.</para>
 		/// </summary>
 		public static FieldBuilder AddField(this TypeBuilder Builder, string MemberName, Type MemberType, FieldAttributes Attributes = FieldAttributes.Public)
-		{
-			return Builder.DefineField(MemberName, MemberType, Attributes);
-		}
+		=> Builder.DefineField(MemberName, MemberType, Attributes);
 
 		public static FieldBuilder AddField(this TypeBuilder Builder, MemberInfo Member, FieldAttributes Attributes = FieldAttributes.Public)
 		{
