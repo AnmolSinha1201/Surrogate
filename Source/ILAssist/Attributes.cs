@@ -83,7 +83,6 @@ namespace Surrogate.ILAssist
 		}
 
 
-		// BUG : Derived type's methods are not being considered
 		internal static bool IsEligibleForSurrogate(this Type BaseType)
 		{
 			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
