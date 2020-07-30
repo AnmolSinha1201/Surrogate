@@ -15,11 +15,11 @@ namespace Surrogate.ILAssist
 		public static FieldBuilder AddField(this TypeBuilder Builder, string MemberName, Type MemberType, FieldAttributes Attributes = FieldAttributes.Public)
 		=> Builder.DefineField(MemberName, MemberType, Attributes);
 
-		public static FieldBuilder AddField(this TypeBuilder Builder, MemberInfo Member, FieldAttributes Attributes = FieldAttributes.Public)
+		public static FieldBuilder AddField(this TypeBuilder Builder, FieldInfo Field)
 		{
-			var field = Builder.AddField(Member.Name, Member.MemberType(), Attributes);
+			var field = Builder.AddField(Field.Name, Field.MemberType(), Field.Attributes);
 
-			foreach (var attribute in Member.GetCustomAttributesData())
+			foreach (var attribute in Field.GetCustomAttributesData())
 				field.AddAttribute(attribute);
 
 			return field;
