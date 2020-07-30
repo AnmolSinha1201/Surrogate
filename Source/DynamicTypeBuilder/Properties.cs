@@ -57,7 +57,7 @@ namespace Surrogate.ILAssist
 		}
 
 		public static void AddAttribute(this PropertyBuilder Builder, CustomAttributeData CustomAttribute)
-		=> Builder.SetCustomAttribute(CustomAttribute.ToCustomAttributeBuilder());
+		=> Builder.AddAttribute(CustomAttribute.ToCustomAttributeBuilder());
 
 		public static void AddAttribute(this PropertyBuilder Builder, CustomAttributeBuilder CustomAttribute)
 		=> Builder.SetCustomAttribute(CustomAttribute);
