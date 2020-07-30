@@ -39,6 +39,9 @@ namespace Surrogate.ILAssist
 			return property;
 		}
 
+		public static PropertyBuilder AddProperty<T>(this TypeBuilder Builder, string MemberName, MethodAttributes MAttributes = DefaultPropertyAttributes)
+		=> Builder.AddProperty(MemberName, typeof(T), MAttributes);
+
 		public const MethodAttributes DefaultPropertyAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName;
 		public const MethodAttributes InheritedFromInterfacePropertyAttributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
 
