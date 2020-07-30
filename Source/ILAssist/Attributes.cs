@@ -50,7 +50,7 @@ namespace Surrogate.ILAssist
 		internal static List<Attribute> FindAttributes(this PropertyInfo Property, Type AttributeType)
 		{
 			var retVal = new List<Attribute>();
-			var attributes = Property.GetCustomAttributes(true);
+			var attributes = Property.GetCustomAttributes();
 			
 			foreach (var attribute in attributes.Cast<Attribute>())
 			{
