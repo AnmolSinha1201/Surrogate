@@ -13,11 +13,11 @@ namespace Surrogate.Samples
 			set { DefaultErrorAction = value; }
 		}
 
-		private int DefaultOrderOfExecution = 0;
-		public int OrderOfExecution 
+		public int OrderOfExecution { get; set; } = 0;
+
+		public NotNull(int OrderOfExecution = 0)
 		{
-			get { return DefaultOrderOfExecution; }
-			set { DefaultOrderOfExecution = value; }
+			this.OrderOfExecution = OrderOfExecution;
 		}
 
 

@@ -19,18 +19,13 @@ namespace Surrogate.Samples
 			set { DefaultErrorAction = value; }
 		}
 
-		private int DefaultOrderOfExecution = 0;
-		public int OrderOfExecution 
-		{
-			get { return DefaultOrderOfExecution; }
-			set { DefaultOrderOfExecution = value; }
-		}
+		public int OrderOfExecution { get; set; } = 0;
 
 		public Between(double LowerBound, double UpperBound, int OrderOfExecution = 0)
 		{
 			this.LowerBound = LowerBound;
 			this.UpperBound = UpperBound;
-			this.DefaultOrderOfExecution = OrderOfExecution;
+			this.OrderOfExecution = OrderOfExecution;
 		}
 
 		public object InterceptParameter(object Argument)
