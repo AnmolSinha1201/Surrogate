@@ -46,11 +46,11 @@ namespace Surrogate.ILAssist
 		public const MethodAttributes InheritedFromInterfacePropertyAttributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
 
 
-		public static PropertyBuilder AddProperty(this TypeBuilder Builder, MemberInfo Member, MethodAttributes MAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName)
+		public static PropertyBuilder AddProperty(this TypeBuilder Builder, PropertyInfo Property)
 		{
-			var property = Builder.AddProperty(Member.Name, Member.MemberType(), MAttributes);
+			var property = Builder.AddProperty(Property.Name, Property.MemberType());
 
-			foreach (var attribute in Member.GetCustomAttributesData())
+			foreach (var attribute in Property.GetCustomAttributesData())
 				property.AddAttribute(attribute);
 
 			return property;
