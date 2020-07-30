@@ -29,7 +29,12 @@ namespace Surrogate.ILAssist
 		internal static bool IsEligibleForSurrogate(this Type BaseType)
 		{
 			var methods = BaseType.GetResolvedMethods();
-			return methods.Select(i => i.IsEligibleForSurrogate()).Aggregate((current, next) => current || next);
+			var methodEligibility = methods.Select(i => i.IsEligibleForSurrogate()).Aggregate(false, (current, next) => current || next);
+
+			// var properties = BaseType.GetProperties();
+			// var propertyEligibility = properties.Select(i => i.IsEligibleForSurrogate()).Aggregate(false, (current, next) => current || next);
+
+			return methodEligibility; // || propertyEligibility;
 		}
 	}
 }
