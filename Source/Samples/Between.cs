@@ -41,7 +41,7 @@ namespace Surrogate.Samples
 		=> DefaultAction(MethodBase.GetCurrentMethod(), Argument);
 
 		public object InterceptPropertyGet(object Argument)
-		=> DefaultAction(MethodBase.GetCurrentMethod(), Argument);
+		=> Argument;
 
 		public object InterceptPropertySet(object Argument)
 		=> DefaultAction(MethodBase.GetCurrentMethod(), Argument);
