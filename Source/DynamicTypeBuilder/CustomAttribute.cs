@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using System.Linq.Expressions;
 
 namespace Surrogate.ILAssist
 {
@@ -26,10 +27,33 @@ namespace Surrogate.ILAssist
 			return new CustomAttributeBuilder(CustomAttribute.Constructor, attributeArgs, propertyInfos, propertyValues, fieldInfos, fieldValues);
 		}
 
-		public static CustomAttributeBuilder CreateAttributeBuilder<T>(params object[] Arguments) where T :Attribute
+		/// <summary>
+		/// Does NOT allow implicit type casting
+		/// </summary>
+		public static CustomAttributeBuilder CreateCustomAttributeBuilder<T>(params object[] Arguments) where T :Attribute
 		{
-			var constructor = 
-			return null;
+			var constructor = typeof(T).GetConstructor(Arguments.Select(i => i.GetType()).ToArray());
+			var builder = new CustomAttributeBuilder(constructor, Arguments);
+
+			return builder;
+		}
+
+		/// <summary>
+		/// Allows implicit type casting as Argument is an Expression
+		/// </summary>
+		public static CustomAttributeBuilder CreateCustomAttributeBuilder(Expression<Func<Attribute>> attributeExpression)
+		{
+			if (attributeExpression.Body is NewExpression == false)
+				throw new Exception("Only 'new' expressions are supported");
+
+			var expression = (NewExpression)attributeExpression.Body;
+			var arguments = expression.Arguments
+				.Cast<Expression>()
+				.Select(i => Expression.Lambda(i).Compile().DynamicInvoke())
+				.ToArray();
+			var constructor = expression.Constructor;
+
+			return new CustomAttributeBuilder(constructor, arguments);
 		}
 	}
 }
