@@ -38,7 +38,7 @@ namespace Surrogate
 					builder.OverrideMethod(method);
 			}
 
-			var properties = BaseType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
+			var properties = BaseType.GetResolvedProperties();
 			foreach (var property in properties)
 			{
 				if (property.IsEligibleForSurrogate())
