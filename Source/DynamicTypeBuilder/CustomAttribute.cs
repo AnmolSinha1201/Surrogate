@@ -8,8 +8,8 @@ namespace Surrogate.ILAssist
 {
 	public static partial class DynamicTypeBuilder
 	{
-		public static CustomAttributeBuilder[] ToCustomAttributeBuilder(this IEnumerable<CustomAttributeData> CustomAttributes)
-		=> CustomAttributes.Select(attribute => attribute.ToCustomAttributeBuilder()).ToArray();
+		public static IEnumerable<CustomAttributeBuilder> ToCustomAttributeBuilder(this IEnumerable<CustomAttributeData> CustomAttributes)
+		=> CustomAttributes.Select(attribute => attribute.ToCustomAttributeBuilder());
 
 		public static CustomAttributeBuilder ToCustomAttributeBuilder(this CustomAttributeData CustomAttribute)
 		{
@@ -24,6 +24,12 @@ namespace Surrogate.ILAssist
 			var fieldValues = fieldArgs.Select(a => a.TypedValue.Value).ToArray();
 			
 			return new CustomAttributeBuilder(CustomAttribute.Constructor, attributeArgs, propertyInfos, propertyValues, fieldInfos, fieldValues);
+		}
+
+		public static CustomAttributeBuilder CreateAttributeBuilder<T>(params object[] Arguments) where T :Attribute
+		{
+			var constructor = 
+			return null;
 		}
 	}
 }
