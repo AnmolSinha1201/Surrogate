@@ -17,5 +17,8 @@ namespace Surrogate.Tests.NotNullTest
 		{
 			return null;
 		}
+
+		[NotNull]
+		public virtual string Property { get; set; }
     }
 }
