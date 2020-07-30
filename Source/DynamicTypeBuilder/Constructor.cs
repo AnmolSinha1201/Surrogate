@@ -16,7 +16,7 @@ namespace Surrogate.ILAssist
 		/// Does not support n-ary (variadic) constructors
 		/// </summary>
 
-		public static ConstructorBuilder CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
+		internal static ConstructorBuilder CreatePassThroughConstructor(this TypeBuilder Builder, ConstructorInfo Constructor)
 		{
 			var ctor = Builder.DefineConstructor(Constructor.GetParameters(), Constructor.CallingConvention);
 
