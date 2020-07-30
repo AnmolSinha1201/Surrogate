@@ -40,7 +40,10 @@ namespace Surrogate
 
 			var properties = BaseType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
 			foreach (var property in properties)
-				builder.OverrideProperty(property);
+			{
+				if (property.IsEligibleForSurrogate())
+					builder.OverrideProperty(property);
+			}
 
 			var generatedType = builder.CreateType();
 			
