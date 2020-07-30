@@ -67,5 +67,31 @@ namespace Surrogate.ILAssist
 
 			// Builder.DefineMethodOverride(newMethod, oldMethod);
 		}
+
+		internal static List<PropertyInfo> GetResolvedProperties(this Type ItemType)
+		{
+			var typeProperties = ItemType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);            
+			var objectProperties = typeof(object).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+			var filteredProperties = typeProperties
+				.Except(objectProperties, new PropertyEqualityComparer())
+				.Where(i => !i.IsSpecialName)
+				.ToList();
+
+			return filteredProperties;
+		}
+
+		internal class PropertyEqualityComparer : IEqualityComparer<PropertyInfo>
+		{
+			public bool Equals(PropertyInfo X, PropertyInfo Y)
+			{
+				if (X == null || Y == null)
+					return X == Y;
+
+				return X.Name == Y.Name && X.DeclaringType == Y.DeclaringType;
+			}
+
+			public int GetHashCode(PropertyInfo Item)
+			=> Item.Name.GetHashCode();
+		}
 	}
 }
