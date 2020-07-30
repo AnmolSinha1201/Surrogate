@@ -18,6 +18,8 @@ namespace Surrogate.ILAssist
 		internal static void OverridePropertyGetter(this TypeBuilder Builder, PropertyInfo Property)
 		{
 			var oldMethod = Property.GetGetMethod();
+			if (oldMethod == null)
+				return;
 
 			var methodAttributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.SpecialName;
 			var newMethod = Builder.DefineMethod(oldMethod.Name, methodAttributes, oldMethod.ReturnType, Type.EmptyTypes);
@@ -43,6 +45,8 @@ namespace Surrogate.ILAssist
 		internal static void OverridePropertySetter(this TypeBuilder Builder, PropertyInfo Property)
 		{
 			var oldMethod = Property.GetSetMethod();
+			if (oldMethod == null)
+				return;
 
 			var methodAttributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig | MethodAttributes.SpecialName;
 			var newMethod = Builder.DefineMethod(oldMethod.Name, methodAttributes, null, new [] { Property.PropertyType });
