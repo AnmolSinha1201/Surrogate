@@ -44,6 +44,4 @@ var retVal = instance.ActualMethod(inputText, ref num);
 # Planned Features
 Feature| Status
 ---|---
-PropertySurrogate|WIP
-Better DynamicTypeBuilder|WIP
-More Detailed Surrogates|WIP
+Observer Surrogate|WIP
