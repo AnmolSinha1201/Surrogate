@@ -1,4 +1,5 @@
 using System;
+using System.Reflection;
 using Surrogate.ILAssist;
 using Surrogate.Interfaces;
 
@@ -7,8 +8,8 @@ namespace Surrogate.Samples
 	/// <summary>
 	/// UpperBounds and LowerBounds are inclusive.
 	/// </summary>
-	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue)]
-	public class Between : Attribute, IParameterSurrogate, IReturnSurrogate, IErrorAction, IOrderOfExecution
+	[AttributeUsage(AttributeTargets.Parameter | AttributeTargets.ReturnValue | AttributeTargets.Property)]
+	public class Between : Attribute, IParameterSurrogate, IReturnSurrogate, IPropertySurrogate, IErrorAction, IOrderOfExecution
 	{
 		public double LowerBound, UpperBound;
 
@@ -19,36 +20,33 @@ namespace Surrogate.Samples
 			set { DefaultErrorAction = value; }
 		}
 
-		private int DefaultOrderOfExecution = 0;
-		public int OrderOfExecution 
-		{
-			get { return DefaultOrderOfExecution; }
-			set { DefaultOrderOfExecution = value; }
-		}
+		public int OrderOfExecution { get; set; } = 0;
 
 		public Between(double LowerBound, double UpperBound, int OrderOfExecution = 0)
 		{
 			this.LowerBound = LowerBound;
 			this.UpperBound = UpperBound;
-			this.DefaultOrderOfExecution = OrderOfExecution;
+			this.OrderOfExecution = OrderOfExecution;
 		}
 
 		public object InterceptParameter(object Argument)
-		{
-			var arg = Convert.ToDouble(Argument);
-
-			if (arg > UpperBound || arg < LowerBound)
-				ErrorAction($"{nameof(Between)} : Argument out of bounds");
-
-			return Argument;
-		}
+		=> DefaultAction(MethodBase.GetCurrentMethod(), Argument);
 
 		public object InterceptReturn(dynamic Argument)
+		=> DefaultAction(MethodBase.GetCurrentMethod(), Argument);
+
+		public object InterceptPropertyGet(object Argument)
+		=> Argument;
+
+		public object InterceptPropertySet(object Argument)
+		=> DefaultAction(MethodBase.GetCurrentMethod(), Argument);
+
+		private object DefaultAction(MethodBase Method, object Argument)
 		{
 			var arg = Convert.ToDouble(Argument);
 
 			if (arg > UpperBound || arg < LowerBound)
-				ErrorAction($"{nameof(Between)} : Return value out of bounds");
+				ErrorAction($"{nameof(NotNull)} : {Method.Name} Argument is out of bounds");
 
 			return Argument;
 		}

@@ -13,22 +13,23 @@ namespace Surrogate.ILAssist
 		/// <para>Default access level is Public, i.e. field is public and instance level.</para>
 		/// </summary>
 		public static FieldBuilder AddField(this TypeBuilder Builder, string MemberName, Type MemberType, FieldAttributes Attributes = FieldAttributes.Public)
-		{
-			return Builder.DefineField(MemberName, MemberType, Attributes);
-		}
+		=> Builder.DefineField(MemberName, MemberType, Attributes);
 
-		public static FieldBuilder AddField(this TypeBuilder Builder, MemberInfo Member, FieldAttributes Attributes = FieldAttributes.Public)
-		{
-			var field = Builder.AddField(Member.Name, Member.MemberType(), Attributes);
+		public static FieldBuilder AddField<T>(this TypeBuilder Builder, string MemberName, FieldAttributes Attributes = FieldAttributes.Public)
+		=> Builder.AddField(MemberName, typeof(T), Attributes);
 
-			foreach (var attribute in Member.GetCustomAttributesData())
+		public static FieldBuilder AddField(this TypeBuilder Builder, FieldInfo Field)
+		{
+			var field = Builder.AddField(Field.Name, Field.MemberType(), Field.Attributes);
+
+			foreach (var attribute in Field.GetCustomAttributesData())
 				field.AddAttribute(attribute);
 
 			return field;
 		}
 
 		public static void AddAttribute(this FieldBuilder Builder, CustomAttributeData CustomAttribute)
-		=> Builder.SetCustomAttribute(CustomAttribute.ToCustomAttributeBuilder());
+		=> Builder.AddAttribute(CustomAttribute.ToCustomAttributeBuilder());
 
 		public static void AddAttribute(this FieldBuilder Builder, CustomAttributeBuilder CustomAttribute)
 		=> Builder.SetCustomAttribute(CustomAttribute);

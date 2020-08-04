@@ -16,7 +16,7 @@ namespace Surrogate.ILAssist
 			typeBuilder.AddInterfaceImplementation(Interface);
 
 			foreach(var member in members)
-				retList.Add(typeBuilder.AddProperty(member, methodAttributesForInterface));
+				retList.Add(typeBuilder.AddProperty(member.Name, member.MemberType(), methodAttributesForInterface));
 
 			return retList;
 		}

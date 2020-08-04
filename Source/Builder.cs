@@ -38,6 +38,13 @@ namespace Surrogate
 					builder.OverrideMethod(method);
 			}
 
+			var properties = BaseType.GetResolvedProperties();
+			foreach (var property in properties)
+			{
+				if (property.IsEligibleForSurrogate())
+					builder.OverrideProperty(property);
+			}
+
 			var generatedType = builder.CreateType();
 			
 			if (!Cache.ContainsKey(BaseType))

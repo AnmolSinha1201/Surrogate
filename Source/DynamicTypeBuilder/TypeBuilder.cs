@@ -19,12 +19,11 @@ namespace Surrogate.ILAssist
 			ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("MainModule");
 			var typeBuilder = moduleBuilder.DefineType(TypeName, TypeAttributes.Public, BaseType);
 
-			if (BaseType != null)
-			{
-				foreach (var attribute in BaseType.GetCustomAttributesData())
-					typeBuilder.SetCustomAttribute(attribute.ToCustomAttributeBuilder());
-			}
-
+			if (BaseType == null)
+				return typeBuilder;
+			
+			foreach (var attribute in BaseType.GetCustomAttributesData())
+				typeBuilder.SetCustomAttribute(attribute.ToCustomAttributeBuilder());
 			foreach (var constructor in BaseType.GetConstructors()) 
 				typeBuilder.CreatePassThroughConstructor(constructor);
 
