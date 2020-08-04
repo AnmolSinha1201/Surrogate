@@ -39,22 +39,25 @@ namespace Surrogate.ILAssist
 			return property;
 		}
 
+		public static PropertyBuilder AddProperty<T>(this TypeBuilder Builder, string MemberName, MethodAttributes MAttributes = DefaultPropertyAttributes)
+		=> Builder.AddProperty(MemberName, typeof(T), MAttributes);
+
 		public const MethodAttributes DefaultPropertyAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName;
 		public const MethodAttributes InheritedFromInterfacePropertyAttributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.NewSlot | MethodAttributes.SpecialName | MethodAttributes.HideBySig;
 
 
-		public static PropertyBuilder AddProperty(this TypeBuilder Builder, MemberInfo Member, MethodAttributes MAttributes = MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName)
+		public static PropertyBuilder AddProperty(this TypeBuilder Builder, PropertyInfo Property)
 		{
-			var property = Builder.AddProperty(Member.Name, Member.MemberType(), MAttributes);
+			var property = Builder.AddProperty(Property.Name, Property.MemberType());
 
-			foreach (var attribute in Member.GetCustomAttributesData())
+			foreach (var attribute in Property.GetCustomAttributesData())
 				property.AddAttribute(attribute);
 
 			return property;
 		}
 
 		public static void AddAttribute(this PropertyBuilder Builder, CustomAttributeData CustomAttribute)
-		=> Builder.SetCustomAttribute(CustomAttribute.ToCustomAttributeBuilder());
+		=> Builder.AddAttribute(CustomAttribute.ToCustomAttributeBuilder());
 
 		public static void AddAttribute(this PropertyBuilder Builder, CustomAttributeBuilder CustomAttribute)
 		=> Builder.SetCustomAttribute(CustomAttribute);
