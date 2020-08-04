@@ -63,5 +63,23 @@ namespace Surrogate.Tests.BetweenTest
 			var retVal = TestObject.Method4(Input);
 			Assert.Equal(Input, retVal);
         }
+
+		[Theory]
+		[InlineAutoData(5)]
+		[InlineAutoData(10)]
+		[InlineAutoData(8)]
+        public void Property_InRange(int Input)
+        {
+			TestObject.Property = Input;
+			Assert.Equal(Input, TestObject.Property);
+        }
+
+		[Theory]
+		[InlineAutoData(4)]
+		[InlineAutoData(11)]
+        public void Property_OutOfRange(int Input)
+        {
+			Assert.ThrowsAny<Exception>(() => TestObject.Property = Input);
+        }
     }
 }

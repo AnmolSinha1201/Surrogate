@@ -8,16 +8,11 @@ namespace Surrogate.Samples
 	[AttributeUsage(AttributeTargets.Method)]
 	public class Bypass : Attribute, IMethodSurrogate, IOrderOfExecution
 	{
-		private int DefaultOrderOfExecution = 0;
-		public int OrderOfExecution 
-		{
-			get { return DefaultOrderOfExecution; }
-			set { DefaultOrderOfExecution = value; }
-		}
+		public int OrderOfExecution { get; set; } = 0;
 
 		public Bypass(int OrderOfExecution = 0)
 		{
-			this.DefaultOrderOfExecution = OrderOfExecution;
+			this.OrderOfExecution = OrderOfExecution;
 		}
 
 		public bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments)
