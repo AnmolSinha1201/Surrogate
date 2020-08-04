@@ -31,5 +31,8 @@ namespace Surrogate.Tests.BetweenTest
 		{
 			return Input;
 		}
+
+		[Between(5, 10)]
+		public virtual int Property { get; set; }
     }
 }

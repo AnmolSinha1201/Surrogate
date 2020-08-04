@@ -31,5 +31,17 @@ namespace Surrogate.Tests.NotNullTest
 			var retVal = TestObject.Method(InputText);
 			Assert.Equal(InputText, retVal);
         }
+
+		[Fact]
+        public void PropertyInput_Null()
+        {
+			Assert.ThrowsAny<Exception>(() => TestObject.Property = null);
+        }
+
+		[Theory, AutoData]
+        public void PropertyInput_Null_And_NotNull(string InputText)
+        {
+			TestObject.Property = InputText;
+        }
     }
 }

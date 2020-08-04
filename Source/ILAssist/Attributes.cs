@@ -46,27 +46,22 @@ namespace Surrogate.ILAssist
 		internal static List<T> FindAttributes<T>(this ParameterInfo Parameter)
 		=> Parameter.FindAttributes(typeof(T)).Cast<T>().ToList();
 
-		internal static bool IsEligibleForSurrogate(this MethodInfo Method)
+
+		internal static List<Attribute> FindAttributes(this PropertyInfo Property, Type AttributeType)
 		{
-			var parameterAttributes = Method.GetParameters().SelectMany(i => i.FindAttributes<IParameterSurrogate>());
-			if (parameterAttributes.Count() > 0)
-				return true;
+			var retVal = new List<Attribute>();
+			var attributes = Property.GetCustomAttributes();
+			
+			foreach (var attribute in attributes.Cast<Attribute>())
+			{
+				if (AttributeType.IsAssignableFrom(attribute.GetType()))
+					retVal.Add(attribute);
+			}
 
-			var methodAttributes = Method.FindAttributes<IMethodSurrogate>();
-			if (methodAttributes.Count > 0)
-				return true;
-
-			var returnAttributes = Method.FindAttributes<IReturnSurrogate>();
-			if (returnAttributes.Count > 0)
-				return true;
-
-			return false;
+			return retVal;
 		}
 
-		internal static bool IsEligibleForSurrogate(this Type BaseType)
-		{
-			var methods = BaseType.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
-			return methods.Select(i => i.IsEligibleForSurrogate()).Aggregate((current, next) => current || next);
-		}
+		internal static List<T> FindAttributes<T>(this PropertyInfo Property)
+		=> Property.FindAttributes(typeof(T)).Cast<T>().ToList();
 	}
 }
