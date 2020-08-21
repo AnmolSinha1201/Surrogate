@@ -11,7 +11,7 @@ on:
         description: 'Test scenario tags'  
 
 jobs:
-  Nuget Deploy:
+  NugetDeploy:
 
     runs-on: ubuntu-latest
 

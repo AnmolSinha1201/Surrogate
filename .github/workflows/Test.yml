@@ -6,10 +6,8 @@ on:
     branches: '*'
 
 jobs:
-  build:
-
+  DotnetCoreTest:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-dotnet@v1
