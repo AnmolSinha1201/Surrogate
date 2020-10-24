@@ -4,7 +4,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>Surrogate</AssemblyName>
     <!-- <TargetFrameworks>netcoreapp3.0;net45</TargetFrameworks> -->
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Version>2.1.0</Version>
     <Authors>Anmol Sinha</Authors>
     <Description>Aspect Oriented Programming framework which supports dynamic code generation</Description>
