@@ -1,27 +1,39 @@
 using System;
 using System.Reflection;
+using Surrogate.Helpers;
 
 namespace Surrogate.Interfaces
 {
 	public interface IMethodSurrogate
 	{
-		/// <summary>
-		/// <para>Return : True - if you want to continue execution, False if you want to stop</para>
-		/// </summary>
-		bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments);
+		MethodSurrogatePreCommands PreEvaluate(MethodSurrogateInfo Info);
+		MethodSurrogatePostCommands PostEvaluate(MethodSurrogateInfo Info);
 	}
 
-	public class MethodSurrogateInfo
+	public enum MethodSurrogatePreCommands
+	{
+		Abort, Continue, 
+	}
+
+	public enum MethodSurrogatePostCommands
+	{
+		ReEvaluate, Continue,
+	}
+
+	public enum MethodSurrogateResults
+	{
+		Aborted, ReEvaluated, Continued
+	}
+
+	public class MethodSurrogateInfo : IClonable<MethodSurrogateInfo>
 	{
 		public object Item;
-		public MethodInfo Member;
+		public MethodInfo Method;
 		public object[] Arguments;
+		public MethodSurrogateResults PreviousResult;
+		public object ResultBy;
 
-		public MethodSurrogateInfo(object Item, MethodInfo Member, object[] Arguments)
-		{
-			this.Item = Item;
-			this.Member = Member;
-			this.Arguments = Arguments;
-		}
-	}
+		public MethodSurrogateInfo Clone()
+		=> (MethodSurrogateInfo) this.MemberwiseClone();
+    }
 }
