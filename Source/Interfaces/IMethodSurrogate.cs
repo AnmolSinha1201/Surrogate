@@ -6,8 +6,11 @@ namespace Surrogate.Interfaces
 {
 	public interface IMethodSurrogate
 	{
-		MethodSurrogatePreCommands PreEvaluate(MethodSurrogateInfo Info);
-		MethodSurrogatePostCommands PostEvaluate(MethodSurrogateInfo Info);
+		MethodSurrogatePreCommands PreEvaluate(MethodSurrogateInfo Info)
+		=> MethodSurrogatePreCommands.Continue;
+		
+		MethodSurrogatePostCommands PostEvaluate(MethodSurrogateInfo Info)
+		=> MethodSurrogatePostCommands.Continue;
 	}
 
 	public enum MethodSurrogatePreCommands
