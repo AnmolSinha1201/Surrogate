@@ -17,14 +17,14 @@ namespace Surrogate.Tests.IOrderOfExecutionTest
         public void OrderTest1()
         {
 			var retVal = TestObject.Method(123);
-			Assert.Equal(970, retVal);
+			Assert.Equal(486, retVal);
         }
 
 		[Fact]
         public void OrderTest2()
         {
 			var retVal = TestObject.Method2(123);
-			Assert.Equal(977, retVal);
+			Assert.Equal(489, retVal);
         }
     }
 }

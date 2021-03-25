@@ -98,12 +98,6 @@ namespace Surrogate.Tests.IOrderOfExecutionTest
 		{
 			this.OrderOfExecution = OrderOfExecution;
 		}
-
-		public bool InterceptMethod(object Item, MethodInfo Member, ref dynamic[] Arguments)
-		{
-			Arguments[0] = Arguments[0] - 1;
-			return true;
-		}
 	}
 
 	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true)]
@@ -119,12 +113,6 @@ namespace Surrogate.Tests.IOrderOfExecutionTest
 		public MethodSurrogate2(int OrderOfExecution = 0)
 		{
 			this.OrderOfExecution = OrderOfExecution;
-		}
-
-		public bool InterceptMethod(object Item, MethodInfo Member, ref dynamic[] Arguments)
-		{
-			Arguments[0] = Arguments[0] * 2;
-			return true;
 		}
 	}
 }
