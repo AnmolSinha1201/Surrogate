@@ -14,8 +14,5 @@ namespace Surrogate.Samples
 		{
 			this.OrderOfExecution = OrderOfExecution;
 		}
-
-		public bool InterceptMethod(object Item, MethodInfo Member, ref object[] Arguments)
-		=> false;
 	}
 }
