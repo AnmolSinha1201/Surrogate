@@ -51,7 +51,7 @@ namespace Surrogate.ILAssist
 			
 			foreach (var attribute in AttributeList)
 			{
-				command = attribute.PreEvaluate(Info);
+				command = attribute.PreEvaluate(Info.Clone());
 				commandBy = attribute;
 
 				if (command == MethodSurrogatePreCommands.Abort)
@@ -68,7 +68,7 @@ namespace Surrogate.ILAssist
 			
 			foreach (var attribute in AttributeList)
 			{
-				command = attribute.PostEvaluate(Info);
+				command = attribute.PostEvaluate(Info.Clone());
 				commandBy = attribute;
 
 				if (command == MethodSurrogatePostCommands.ReEvaluate)
