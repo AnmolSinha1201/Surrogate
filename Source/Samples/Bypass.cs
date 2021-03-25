@@ -14,5 +14,8 @@ namespace Surrogate.Samples
 		{
 			this.OrderOfExecution = OrderOfExecution;
 		}
+
+		public MethodSurrogatePreCommands PreEvaluate(MethodSurrogateInfo Info)
+		=> MethodSurrogatePreCommands.Abort;
 	}
 }
